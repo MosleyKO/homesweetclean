@@ -1,26 +1,29 @@
 import Link from "next/link";
+import { Home, Sparkles, ArrowRightLeft, CalendarDays } from "lucide-react";
+
+const iconStyle = { width: 24, height: 24, color: "var(--blush)", strokeWidth: 1.5 };
 
 const services = [
   {
-    icon: "🏠",
+    icon: <Home {...iconStyle} />,
     title: "Standard Cleaning",
     desc: "Our standard clean is perfect for maintaining a fresh, tidy home on a regular basis. We cover all the essentials — dusting, vacuuming, mopping, kitchen surfaces, bathrooms, and more.",
     includes: ["Dust all surfaces & furniture", "Vacuum & mop floors", "Clean kitchen counters & appliances", "Scrub sinks, toilets & showers", "Empty trash cans", "Wipe mirrors & glass"],
   },
   {
-    icon: "✨",
+    icon: <Sparkles {...iconStyle} />,
     title: "Deep Cleaning",
     desc: "A thorough, top-to-bottom clean designed to tackle buildup and get your home truly spotless. Great for first-time cleans, spring cleaning, or when things need a reset.",
     includes: ["Everything in Standard Cleaning", "Inside oven & microwave", "Inside fridge", "Baseboards & window sills", "Light fixtures & ceiling fans", "Cabinet fronts & door handles"],
   },
   {
-    icon: "📦",
+    icon: <ArrowRightLeft {...iconStyle} />,
     title: "Move In / Move Out",
     desc: "Moving is stressful enough. Let us handle the cleaning so you can start fresh in your new home — or leave your old one spotless for the next family.",
     includes: ["Full deep clean of entire home", "Inside all cabinets & drawers", "Inside all appliances", "Walls & baseboards", "Windows (interior)", "Garage sweep (if applicable)"],
   },
   {
-    icon: "🗓",
+    icon: <CalendarDays {...iconStyle} />,
     title: "Recurring Cleaning",
     desc: "Keep your home consistently clean with our recurring plans. Choose the frequency that works best for your lifestyle and we'll handle the rest — every single time.",
     includes: ["Weekly, bi-weekly, or monthly", "Same trusted cleaner each visit", "Customizable checklist", "Flexible scheduling", "Easy rescheduling", "Loyalty discounts available"],

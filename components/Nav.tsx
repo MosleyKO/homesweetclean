@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { Phone } from "lucide-react";
 
 const links = [
   { href: "/", label: "Home" },
@@ -121,7 +122,7 @@ export default function Nav() {
               fontSize: 14,
               color: "var(--teal)",
               textDecoration: "none",
-            }}>📞 (435) 681-0314</a>
+          }}><Phone size={14} strokeWidth={1.5} style={{ display: "inline", marginRight: 6 }} />(435) 681-0314</a>
             <Link href="/contact" className="btn-primary" onClick={() => setOpen(false)} style={{ textAlign: "center" }}>
               Get a Quote ♥
             </Link>

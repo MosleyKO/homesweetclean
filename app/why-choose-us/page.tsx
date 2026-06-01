@@ -1,14 +1,17 @@
 import Link from "next/link";
+import { Home, Leaf, ShieldCheck, RefreshCw, Sparkles, MessageCircle, Heart, BadgeCheck } from "lucide-react";
+
+const iconStyle = { width: 24, height: 24, color: "var(--blush)", strokeWidth: 1.5 };
 
 const reasons = [
-  { icon: "🏡", title: "Locally Owned & Operated", desc: "We're your neighbors — not a national franchise. When you hire us, you're investing in your own community." },
-  { icon: "🌿", title: "Safe & Eco-Friendly Products", desc: "We use products that are safe for your kids, your pets, and the planet. Clean without compromise." },
-  { icon: "✅", title: "Insured & Background Checked", desc: "Every member of our team is fully insured and background checked. Your home is in safe hands." },
-  { icon: "🔁", title: "Consistent, Reliable Service", desc: "We show up when we say we will — every single time. No surprises, no excuses." },
-  { icon: "✦", title: "Detail-Obsessed Cleaning", desc: "We don't just clean what you can see. We focus on the corners, the edges, the things others skip." },
-  { icon: "💬", title: "Communication You Can Count On", desc: "Easy scheduling, clear confirmations, and a team that's always reachable. No chasing us down." },
-  { icon: "❤️", title: "We Genuinely Care", desc: "This isn't just a job to us. We're passionate about the homes we clean and the families we serve." },
-  { icon: "🛡", title: "Satisfaction Guaranteed", desc: "Not happy with something? We'll come back and make it right. No questions asked." },
+  { icon: <Home {...iconStyle} />, title: "Locally Owned & Operated", desc: "We're your neighbors — not a national franchise. When you hire us, you're investing in your own community." },
+  { icon: <Leaf {...iconStyle} />, title: "Safe & Eco-Friendly Products", desc: "We use products that are safe for your kids, your pets, and the planet. Clean without compromise." },
+  { icon: <ShieldCheck {...iconStyle} />, title: "Insured & Background Checked", desc: "Every member of our team is fully insured and background checked. Your home is in safe hands." },
+  { icon: <RefreshCw {...iconStyle} />, title: "Consistent, Reliable Service", desc: "We show up when we say we will — every single time. No surprises, no excuses." },
+  { icon: <Sparkles {...iconStyle} />, title: "Detail-Obsessed Cleaning", desc: "We don't just clean what you can see. We focus on the corners, the edges, the things others skip." },
+  { icon: <MessageCircle {...iconStyle} />, title: "Communication You Can Count On", desc: "Easy scheduling, clear confirmations, and a team that's always reachable. No chasing us down." },
+  { icon: <Heart {...iconStyle} />, title: "We Genuinely Care", desc: "This isn't just a job to us. We're passionate about the homes we clean and the families we serve." },
+  { icon: <BadgeCheck {...iconStyle} />, title: "Satisfaction Guaranteed", desc: "Not happy with something? We'll come back and make it right. No questions asked." },
 ];
 
 const stats = [

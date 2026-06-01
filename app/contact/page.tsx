@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { Phone, Mail, MapPin, Sparkles } from "lucide-react";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", bedrooms: "", message: "" });
@@ -76,7 +77,7 @@ export default function ContactPage() {
 
             {status === "success" ? (
               <div style={{ textAlign: "center", padding: "48px 0" }}>
-                <div style={{ fontSize: 48, marginBottom: 16 }}>✨</div>
+                <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}><Sparkles size={40} color="var(--blush)" strokeWidth={1.5} /></div>
                 <h3 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 26, color: "var(--teal)", marginBottom: 12 }}>
                   We got your message!
                 </h3>
@@ -154,9 +155,9 @@ export default function ContactPage() {
           {/* CONTACT INFO */}
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {[
-              { icon: "📞", label: "Call or Text", value: "(435) 681-0314", href: "tel:4356810314" },
-              { icon: "✉", label: "Email Us", value: "hello@homesweetclean.co", href: "mailto:hello@homesweetclean.co" },
-              { icon: "📍", label: "Service Area", value: "St. George · Washington · Hurricane · Ivins · Santa Clara", href: null },
+              { icon: <Phone size={20} color="var(--blush)" strokeWidth={1.5} />, label: "Call or Text", value: "(435) 681-0314", href: "tel:4356810314" },
+              { icon: <Mail size={20} color="var(--blush)" strokeWidth={1.5} />, label: "Email Us", value: "hello@homesweetclean.co", href: "mailto:hello@homesweetclean.co" },
+              { icon: <MapPin size={20} color="var(--blush)" strokeWidth={1.5} />, label: "Service Area", value: "St. George · Washington · Hurricane · Ivins · Santa Clara", href: null },
             ].map((item, i) => (
               <div key={i} style={{ background: "white", borderRadius: 16, padding: "28px 24px", border: "1px solid var(--line)", display: "flex", gap: 20, alignItems: "flex-start" }}>
                 <div style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--blush-bg)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>

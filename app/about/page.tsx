@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MapPin } from "lucide-react";
 
 const promises = [
   { title: "Friendly, professional service", desc: "We're approachable, respectful, and here to help." },
@@ -107,7 +108,7 @@ export default function AboutPage() {
                 minWidth: 140,
                 transition: "border-color 0.2s, transform 0.2s",
               }}>
-                <div style={{ fontSize: 14, marginBottom: 6 }}>📍</div>
+                <div style={{ marginBottom: 8, display: "flex", justifyContent: "center" }}><MapPin size={16} color="var(--blush)" strokeWidth={1.5} /></div>
                 <div style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 17, fontWeight: 600, color: "var(--teal)" }}>{a}</div>
               </div>
             ))}
