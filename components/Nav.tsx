@@ -43,7 +43,7 @@ export default function Nav() {
         <div style={{ display: "flex", alignItems: "center", gap: 32 }} className="desktop-nav">
           {links.map(l => (
             <Link key={l.href} href={l.href} style={{
-              fontFamily: "'Montserrat', sans-serif",
+              fontFamily: "var(--font-montserrat), sans-serif",
               fontSize: 13,
               fontWeight: 500,
               letterSpacing: "0.04em",
@@ -59,7 +59,7 @@ export default function Nav() {
         {/* CTA */}
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <a href="tel:4356810314" style={{
-            fontFamily: "'Montserrat', sans-serif",
+            fontFamily: "var(--font-montserrat), sans-serif",
             fontSize: 13,
             fontWeight: 500,
             color: "var(--teal)",
@@ -105,7 +105,7 @@ export default function Nav() {
             <Link key={l.href} href={l.href} onClick={() => setOpen(false)} style={{
               display: "block",
               padding: "12px 0",
-              fontFamily: "'Montserrat', sans-serif",
+              fontFamily: "var(--font-montserrat), sans-serif",
               fontSize: 14,
               fontWeight: 500,
               color: pathname === l.href ? "var(--blush)" : "var(--teal)",
@@ -117,7 +117,7 @@ export default function Nav() {
           ))}
           <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 12 }}>
             <a href="tel:4356810314" style={{
-              fontFamily: "'Montserrat', sans-serif",
+              fontFamily: "var(--font-montserrat), sans-serif",
               fontSize: 14,
               color: "var(--teal)",
               textDecoration: "none",

@@ -51,7 +51,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 720, margin: "0 auto", position: "relative", zIndex: 1 }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>♥ Clean Spaces. Happy Places.</div>
           <h1 style={{
-            fontFamily: "'Fraunces', serif",
+            fontFamily: "var(--font-fraunces), serif",
             fontSize: "clamp(44px, 7vw, 72px)",
             fontWeight: 600,
             color: "var(--teal)",
@@ -61,7 +61,7 @@ export default function HomePage() {
             A cleaner home
           </h1>
           <h1 style={{
-            fontFamily: "'Allura', cursive",
+            fontFamily: "var(--font-allura), cursive",
             fontSize: "clamp(52px, 8vw, 88px)",
             fontWeight: 400,
             color: "var(--blush)",
@@ -79,7 +79,7 @@ export default function HomePage() {
           </div>
           <div style={{ display: "flex", gap: 32, justifyContent: "center", marginTop: 40, flexWrap: "wrap" }}>
             {["Trusted & Reliable", "Detail Oriented", "Satisfaction Guaranteed"].map(t => (
-              <span key={t} style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 13, fontWeight: 500, color: "var(--teal)", display: "flex", alignItems: "center", gap: 6 }}>
+              <span key={t} style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 13, fontWeight: 500, color: "var(--teal)", display: "flex", alignItems: "center", gap: 6 }}>
                 <span style={{ color: "var(--sage)" }}>✓</span> {t}
               </span>
             ))}
@@ -107,7 +107,7 @@ export default function HomePage() {
               textAlign: "center",
             }}>
               <div style={{ fontSize: 28, marginBottom: 12 }}>{f.icon}</div>
-              <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 17, fontWeight: 600, color: "var(--teal)", marginBottom: 8 }}>{f.title}</h3>
+              <h3 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 17, fontWeight: 600, color: "var(--teal)", marginBottom: 8 }}>{f.title}</h3>
               <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.6 }}>{f.desc}</p>
             </div>
           ))}
@@ -137,9 +137,9 @@ export default function HomePage() {
           </div>
           <div>
             <div className="eyebrow">About Home Sweet Clean ♥</div>
-            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(32px, 4vw, 46px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.15, marginBottom: 20 }}>
+            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(32px, 4vw, 46px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.15, marginBottom: 20 }}>
               We believe a clean home creates a{" "}
-              <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontSize: "1.3em", fontWeight: 400 }}>happier life.</span>
+              <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontSize: "1.3em", fontWeight: 400 }}>happier life.</span>
             </h2>
             <p style={{ fontSize: 16, color: "var(--muted)", marginBottom: 16, lineHeight: 1.75 }}>
               At Home Sweet Clean, we're passionate about creating clean, comfortable spaces for busy people and families. Our team is reliable, thorough, and committed to making your home shine — every time.
@@ -154,9 +154,9 @@ export default function HomePage() {
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
             <div className="eyebrow" style={{ justifyContent: "center" }}>Our Services ♥</div>
-            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 600, color: "var(--teal)" }}>
+            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 600, color: "var(--teal)" }}>
               Cleaning Services to Fit{" "}
-              <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>Your Needs</span>
+              <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>Your Needs</span>
             </h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24 }}>
@@ -174,9 +174,9 @@ export default function HomePage() {
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: 22, marginBottom: 16,
                 }}>{s.icon}</div>
-                <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 19, fontWeight: 600, color: "var(--teal)", marginBottom: 10 }}>{s.title}</h3>
+                <h3 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 19, fontWeight: 600, color: "var(--teal)", marginBottom: 10 }}>{s.title}</h3>
                 <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.65, marginBottom: 20 }}>{s.desc}</p>
-                <Link href="/services" style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, fontWeight: 600, color: "var(--blush)", textDecoration: "none", letterSpacing: "0.06em" }}>
+                <Link href="/services" style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 12, fontWeight: 600, color: "var(--blush)", textDecoration: "none", letterSpacing: "0.06em" }}>
                   LEARN MORE →
                 </Link>
               </div>
@@ -198,11 +198,11 @@ export default function HomePage() {
                 border: "1px solid var(--line)",
                 textAlign: "left",
               }}>
-                <div style={{ color: "var(--blush)", fontSize: 28, fontFamily: "'Fraunces', serif", lineHeight: 1, marginBottom: 16 }}>"</div>
+                <div style={{ color: "var(--blush)", fontSize: 28, fontFamily: "var(--font-fraunces), serif", lineHeight: 1, marginBottom: 16 }}>"</div>
                 <p style={{ fontSize: 15, color: "var(--teal)", lineHeight: 1.7, marginBottom: 20, fontStyle: "italic" }}>{r.text}</p>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <div style={{ color: "#F4B942", fontSize: 13 }}>★★★★★</div>
-                  <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>— {r.author}</span>
+                  <span style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>— {r.author}</span>
                 </div>
               </div>
             ))}
@@ -223,9 +223,9 @@ export default function HomePage() {
         gap: 32,
       }}>
         <div>
-          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(26px, 3vw, 40px)", fontWeight: 600, color: "white", marginBottom: 8 }}>
+          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(26px, 3vw, 40px)", fontWeight: 600, color: "white", marginBottom: 8 }}>
             Ready for a home you'll love{" "}
-            <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>coming back to?</span>
+            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>coming back to?</span>
           </h2>
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 16 }}>Let us take cleaning off your to-do list.</p>
         </div>

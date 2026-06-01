@@ -19,9 +19,9 @@ export default function ReviewsPage() {
       <section style={{ background: "var(--cream)", padding: "80px 32px 60px", textAlign: "center" }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Client Reviews ♥</div>
-          <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
+          <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
             What our clients{" "}
-            <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>are saying.</span>
+            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>are saying.</span>
           </h1>
           <p style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7 }}>
             Don't take our word for it. Here's what real Southern Utah families have to say about Home Sweet Clean.
@@ -29,10 +29,10 @@ export default function ReviewsPage() {
 
           {/* Stars summary */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 36 }}>
-            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 56, fontWeight: 700, color: "var(--teal)", lineHeight: 1 }}>5.0</div>
+            <div style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 56, fontWeight: 700, color: "var(--teal)", lineHeight: 1 }}>5.0</div>
             <div>
               <div style={{ color: "#F4B942", fontSize: 24, letterSpacing: 2 }}>★★★★★</div>
-              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, fontWeight: 600, color: "var(--muted)", letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 4 }}>Average Rating</div>
+              <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 12, fontWeight: 600, color: "var(--muted)", letterSpacing: "0.1em", textTransform: "uppercase", marginTop: 4 }}>Average Rating</div>
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@ export default function ReviewsPage() {
                 "{r.text}"
               </p>
               <div style={{ paddingTop: 16, borderTop: "1px solid var(--line)" }}>
-                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 13, fontWeight: 700, color: "var(--teal)" }}>— {r.author}</div>
+                <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 13, fontWeight: 700, color: "var(--teal)" }}>— {r.author}</div>
                 <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>{r.location}</div>
               </div>
             </div>
@@ -67,9 +67,9 @@ export default function ReviewsPage() {
       <section style={{ padding: "80px 32px", background: "var(--cream-warm)", textAlign: "center" }}>
         <div style={{ maxWidth: 600, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Share your experience</div>
-          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(28px, 3vw, 42px)", fontWeight: 600, color: "var(--teal)", marginBottom: 16 }}>
+          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(28px, 3vw, 42px)", fontWeight: 600, color: "var(--teal)", marginBottom: 16 }}>
             Had a great clean?{" "}
-            <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>Tell us about it.</span>
+            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>Tell us about it.</span>
           </h2>
           <p style={{ fontSize: 16, color: "var(--muted)", marginBottom: 32, lineHeight: 1.7 }}>
             We'd love to hear about your experience. Your review helps other Southern Utah families find a cleaning service they can trust.
@@ -83,9 +83,9 @@ export default function ReviewsPage() {
       {/* CTA */}
       <section style={{ margin: "60px 32px", background: "var(--teal)", borderRadius: 20, padding: "60px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
         <div>
-          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(24px, 3vw, 38px)", fontWeight: 600, color: "white", marginBottom: 8 }}>
+          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(24px, 3vw, 38px)", fontWeight: 600, color: "white", marginBottom: 8 }}>
             Ready to experience it{" "}
-            <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>for yourself?</span>
+            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>for yourself?</span>
           </h2>
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 16 }}>Join hundreds of happy Southern Utah families.</p>
         </div>

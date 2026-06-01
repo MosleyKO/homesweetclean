@@ -36,7 +36,7 @@ export default function Footer() {
 
         {/* Quick links */}
         <div>
-          <h4 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 20, opacity: 0.6 }}>
+          <h4 style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 20, opacity: 0.6 }}>
             Quick Links
           </h4>
           {[
@@ -58,7 +58,7 @@ export default function Footer() {
 
         {/* Contact */}
         <div>
-          <h4 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 20, opacity: 0.6 }}>
+          <h4 style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 20, opacity: 0.6 }}>
             Contact Us
           </h4>
           <p style={{ fontSize: 14, color: "rgba(255,255,255,0.75)", marginBottom: 10 }}>📞 (435) 681-0314</p>
@@ -68,7 +68,7 @@ export default function Footer() {
 
         {/* Hours */}
         <div>
-          <h4 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 20, opacity: 0.6 }}>
+          <h4 style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 20, opacity: 0.6 }}>
             Hours
           </h4>
           {[
@@ -81,7 +81,7 @@ export default function Footer() {
               <div style={{ fontSize: 14, color: "white", fontWeight: 500 }}>{h.hours}</div>
             </div>
           ))}
-          <p style={{ marginTop: 20, fontFamily: "'Allura', cursive", fontSize: 22, color: "var(--blush)" }}>
+          <p style={{ marginTop: 20, fontFamily: "var(--font-allura), cursive", fontSize: 22, color: "var(--blush)" }}>
             Thank you for supporting our small business!
           </p>
         </div>

@@ -30,7 +30,7 @@ export default function ContactPage() {
     padding: "14px 16px",
     borderRadius: 10,
     border: "1.5px solid var(--line)",
-    fontFamily: "'Outfit', sans-serif",
+    fontFamily: "var(--font-outfit), sans-serif",
     fontSize: 15,
     color: "var(--teal)",
     background: "white",
@@ -39,7 +39,7 @@ export default function ContactPage() {
   };
 
   const labelStyle = {
-    fontFamily: "'Montserrat', sans-serif",
+    fontFamily: "var(--font-montserrat), sans-serif",
     fontSize: 12,
     fontWeight: 600,
     letterSpacing: "0.1em",
@@ -55,9 +55,9 @@ export default function ContactPage() {
       <section style={{ background: "var(--cream)", padding: "80px 32px 60px", textAlign: "center" }}>
         <div style={{ maxWidth: 650, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Get in Touch ♥</div>
-          <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
+          <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
             Let's get your home{" "}
-            <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>sparkling clean.</span>
+            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>sparkling clean.</span>
           </h1>
           <p style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7 }}>
             Fill out the form below and we'll get back to you within 24 hours with a free, no-obligation quote.
@@ -71,16 +71,16 @@ export default function ContactPage() {
 
           {/* FORM */}
           <div style={{ background: "white", borderRadius: 20, padding: "48px", border: "1px solid var(--line)" }}>
-            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 28, fontWeight: 600, color: "var(--teal)", marginBottom: 8 }}>Request a Free Quote</h2>
+            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 28, fontWeight: 600, color: "var(--teal)", marginBottom: 8 }}>Request a Free Quote</h2>
             <p style={{ color: "var(--muted)", fontSize: 15, marginBottom: 36 }}>We'll reach out within 24 hours.</p>
 
             {status === "success" ? (
               <div style={{ textAlign: "center", padding: "48px 0" }}>
                 <div style={{ fontSize: 48, marginBottom: 16 }}>✨</div>
-                <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 26, color: "var(--teal)", marginBottom: 12 }}>
+                <h3 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 26, color: "var(--teal)", marginBottom: 12 }}>
                   We got your message!
                 </h3>
-                <p style={{ fontFamily: "'Allura', cursive", fontSize: 32, color: "var(--blush)", marginBottom: 16 }}>Thank you!</p>
+                <p style={{ fontFamily: "var(--font-allura), cursive", fontSize: 32, color: "var(--blush)", marginBottom: 16 }}>Thank you!</p>
                 <p style={{ color: "var(--muted)", fontSize: 15, lineHeight: 1.7 }}>
                   We'll be in touch within 24 hours with your free quote. We can't wait to help make your home shine.
                 </p>
@@ -139,7 +139,7 @@ export default function ContactPage() {
                 </div>
 
                 {status === "error" && (
-                  <p style={{ color: "#E53E3E", fontSize: 14, fontFamily: "'Montserrat', sans-serif" }}>
+                  <p style={{ color: "#E53E3E", fontSize: 14, fontFamily: "var(--font-montserrat), sans-serif" }}>
                     Something went wrong. Please try again or call us directly at (435) 681-0314.
                   </p>
                 )}
@@ -163,11 +163,11 @@ export default function ContactPage() {
                   {item.icon}
                 </div>
                 <div>
-                  <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 6 }}>{item.label}</div>
+                  <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 6 }}>{item.label}</div>
                   {item.href ? (
-                    <a href={item.href} style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 600, color: "var(--teal)", textDecoration: "none" }}>{item.value}</a>
+                    <a href={item.href} style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 18, fontWeight: 600, color: "var(--teal)", textDecoration: "none" }}>{item.value}</a>
                   ) : (
-                    <p style={{ fontFamily: "'Fraunces', serif", fontSize: 16, fontWeight: 500, color: "var(--teal)" }}>{item.value}</p>
+                    <p style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 16, fontWeight: 500, color: "var(--teal)" }}>{item.value}</p>
                   )}
                 </div>
               </div>
@@ -175,14 +175,14 @@ export default function ContactPage() {
 
             {/* Hours */}
             <div style={{ background: "var(--cream-warm)", borderRadius: 16, padding: "28px 24px", border: "1px solid var(--line)" }}>
-              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 16 }}>Hours</div>
+              <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 16 }}>Hours</div>
               {[["Mon – Fri", "8am – 6pm"], ["Saturday", "9am – 2pm"], ["Sunday", "Closed"]].map(([day, hours]) => (
                 <div key={day} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid var(--line)" }}>
                   <span style={{ fontSize: 14, color: "var(--muted)" }}>{day}</span>
                   <span style={{ fontSize: 14, fontWeight: 600, color: "var(--teal)" }}>{hours}</span>
                 </div>
               ))}
-              <p style={{ fontFamily: "'Allura', cursive", fontSize: 22, color: "var(--blush)", marginTop: 16 }}>
+              <p style={{ fontFamily: "var(--font-allura), cursive", fontSize: 22, color: "var(--blush)", marginTop: 16 }}>
                 Thank you for supporting our small business!
               </p>
             </div>

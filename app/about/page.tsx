@@ -19,9 +19,9 @@ export default function AboutPage() {
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 72, alignItems: "center" }} className="two-col">
           <div>
             <div className="eyebrow">Meet the team</div>
-            <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(40px, 5vw, 64px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.05, marginBottom: 20 }}>
+            <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(40px, 5vw, 64px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.05, marginBottom: 20 }}>
               Hi, we're{" "}
-              <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>Kinsey & Koby.</span>
+              <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>Kinsey & Koby.</span>
             </h1>
             <p style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7, marginBottom: 32, maxWidth: 460 }}>
               Southern Utah locals on a simple mission: give people their time back, one clean home at a time.
@@ -38,7 +38,7 @@ export default function AboutPage() {
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
             <p style={{ color: "var(--muted)", fontStyle: "italic", fontSize: 14, textAlign: "center" }}>
-              <span style={{ fontFamily: "'Allura', cursive", fontSize: 28, color: "var(--blush)", display: "block", marginBottom: 8 }}>Kinsey & Koby</span>
+              <span style={{ fontFamily: "var(--font-allura), cursive", fontSize: 28, color: "var(--blush)", display: "block", marginBottom: 8 }}>Kinsey & Koby</span>
               [ Founder photo coming soon ]
             </p>
           </div>
@@ -56,15 +56,15 @@ export default function AboutPage() {
             display: "flex", alignItems: "flex-end",
           }}>
             <div style={{ background: "white", padding: "16px 22px", borderRadius: 10, margin: 24, boxShadow: "0 4px 24px rgba(31,78,95,0.08)" }}>
-              <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 600, fontSize: 15, color: "var(--teal)" }}>Kinsey & Koby</div>
+              <div style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 600, fontSize: 15, color: "var(--teal)" }}>Kinsey & Koby</div>
               <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>Founders · Southern Utah</div>
             </div>
           </div>
           <div>
             <div className="eyebrow">Our story</div>
-            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 24 }}>
+            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 24 }}>
               A cleaner space is a{" "}
-              <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.25em" }}>happier place.</span>
+              <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.25em" }}>happier place.</span>
             </h2>
             <div style={{ width: 50, height: 2, background: "var(--blush)", marginBottom: 28 }} />
             <p style={{ fontSize: 16, color: "var(--muted)", marginBottom: 18, lineHeight: 1.75 }}>
@@ -77,8 +77,8 @@ export default function AboutPage() {
               When we say we're invested in your home, we mean it. We show up. We pay attention. And we won't leave until it feels right.
             </p>
             <div style={{ marginTop: 36, paddingTop: 28, borderTop: "1px solid var(--line)" }}>
-              <div style={{ fontFamily: "'Allura', cursive", fontSize: 40, color: "var(--blush)", lineHeight: 1 }}>Kinsey & Koby</div>
-              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.12em", marginTop: 6 }}>
+              <div style={{ fontFamily: "var(--font-allura), cursive", fontSize: 40, color: "var(--blush)", lineHeight: 1 }}>Kinsey & Koby</div>
+              <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 12, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.12em", marginTop: 6 }}>
                 Founders, Home Sweet Clean
               </div>
             </div>
@@ -90,9 +90,9 @@ export default function AboutPage() {
       <section style={{ padding: "100px 32px", background: "var(--cream)", textAlign: "center" }}>
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Proudly local</div>
-          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(30px, 4vw, 44px)", fontWeight: 600, color: "var(--teal)", marginBottom: 20 }}>
+          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(30px, 4vw, 44px)", fontWeight: 600, color: "var(--teal)", marginBottom: 20 }}>
             Born & based in{" "}
-            <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>Southern Utah.</span>
+            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>Southern Utah.</span>
           </h2>
           <p style={{ fontSize: 17, color: "var(--muted)", maxWidth: 580, margin: "0 auto 56px", lineHeight: 1.7 }}>
             We're not a national chain or a faceless app — we're your neighbors. When you book with us, you're supporting a local business and getting service from people who actually live here.
@@ -108,11 +108,11 @@ export default function AboutPage() {
                 transition: "border-color 0.2s, transform 0.2s",
               }}>
                 <div style={{ fontSize: 14, marginBottom: 6 }}>📍</div>
-                <div style={{ fontFamily: "'Fraunces', serif", fontSize: 17, fontWeight: 600, color: "var(--teal)" }}>{a}</div>
+                <div style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 17, fontWeight: 600, color: "var(--teal)" }}>{a}</div>
               </div>
             ))}
           </div>
-          <p style={{ marginTop: 40, fontFamily: "'Fraunces', serif", fontStyle: "italic", fontSize: 17, color: "var(--muted)" }}>
+          <p style={{ marginTop: 40, fontFamily: "var(--font-fraunces), serif", fontStyle: "italic", fontSize: 17, color: "var(--muted)" }}>
             Don't see your area? Give us a call — we're growing.
           </p>
         </div>
@@ -122,7 +122,7 @@ export default function AboutPage() {
       <section style={{ padding: "100px 32px", background: "var(--blush-bg)" }}>
         <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>What we really sell</div>
-          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 28 }}>
+          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 28 }}>
             We don't just clean homes.<br />
             <em style={{ fontStyle: "italic", color: "var(--blush-deep)" }}>We give you your time back.</em>
           </h2>
@@ -132,7 +132,7 @@ export default function AboutPage() {
           <p style={{ fontSize: 18, color: "var(--muted)", lineHeight: 1.75 }}>
             Because at the end of the day, a spotless kitchen isn't the point — the dinner you get to enjoy in it is.
           </p>
-          <p style={{ marginTop: 40, fontFamily: "'Fraunces', serif", fontWeight: 600, fontStyle: "italic", fontSize: 22, color: "var(--teal)" }}>
+          <p style={{ marginTop: 40, fontFamily: "var(--font-fraunces), serif", fontWeight: 600, fontStyle: "italic", fontSize: 22, color: "var(--teal)" }}>
             "We clean homes so you can live yours."
           </p>
         </div>
@@ -148,7 +148,7 @@ export default function AboutPage() {
           }} />
           <div>
             <div className="eyebrow">Our promise</div>
-            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(28px, 3vw, 40px)", fontWeight: 600, color: "var(--teal)", marginBottom: 12 }}>
+            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(28px, 3vw, 40px)", fontWeight: 600, color: "var(--teal)", marginBottom: 12 }}>
               What you can expect, every visit.
             </h2>
             <p style={{ color: "var(--muted)", marginBottom: 36, fontSize: 16 }}>Six things we commit to — no exceptions, no excuses.</p>
@@ -157,15 +157,15 @@ export default function AboutPage() {
                 <li key={i} style={{ display: "grid", gridTemplateColumns: "32px 1fr", gap: 16, padding: "16px 0", borderBottom: i < promises.length - 1 ? "1px solid var(--line)" : "none" }}>
                   <div style={{ width: 26, height: 26, borderRadius: "50%", background: "var(--sage)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700 }}>✓</div>
                   <div>
-                    <h4 style={{ fontFamily: "'Fraunces', serif", fontSize: 17, fontWeight: 600, color: "var(--teal)", marginBottom: 4 }}>{p.title}</h4>
+                    <h4 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 17, fontWeight: 600, color: "var(--teal)", marginBottom: 4 }}>{p.title}</h4>
                     <p style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.6 }}>{p.desc}</p>
                   </div>
                 </li>
               ))}
             </ul>
             <div style={{ marginTop: 32 }}>
-              <div style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontSize: 34, lineHeight: 1 }}>— Kinsey & Koby</div>
-              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 12, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>Signed, sealed, & delivered</div>
+              <div style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontSize: 34, lineHeight: 1 }}>— Kinsey & Koby</div>
+              <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 12, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>Signed, sealed, & delivered</div>
             </div>
           </div>
         </div>
@@ -174,9 +174,9 @@ export default function AboutPage() {
       {/* CTA */}
       <section style={{ margin: "0 32px 60px", background: "var(--teal)", borderRadius: 20, padding: "60px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
         <div>
-          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(24px, 3vw, 38px)", fontWeight: 600, color: "white", marginBottom: 8 }}>
+          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(24px, 3vw, 38px)", fontWeight: 600, color: "white", marginBottom: 8 }}>
             Ready for a{" "}
-            <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>cleaner, happier home?</span>
+            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>cleaner, happier home?</span>
           </h2>
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 16 }}>Let us help take cleaning off your to-do list.</p>
         </div>

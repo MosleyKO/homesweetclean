@@ -34,9 +34,9 @@ export default function ServicesPage() {
       <section style={{ background: "var(--cream)", padding: "80px 32px 60px", textAlign: "center" }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Our Services ♥</div>
-          <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(38px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
+          <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(38px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
             Cleaning Services to Fit{" "}
-            <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>Your Needs</span>
+            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>Your Needs</span>
           </h1>
           <p style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7 }}>
             From routine maintenance to deep cleans and everything in between — we have a service that fits your home and your life.
@@ -62,12 +62,12 @@ export default function ServicesPage() {
                 <div style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--blush-bg)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, marginBottom: 20 }}>
                   {s.icon}
                 </div>
-                <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 32, fontWeight: 600, color: "var(--teal)", marginBottom: 16 }}>{s.title}</h2>
+                <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 32, fontWeight: 600, color: "var(--teal)", marginBottom: 16 }}>{s.title}</h2>
                 <p style={{ fontSize: 16, color: "var(--muted)", lineHeight: 1.75, marginBottom: 28 }}>{s.desc}</p>
                 <Link href="/contact" className="btn-primary">Book This Service</Link>
               </div>
               <div>
-                <h4 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 20 }}>
+                <h4 style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 20 }}>
                   What's Included
                 </h4>
                 <ul style={{ listStyle: "none", padding: 0 }}>
@@ -87,9 +87,9 @@ export default function ServicesPage() {
       {/* CTA */}
       <section style={{ margin: "0 32px 60px", background: "var(--teal)", borderRadius: 20, padding: "60px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
         <div>
-          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(24px, 3vw, 38px)", fontWeight: 600, color: "white", marginBottom: 8 }}>
+          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(24px, 3vw, 38px)", fontWeight: 600, color: "white", marginBottom: 8 }}>
             Not sure which service is{" "}
-            <span style={{ fontFamily: "'Allura', cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>right for you?</span>
+            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>right for you?</span>
           </h2>
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 16 }}>Reach out and we'll help you figure out exactly what you need.</p>
         </div>
