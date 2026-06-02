@@ -39,8 +39,8 @@ export default function HomePage() {
             <h1 style={{ fontFamily: "var(--font-allura), cursive", fontSize: "clamp(48px, 5.5vw, 82px)", fontWeight: 400, color: "var(--blush)", lineHeight: 1.1, marginBottom: 24 }}>
               is a happier home.
             </h1>
-            <p style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7, maxWidth: 440, marginBottom: 36 }}>
-              We provide reliable, detail-focused cleaning services so you can enjoy a fresh, stress-free home.
+            <p className="hero-body" style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7, maxWidth: 440, marginBottom: 36 }}>
+              Reliable, detail-focused cleaning so you can enjoy a fresh, stress-free home.
             </p>
             <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
               <Link href="/contact" className="btn-primary">Book Your Clean Today</Link>
@@ -98,8 +98,7 @@ export default function HomePage() {
           <div>
             <div className="eyebrow">About Home Sweet Clean ♥</div>
             <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(32px, 4vw, 46px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.15, marginBottom: 20 }}>
-              We believe a clean home creates a<br />
-              <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontSize: "1.3em", fontWeight: 400 }}>happier life.</span>
+              We believe a clean home creates a <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontSize: "1.3em", fontWeight: 400 }}>happier life.</span>
             </h2>
             <p style={{ fontSize: 16, color: "var(--muted)", marginBottom: 16, lineHeight: 1.75 }}>
               At Home Sweet Clean, we're passionate about creating clean, comfortable spaces for busy people and families. Our team is reliable, thorough, and committed to making your home shine — every time.
@@ -124,10 +123,10 @@ export default function HomePage() {
               <div key={i} style={{ background: "white", borderRadius: 16, overflow: "visible", border: "1px solid var(--line)", position: "relative" }}>
                 {/* Photo */}
                 <div className="service-card-img" style={{ height: 200, position: "relative", borderRadius: "16px 16px 0 0", overflow: "hidden" }}>
-                  <Image src={s.img} alt={s.title} fill style={{ objectFit: "cover" }} />
+                  <Image src={s.img} alt={s.title} fill style={{ objectFit: "cover", objectPosition: "center", transform: "scale(0.95)", transformOrigin: "center" }} />
                 </div>
-                {/* Floating icon */}
-                <div style={{
+                {/* Floating icon — sits at bottom edge of image */}
+                <div className="service-card-icon" style={{
                   position: "absolute",
                   top: 172,
                   left: 24,
@@ -141,7 +140,7 @@ export default function HomePage() {
                 }}>
                   {s.icon}
                 </div>
-                <div style={{ padding: "36px 24px 28px" }}>
+                <div className="service-card-body" style={{ padding: "36px 24px 28px" }}>
                   <h3 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 19, fontWeight: 600, color: "var(--teal)", marginBottom: 10 }}>{s.title}</h3>
                   <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.65, marginBottom: 20 }}>{s.desc}</p>
                   <Link href="/services" style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 12, fontWeight: 600, color: "var(--blush)", textDecoration: "none", letterSpacing: "0.06em" }}>
@@ -158,7 +157,7 @@ export default function HomePage() {
       <section style={{ padding: "60px 32px 80px", background: "var(--blush-bg)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>What Our Clients Say ♥</div>
-          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(28px, 3vw, 42px)", fontWeight: 600, color: "var(--teal)", marginBottom: 36 }}>
+          <h2 className="reviews-heading" style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(28px, 3vw, 42px)", fontWeight: 600, color: "var(--teal)", marginBottom: 36 }}>
             Families who love their{" "}
             <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>clean home.</span>
           </h2>

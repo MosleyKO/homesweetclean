@@ -108,6 +108,16 @@ body {
     display: none !important;
   }
 
+  /* 1. Hero body text — shorter on mobile */
+  .hero-body {
+    font-size: 15px !important;
+  }
+
+  /* 1. Trust badges — hide on mobile (feature cards below serve same purpose) */
+  .trust-badges {
+    display: none !important;
+  }
+
   /* 2. Hero — stack, tighter padding, smaller text */
   .hero-grid {
     grid-template-columns: 1fr !important;
@@ -123,11 +133,11 @@ body {
   .hero-grid > div:first-child > div {
     max-width: 100% !important;
   }
-  /* 3. Hero image — rounded corners, reduced height */
+  /* 2+3. Hero image — rounded corners, reduced height, margin below */
   .hero-grid > div:last-child {
     min-height: 260px !important;
     border-radius: 20px !important;
-    margin: 0 20px 0 !important;
+    margin: 0 20px 20px !important;
   }
 
   /* Trust badges — single line via smaller font */
@@ -174,6 +184,22 @@ body {
   /* 6. Service card images — shorter */
   .service-card-img {
     height: 150px !important;
+  }
+
+  /* 4. Service card icon — reposition for shorter image */
+  .service-card-icon {
+    top: 122px !important;
+  }
+
+  /* 4. Service card body — tighten top padding */
+  .service-card-body {
+    padding: 28px 20px 20px !important;
+  }
+
+  /* 5. Reviews section heading spacing */
+  .reviews-heading {
+    margin-bottom: 24px !important;
+    font-size: clamp(24px, 7vw, 36px) !important;
   }
 
   /* Two-col grids (about page) */

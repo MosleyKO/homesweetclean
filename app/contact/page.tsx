@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Phone, Mail, MapPin, Sparkles } from "lucide-react";
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", bedrooms: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", propertyType: "", service: "", bedrooms: "", address: "", message: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -17,7 +17,7 @@ export default function ContactPage() {
       });
       if (res.ok) {
         setStatus("success");
-        setForm({ name: "", email: "", phone: "", service: "", bedrooms: "", message: "" });
+        setForm({ name: "", email: "", phone: "", propertyType: "", service: "", bedrooms: "", address: "", message: "" });
       } else {
         setStatus("error");
       }
@@ -106,6 +106,14 @@ export default function ContactPage() {
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }} className="form-row">
                   <div>
+                    <label style={labelStyle}>Property Type</label>
+                    <select style={{ ...inputStyle, cursor: "pointer" }} value={form.propertyType} onChange={e => setForm({ ...form, propertyType: e.target.value })}>
+                      <option value="">Select...</option>
+                      <option>Residential</option>
+                      <option>Commercial</option>
+                    </select>
+                  </div>
+                  <div>
                     <label style={labelStyle}>Service Interested In</label>
                     <select style={{ ...inputStyle, cursor: "pointer" }} value={form.service} onChange={e => setForm({ ...form, service: e.target.value })}>
                       <option value="">Select a service...</option>
@@ -116,17 +124,23 @@ export default function ContactPage() {
                       <option>Not sure yet</option>
                     </select>
                   </div>
-                  <div>
-                    <label style={labelStyle}>Number of Bedrooms</label>
-                    <select style={{ ...inputStyle, cursor: "pointer" }} value={form.bedrooms} onChange={e => setForm({ ...form, bedrooms: e.target.value })}>
-                      <option value="">Select...</option>
-                      <option>Studio / 1 Bedroom</option>
-                      <option>2 Bedrooms</option>
-                      <option>3 Bedrooms</option>
-                      <option>4 Bedrooms</option>
-                      <option>5+ Bedrooms</option>
-                    </select>
-                  </div>
+                </div>
+
+                <div>
+                  <label style={labelStyle}>Number of Bedrooms</label>
+                  <select style={{ ...inputStyle, cursor: "pointer" }} value={form.bedrooms} onChange={e => setForm({ ...form, bedrooms: e.target.value })}>
+                    <option value="">Select...</option>
+                    <option>Studio / 1 Bedroom</option>
+                    <option>2 Bedrooms</option>
+                    <option>3 Bedrooms</option>
+                    <option>4 Bedrooms</option>
+                    <option>5+ Bedrooms</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={labelStyle}>Address to be Cleaned *</label>
+                  <input style={inputStyle} required value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} placeholder="123 Main St, St. George, UT" />
                 </div>
 
                 <div>

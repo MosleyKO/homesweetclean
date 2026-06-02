@@ -3,7 +3,7 @@ import { Resend } from "resend";
 
 export async function POST(req: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const { name, email, phone, service, bedrooms, message } = await req.json();
+  const { name, email, phone, propertyType, service, bedrooms, address, message } = await req.json();
 
   if (!name || !email) {
     return NextResponse.json({ error: "Name and email are required" }, { status: 400 });
@@ -26,8 +26,10 @@ export async function POST(req: NextRequest) {
               <tr><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6; font-weight: 600; width: 140px;">Name</td><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6;">${name}</td></tr>
               <tr><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6; font-weight: 600;">Email</td><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6;"><a href="mailto:${email}">${email}</a></td></tr>
               <tr><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6; font-weight: 600;">Phone</td><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6;">${phone || "Not provided"}</td></tr>
+              <tr><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6; font-weight: 600;">Property Type</td><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6;">${propertyType || "Not selected"}</td></tr>
               <tr><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6; font-weight: 600;">Service</td><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6;">${service || "Not selected"}</td></tr>
               <tr><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6; font-weight: 600;">Bedrooms</td><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6;">${bedrooms || "Not selected"}</td></tr>
+              <tr><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6; font-weight: 600;">Address</td><td style="padding: 12px 0; border-bottom: 1px solid #E8DDD6;">${address || "Not provided"}</td></tr>
               <tr><td style="padding: 12px 0; font-weight: 600; vertical-align: top;">Message</td><td style="padding: 12px 0;">${message || "None"}</td></tr>
             </table>
             <div style="margin-top: 28px; padding: 20px; background: #FCEFEC; border-radius: 8px;">
