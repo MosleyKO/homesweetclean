@@ -80,7 +80,7 @@ export default function AboutPage() {
         <div style={{ maxWidth: 900, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Proudly local</div>
           <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(30px, 4vw, 44px)", fontWeight: 600, color: "var(--teal)", marginBottom: 20 }}>
-            Born & based in{" "}
+            Proudly rooted in{" "}
             <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>Southern Utah.</span>
           </h2>
           <p style={{ fontSize: 17, color: "var(--muted)", maxWidth: 580, margin: "0 auto 56px", lineHeight: 1.7 }}>

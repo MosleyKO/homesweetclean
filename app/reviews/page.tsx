@@ -20,7 +20,7 @@ export default function ReviewsPage() {
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Client Reviews ♥</div>
           <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
-            What our clients{" "}
+            What our clients<br />
             <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>are saying.</span>
           </h1>
           <p style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7 }}>
@@ -68,7 +68,7 @@ export default function ReviewsPage() {
         <div style={{ maxWidth: 600, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Share your experience</div>
           <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(28px, 3vw, 42px)", fontWeight: 600, color: "var(--teal)", marginBottom: 16 }}>
-            Had a great clean?{" "}
+            Had a great clean?<br />
             <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>Tell us about it.</span>
           </h2>
           <p style={{ fontSize: 16, color: "var(--muted)", marginBottom: 32, lineHeight: 1.7 }}>

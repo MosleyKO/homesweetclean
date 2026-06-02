@@ -29,7 +29,7 @@ export default function WhyChooseUsPage() {
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Why Choose Us ♥</div>
           <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
-            Cleaning you can{" "}
+            Cleaning you can<br />
             <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>actually trust.</span>
           </h1>
           <p style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7 }}>
