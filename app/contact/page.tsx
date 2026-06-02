@@ -28,7 +28,7 @@ export default function ContactPage() {
 
   const inputStyle = {
     width: "100%",
-    padding: "14px 16px",
+    padding: "11px 14px",
     borderRadius: 10,
     border: "1.5px solid var(--line)",
     fontFamily: "var(--font-outfit), sans-serif",
@@ -53,27 +53,27 @@ export default function ContactPage() {
   return (
     <>
       {/* HERO */}
-      <section style={{ background: "var(--cream)", padding: "80px 32px 60px", textAlign: "center" }}>
+      <section style={{ background: "var(--cream)", padding: "36px 32px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: 650, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Get in Touch ♥</div>
-          <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
+          <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 12 }}>
             Let's get your home{" "}
             <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>sparkling clean.</span>
           </h1>
-          <p style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7 }}>
+          <p style={{ fontSize: 16, color: "var(--muted)", lineHeight: 1.6 }}>
             Fill out the form below and we'll get back to you within 24 hours with a free, no-obligation quote.
           </p>
         </div>
       </section>
 
       {/* FORM + INFO */}
-      <section style={{ padding: "60px 32px 100px", background: "var(--cream)" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 60, alignItems: "start" }} className="contact-grid">
+      <section style={{ padding: "24px 32px 48px", background: "var(--cream)" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 40, alignItems: "start" }} className="contact-grid">
 
           {/* FORM */}
-          <div style={{ background: "white", borderRadius: 20, padding: "48px", border: "1px solid var(--line)" }}>
-            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 28, fontWeight: 600, color: "var(--teal)", marginBottom: 8 }}>Request a Free Quote</h2>
-            <p style={{ color: "var(--muted)", fontSize: 15, marginBottom: 36 }}>We'll reach out within 24 hours.</p>
+          <div style={{ background: "white", borderRadius: 20, padding: "32px 36px", border: "1px solid var(--line)" }}>
+            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 24, fontWeight: 600, color: "var(--teal)", marginBottom: 4 }}>Request a Free Quote</h2>
+            <p style={{ color: "var(--muted)", fontSize: 14, marginBottom: 24 }}>We'll reach out within 24 hours.</p>
 
             {status === "success" ? (
               <div style={{ textAlign: "center", padding: "48px 0" }}>
@@ -87,7 +87,7 @@ export default function ContactPage() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }} className="form-row">
                   <div>
                     <label style={labelStyle}>Your Name *</label>
@@ -132,7 +132,7 @@ export default function ContactPage() {
                 <div>
                   <label style={labelStyle}>Anything else we should know?</label>
                   <textarea
-                    style={{ ...inputStyle, minHeight: 120, resize: "vertical" }}
+                    style={{ ...inputStyle, minHeight: 90, resize: "vertical" }}
                     value={form.message}
                     onChange={e => setForm({ ...form, message: e.target.value })}
                     placeholder="Special requests, pets, specific areas of focus..."
