@@ -28,25 +28,18 @@ export default function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section style={{ background: "var(--cream)", overflow: "hidden" }}>
-        <div style={{
-          maxWidth: 1400,
-          margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          minHeight: 620,
-          alignItems: "center",
-        }} className="hero-grid">
-          {/* Left — text */}
-          <div style={{ padding: "80px 60px 80px 48px" }}>
+      <section style={{ background: "var(--cream)", overflow: "hidden", display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: 640 }} className="hero-grid">
+        {/* Left — text */}
+        <div style={{ display: "flex", alignItems: "center", padding: "80px 60px 80px 6vw" }}>
+          <div style={{ maxWidth: 560 }}>
             <div className="eyebrow">♥ Clean Spaces. Happy Places.</div>
-            <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(40px, 5vw, 68px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.05, marginBottom: 8 }}>
+            <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(40px, 4.5vw, 68px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.05, marginBottom: 8 }}>
               A cleaner home
             </h1>
-            <h1 style={{ fontFamily: "var(--font-allura), cursive", fontSize: "clamp(48px, 6vw, 82px)", fontWeight: 400, color: "var(--blush)", lineHeight: 1.1, marginBottom: 24 }}>
+            <h1 style={{ fontFamily: "var(--font-allura), cursive", fontSize: "clamp(48px, 5.5vw, 82px)", fontWeight: 400, color: "var(--blush)", lineHeight: 1.1, marginBottom: 24 }}>
               is a happier home.
             </h1>
-            <p style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7, maxWidth: 460, marginBottom: 36 }}>
+            <p style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7, maxWidth: 440, marginBottom: 36 }}>
               We provide reliable, detail-focused cleaning services so you can enjoy a fresh, stress-free home.
             </p>
             <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
@@ -61,17 +54,22 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+        </div>
 
-          {/* Right — photo */}
-          <div style={{ position: "relative", height: "100%", minHeight: 620 }}>
-            <Image
-              src="/hero.png"
-              alt="Clean beautiful home"
-              fill
-              style={{ objectFit: "cover" }}
-              priority
-            />
-          </div>
+        {/* Right — photo, full bleed with curved left edge */}
+        <div style={{
+          position: "relative",
+          minHeight: 640,
+          borderRadius: "140px 0 0 140px",
+          overflow: "hidden",
+        }}>
+          <Image
+            src="/hero.png"
+            alt="Clean beautiful home"
+            fill
+            style={{ objectFit: "cover", objectPosition: "center" }}
+            priority
+          />
         </div>
       </section>
 
@@ -91,7 +89,7 @@ export default function HomePage() {
       </section>
 
       {/* ABOUT STRIP */}
-      <section style={{ padding: "100px 32px", background: "var(--cream-warm)" }}>
+      <section style={{ padding: "60px 32px", background: "var(--cream-warm)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 72, alignItems: "center" }} className="about-grid">
           <div style={{ height: 480, borderRadius: 16, overflow: "hidden", position: "relative" }}>
             <Image src="/about-home.png" alt="Home Sweet Clean team" fill style={{ objectFit: "cover" }} />
@@ -112,7 +110,7 @@ export default function HomePage() {
 
       {/* SERVICES */}
       <section style={{ padding: "100px 32px", background: "var(--cream)" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ maxWidth: 1300, margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: 56 }}>
             <div className="eyebrow" style={{ justifyContent: "center" }}>Our Services ♥</div>
             <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 600, color: "var(--teal)" }}>
@@ -120,16 +118,29 @@ export default function HomePage() {
               <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>Your Needs</span>
             </h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 28 }}>
             {services.map((s, i) => (
-              <div key={i} style={{ background: "white", borderRadius: 16, overflow: "hidden", border: "1px solid var(--line)" }}>
-                <div style={{ height: 180, position: "relative" }}>
+              <div key={i} style={{ background: "white", borderRadius: 16, overflow: "visible", border: "1px solid var(--line)", position: "relative" }}>
+                {/* Photo */}
+                <div style={{ height: 200, position: "relative", borderRadius: "16px 16px 0 0", overflow: "hidden" }}>
                   <Image src={s.img} alt={s.title} fill style={{ objectFit: "cover" }} />
                 </div>
-                <div style={{ padding: "24px 24px 28px" }}>
-                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--blush-bg)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-                    {s.icon}
-                  </div>
+                {/* Floating icon */}
+                <div style={{
+                  position: "absolute",
+                  top: 172,
+                  left: 24,
+                  width: 48, height: 48,
+                  borderRadius: "50%",
+                  background: "white",
+                  border: "2px solid var(--line)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  boxShadow: "0 2px 12px rgba(31,78,95,0.1)",
+                  zIndex: 2,
+                }}>
+                  {s.icon}
+                </div>
+                <div style={{ padding: "36px 24px 28px" }}>
                   <h3 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 19, fontWeight: 600, color: "var(--teal)", marginBottom: 10 }}>{s.title}</h3>
                   <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.65, marginBottom: 20 }}>{s.desc}</p>
                   <Link href="/services" style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 12, fontWeight: 600, color: "var(--blush)", textDecoration: "none", letterSpacing: "0.06em" }}>
@@ -143,25 +154,29 @@ export default function HomePage() {
       </section>
 
       {/* REVIEWS */}
-      <section style={{ padding: "100px 32px", background: "var(--cream-warm)", position: "relative", overflow: "hidden" }}>
-        {/* Background photo with overlay */}
-        <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-          <Image src="/reviews-photo.png" alt="" fill style={{ objectFit: "cover" }} />
-          <div style={{ position: "absolute", inset: 0, background: "rgba(251,247,244,0.92)" }} />
-        </div>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
+      <section style={{ padding: "100px 32px", background: "var(--blush-bg)" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>What Our Clients Say ♥</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 24, marginTop: 40 }}>
+          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(28px, 3vw, 42px)", fontWeight: 600, color: "var(--teal)", marginBottom: 48 }}>
+            Families who love their{" "}
+            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>clean home.</span>
+          </h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
             {reviews.map((r, i) => (
-              <div key={i} style={{ background: "white", borderRadius: 16, padding: "32px 28px", border: "1px solid var(--line)", textAlign: "left" }}>
-                <div style={{ color: "var(--blush)", fontSize: 28, fontFamily: "var(--font-fraunces), serif", lineHeight: 1, marginBottom: 16 }}>"</div>
-                <p style={{ fontSize: 15, color: "var(--teal)", lineHeight: 1.7, marginBottom: 20, fontStyle: "italic" }}>{r.text}</p>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <div style={{ color: "#F4B942", fontSize: 13 }}>★★★★★</div>
+              <div key={i} style={{ background: "white", borderRadius: 16, padding: "36px 32px", border: "1px solid var(--blush-soft)", textAlign: "left", boxShadow: "0 4px 24px rgba(232,166,166,0.1)" }}>
+                <div style={{ color: "var(--blush)", fontSize: 36, fontFamily: "var(--font-fraunces), serif", lineHeight: 0.8, marginBottom: 20 }}>"</div>
+                <p style={{ fontSize: 15, color: "var(--teal)", lineHeight: 1.75, marginBottom: 24, fontStyle: "italic" }}>{r.text}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, paddingTop: 16, borderTop: "1px solid var(--line)" }}>
+                  <div style={{ color: "#F4B942", fontSize: 14, letterSpacing: 2 }}>★★★★★</div>
                   <span style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>— {r.author}</span>
                 </div>
               </div>
             ))}
+          </div>
+          <div style={{ marginTop: 48 }}>
+            <Link href="/reviews" className="btn-secondary" style={{ borderColor: "var(--blush)", color: "var(--teal)" }}>
+              Read All Reviews →
+            </Link>
           </div>
         </div>
       </section>
@@ -184,7 +199,7 @@ export default function HomePage() {
       <style>{`
         @media (max-width: 768px) {
           .hero-grid { grid-template-columns: 1fr !important; }
-          .hero-grid > div:last-child { min-height: 300px !important; }
+          .hero-grid > div:last-child { min-height: 320px !important; border-radius: 0 !important; }
           .about-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
