@@ -109,9 +109,9 @@ export default function HomePage() {
       </section>
 
       {/* SERVICES */}
-      <section style={{ padding: "100px 32px", background: "var(--cream)" }}>
+      <section style={{ padding: "60px 32px 80px", background: "var(--cream)" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
+          <div style={{ textAlign: "center", marginBottom: 36 }}>
             <div className="eyebrow" style={{ justifyContent: "center" }}>Our Services ♥</div>
             <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 600, color: "var(--teal)" }}>
               Cleaning Services to Fit{" "}
@@ -154,10 +154,10 @@ export default function HomePage() {
       </section>
 
       {/* REVIEWS */}
-      <section style={{ padding: "100px 32px", background: "var(--blush-bg)" }}>
+      <section style={{ padding: "60px 32px 80px", background: "var(--blush-bg)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>What Our Clients Say ♥</div>
-          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(28px, 3vw, 42px)", fontWeight: 600, color: "var(--teal)", marginBottom: 48 }}>
+          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(28px, 3vw, 42px)", fontWeight: 600, color: "var(--teal)", marginBottom: 36 }}>
             Families who love their{" "}
             <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>clean home.</span>
           </h2>
@@ -182,7 +182,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA BANNER */}
-      <section style={{ margin: "0 32px 60px", background: "var(--teal)", borderRadius: 20, padding: "60px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
+      <section style={{ margin: "60px 32px 60px", background: "var(--teal)", borderRadius: 20, padding: "60px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
         <div>
           <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(26px, 3vw, 40px)", fontWeight: 600, color: "white", marginBottom: 8 }}>
             Ready for a home you'll love{" "}
