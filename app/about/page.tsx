@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin } from "lucide-react";
 
 const promises = [
@@ -32,16 +33,8 @@ export default function AboutPage() {
               <a href="#story" className="btn-secondary">Our Story ↓</a>
             </div>
           </div>
-          <div style={{
-            height: 480,
-            borderRadius: "160px 16px 160px 16px",
-            background: "linear-gradient(135deg, var(--blush-soft), var(--cream-warm))",
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
-            <p style={{ color: "var(--muted)", fontStyle: "italic", fontSize: 14, textAlign: "center" }}>
-              <span style={{ fontFamily: "var(--font-allura), cursive", fontSize: 28, color: "var(--blush)", display: "block", marginBottom: 8 }}>Kinsey & Koby</span>
-              [ Founder photo coming soon ]
-            </p>
+          <div style={{ height: 480, borderRadius: "160px 16px 160px 16px", overflow: "hidden", position: "relative" }}>
+            <Image src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=85" alt="Beautiful clean home" fill style={{ objectFit: "cover" }} />
           </div>
         </div>
       </section>
@@ -49,13 +42,8 @@ export default function AboutPage() {
       {/* STORY */}
       <section id="story" style={{ padding: "100px 32px", background: "var(--cream-warm)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }} className="two-col">
-          <div style={{
-            height: 540,
-            borderRadius: 16,
-            background: "linear-gradient(135deg, var(--sage), var(--blush-soft))",
-            position: "relative",
-            display: "flex", alignItems: "flex-end",
-          }}>
+          <div style={{ height: 540, borderRadius: 16, position: "relative", overflow: "hidden", display: "flex", alignItems: "flex-end" }}>
+            <Image src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=900&q=85" alt="Bright clean kitchen" fill style={{ objectFit: "cover" }} />
             <div style={{ background: "white", padding: "16px 22px", borderRadius: 10, margin: 24, boxShadow: "0 4px 24px rgba(31,78,95,0.08)" }}>
               <div style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 600, fontSize: 15, color: "var(--teal)" }}>Kinsey & Koby</div>
               <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>Founders · Southern Utah</div>
@@ -142,11 +130,9 @@ export default function AboutPage() {
       {/* PROMISE */}
       <section style={{ padding: "100px 32px", background: "var(--cream)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 80, alignItems: "center" }} className="two-col">
-          <div style={{
-            height: 500,
-            borderRadius: 16,
-            background: "linear-gradient(135deg, var(--sage), var(--cream-warm))",
-          }} />
+          <div style={{ height: 500, borderRadius: 16, overflow: "hidden", position: "relative" }}>
+            <Image src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=900&q=85" alt="Clean sparkling bathroom" fill style={{ objectFit: "cover" }} />
+          </div>
           <div>
             <div className="eyebrow">Our promise</div>
             <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(28px, 3vw, 40px)", fontWeight: 600, color: "var(--teal)", marginBottom: 12 }}>

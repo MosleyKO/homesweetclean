@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Home, Sparkles, ArrowRightLeft, CalendarDays, ShieldCheck, Leaf, Star } from "lucide-react";
 
 const iconStyle = { width: 22, height: 22, color: "var(--blush)", strokeWidth: 1.5 };
@@ -71,8 +72,8 @@ export default function HomePage() {
       {/* ABOUT STRIP */}
       <section style={{ padding: "100px 32px", background: "var(--cream-warm)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 72, alignItems: "center" }} className="about-grid">
-          <div style={{ height: 420, borderRadius: 16, background: "linear-gradient(135deg, var(--blush-soft), var(--cream-warm))", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-            <p style={{ color: "var(--muted)", fontStyle: "italic", fontSize: 14 }}>[ Photo coming soon ]</p>
+          <div style={{ height: 420, borderRadius: 16, overflow: "hidden", position: "relative" }}>
+            <Image src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=900&q=85" alt="Clean bright living room" fill style={{ objectFit: "cover" }} />
           </div>
           <div>
             <div className="eyebrow">About Home Sweet Clean ♥</div>
