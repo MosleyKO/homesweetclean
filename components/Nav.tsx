@@ -69,7 +69,7 @@ export default function Nav() {
           }} className="nav-phone">
             (435) 681-0314
           </a>
-          <Link href="/contact" className="btn-primary" style={{ fontSize: 12, padding: "11px 22px" }}>
+          <Link href="/contact" className="btn-primary nav-cta-btn" style={{ fontSize: 12, padding: "11px 22px" }}>
             Get a Quote ♥
           </Link>
 

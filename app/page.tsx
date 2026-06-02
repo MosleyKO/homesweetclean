@@ -46,7 +46,7 @@ export default function HomePage() {
               <Link href="/contact" className="btn-primary">Book Your Clean Today</Link>
               <Link href="/contact" className="btn-secondary">Get a Free Quote ♥</Link>
             </div>
-            <div style={{ display: "flex", gap: 28, marginTop: 36, flexWrap: "wrap" }}>
+            <div className="trust-badges" style={{ display: "flex", gap: 28, marginTop: 36, flexWrap: "wrap" }}>
               {["Trusted & Reliable", "Detail Oriented", "Satisfaction Guaranteed"].map(t => (
                 <span key={t} style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 13, fontWeight: 500, color: "var(--teal)", display: "flex", alignItems: "center", gap: 6 }}>
                   <span style={{ color: "var(--sage)", fontWeight: 700 }}>✓</span> {t}
@@ -75,10 +75,10 @@ export default function HomePage() {
       </section>
 
       {/* FEATURE CARDS */}
-      <section style={{ background: "white", padding: "60px 32px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", border: "1px solid var(--line)", borderRadius: 16, overflow: "hidden" }}>
+      <section className="feature-section" style={{ background: "white", padding: "60px 32px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", border: "1px solid var(--line)", borderRadius: 16, overflow: "hidden" }} className="feature-cards">
           {features.map((f, i) => (
-            <div key={i} style={{ padding: "36px 28px", background: "white", borderRight: i < features.length - 1 ? "1px solid var(--line)" : "none", textAlign: "center" }}>
+            <div key={i} className="feature-card" style={{ padding: "36px 28px", background: "white", borderRight: i < features.length - 1 ? "1px solid var(--line)" : "none", textAlign: "center" }}>
               <div style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--blush-bg)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
                 {f.icon}
               </div>
@@ -92,7 +92,7 @@ export default function HomePage() {
       {/* ABOUT STRIP */}
       <section style={{ padding: "60px 32px", background: "var(--cream-warm)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 72, alignItems: "center" }} className="about-grid">
-          <div style={{ height: 480, borderRadius: 16, overflow: "hidden", position: "relative" }}>
+          <div className="about-img" style={{ height: 480, borderRadius: 16, overflow: "hidden", position: "relative" }}>
             <Image src="/about-home.png" alt="Home Sweet Clean team" fill style={{ objectFit: "cover" }} />
           </div>
           <div>
@@ -123,7 +123,7 @@ export default function HomePage() {
             {services.map((s, i) => (
               <div key={i} style={{ background: "white", borderRadius: 16, overflow: "visible", border: "1px solid var(--line)", position: "relative" }}>
                 {/* Photo */}
-                <div style={{ height: 200, position: "relative", borderRadius: "16px 16px 0 0", overflow: "hidden" }}>
+                <div className="service-card-img" style={{ height: 200, position: "relative", borderRadius: "16px 16px 0 0", overflow: "hidden" }}>
                   <Image src={s.img} alt={s.title} fill style={{ objectFit: "cover" }} />
                 </div>
                 {/* Floating icon */}

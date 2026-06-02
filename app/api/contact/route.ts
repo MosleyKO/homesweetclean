@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const result = await resend.emails.send({
       from: "Home Sweet Clean <quotes@homesweetclean.co>",
       to: ["hello@homesweetclean.co"],
-      reply_to: email,
+      replyTo: email,
       subject: `New Quote Request from ${name}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #1F4E5F;">
