@@ -28,7 +28,7 @@ export default function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section style={{ background: "var(--cream)", overflow: "hidden", display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: 640 }} className="hero-grid">
+      <section style={{ background: "var(--cream)", overflow: "hidden", display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: 700 }} className="hero-grid">
         {/* Left — text */}
         <div style={{ display: "flex", alignItems: "center", padding: "80px 60px 80px 6vw" }}>
           <div style={{ maxWidth: 560 }}>
@@ -56,12 +56,13 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Right — photo, full bleed with curved left edge */}
+        {/* Right — photo, full bleed, curved top-left only */}
         <div style={{
           position: "relative",
-          minHeight: 640,
-          borderRadius: "140px 0 0 140px",
+          minHeight: 700,
+          borderRadius: "120px 0 0 0",
           overflow: "hidden",
+          alignSelf: "stretch",
         }}>
           <Image
             src="/hero.png"
