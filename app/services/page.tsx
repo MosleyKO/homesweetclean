@@ -102,11 +102,6 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <style>{`
-        @media (max-width: 768px) {
-          .service-row { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </>
   );
 }

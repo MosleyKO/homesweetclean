@@ -97,3 +97,105 @@ body {
   color: var(--blush);
   font-weight: 400;
 }
+
+/* =====================
+   MOBILE STYLES
+   ===================== */
+@media (max-width: 768px) {
+
+  /* Hero */
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    min-height: unset !important;
+  }
+  .hero-grid > div:first-child {
+    padding: 48px 24px 36px !important;
+    text-align: center;
+  }
+  .hero-grid > div:first-child .eyebrow {
+    justify-content: center;
+  }
+  .hero-grid > div:first-child > div {
+    max-width: 100% !important;
+  }
+  .hero-grid > div:first-child div[style*="display: flex"][style*="gap: 14"] {
+    justify-content: center;
+  }
+  .hero-grid > div:first-child div[style*="gap: 28"] {
+    justify-content: center;
+  }
+  .hero-grid > div:last-child {
+    min-height: 320px !important;
+    border-radius: 0 !important;
+  }
+
+  /* Two-col grids (about page) */
+  .two-col {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  /* About strip on home */
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  /* Services page rows */
+  .service-row {
+    grid-template-columns: 1fr !important;
+    padding: 28px !important;
+  }
+
+  /* Stats grid (why choose us) */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+  }
+
+  /* Contact form */
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  .form-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Global section padding */
+  section {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* CTA banners */
+  section[style*="border-radius: 20"] {
+    margin-left: 16px !important;
+    margin-right: 16px !important;
+    padding: 40px 28px !important;
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+
+  /* Buttons — full width on mobile */
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Footer grid */
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 32px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}

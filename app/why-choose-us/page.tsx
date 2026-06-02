@@ -99,11 +99,6 @@ export default function WhyChooseUsPage() {
         </div>
       </section>
 
-      <style>{`
-        @media (max-width: 640px) {
-          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
-        }
-      `}</style>
     </>
   );
 }

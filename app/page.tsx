@@ -197,13 +197,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <style>{`
-        @media (max-width: 768px) {
-          .hero-grid { grid-template-columns: 1fr !important; }
-          .hero-grid > div:last-child { min-height: 320px !important; border-radius: 0 !important; }
-          .about-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </>
   );
 }

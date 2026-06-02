@@ -173,11 +173,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <style>{`
-        @media (max-width: 768px) {
-          .two-col { grid-template-columns: 1fr !important; gap: 40px !important; }
-        }
-      `}</style>
     </>
   );
 }
