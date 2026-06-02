@@ -77,7 +77,7 @@ export default function HomePage() {
           <div>
             <div className="eyebrow">About Home Sweet Clean ♥</div>
             <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(32px, 4vw, 46px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.15, marginBottom: 20 }}>
-              We believe a clean home creates a{" "}
+              We believe a clean home creates a<br />
               <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontSize: "1.3em", fontWeight: 400 }}>happier life.</span>
             </h2>
             <p style={{ fontSize: 16, color: "var(--muted)", marginBottom: 16, lineHeight: 1.75 }}>
