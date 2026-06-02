@@ -10,10 +10,10 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: "Home Sweet Clean <quotes@homesweetclean.co>",
-      to: "hello@homesweetclean.co",
-      replyTo: email,
+      to: ["hello@homesweetclean.co"],
+      reply_to: email,
       subject: `New Quote Request from ${name}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #1F4E5F;">
@@ -38,9 +38,15 @@ export async function POST(req: NextRequest) {
       `,
     });
 
+    if (result.error) {
+      console.error("Resend error:", result.error);
+      return NextResponse.json({ error: result.error.message }, { status: 500 });
+    }
+
     return NextResponse.json({ ok: true });
-  } catch (err) {
-    console.error("Email send error:", err);
-    return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("Email send error:", message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

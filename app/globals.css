@@ -103,13 +103,18 @@ body {
    ===================== */
 @media (max-width: 768px) {
 
-  /* Hero */
+  /* 1. Nav — hide CTA button, just logo + hamburger */
+  .nav-cta-btn {
+    display: none !important;
+  }
+
+  /* 2. Hero — stack, tighter padding, smaller text */
   .hero-grid {
     grid-template-columns: 1fr !important;
     min-height: unset !important;
   }
   .hero-grid > div:first-child {
-    padding: 48px 24px 36px !important;
+    padding: 36px 20px 20px !important;
     text-align: center;
   }
   .hero-grid > div:first-child .eyebrow {
@@ -118,33 +123,64 @@ body {
   .hero-grid > div:first-child > div {
     max-width: 100% !important;
   }
-  .hero-grid > div:first-child div[style*="display: flex"][style*="gap: 14"] {
-    justify-content: center;
-  }
-  .hero-grid > div:first-child div[style*="gap: 28"] {
-    justify-content: center;
-  }
+  /* 3. Hero image — rounded corners, reduced height */
   .hero-grid > div:last-child {
-    min-height: 320px !important;
-    border-radius: 0 !important;
+    min-height: 260px !important;
+    border-radius: 20px !important;
+    margin: 0 20px 0 !important;
+  }
+
+  /* Trust badges — single line via smaller font */
+  .trust-badges {
+    gap: 16px !important;
+    flex-wrap: nowrap !important;
+  }
+  .trust-badges span {
+    font-size: 11px !important;
+    gap: 4px !important;
+  }
+
+  /* 4. Feature cards — 2x2 grid instead of stacked */
+  .feature-cards {
+    grid-template-columns: 1fr 1fr !important;
+    border-radius: 12px !important;
+  }
+  .feature-card {
+    padding: 20px 14px !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--line) !important;
+  }
+  .feature-card:nth-child(odd) {
+    border-right: 1px solid var(--line) !important;
+  }
+  .feature-card:nth-last-child(-n+2) {
+    border-bottom: none !important;
+  }
+
+  /* 5. About strip — stack, reduce image height */
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  .about-grid > div:first-child {
+    height: 240px !important;
+  }
+
+  /* 6. Service card images — shorter */
+  .service-card-img {
+    height: 150px !important;
   }
 
   /* Two-col grids (about page) */
   .two-col {
     grid-template-columns: 1fr !important;
-    gap: 32px !important;
-  }
-
-  /* About strip on home */
-  .about-grid {
-    grid-template-columns: 1fr !important;
-    gap: 32px !important;
+    gap: 28px !important;
   }
 
   /* Services page rows */
   .service-row {
     grid-template-columns: 1fr !important;
-    padding: 28px !important;
+    padding: 24px !important;
   }
 
   /* Stats grid (why choose us) */
@@ -156,7 +192,7 @@ body {
   /* Contact form */
   .contact-grid {
     grid-template-columns: 1fr !important;
-    gap: 24px !important;
+    gap: 20px !important;
   }
   .form-row {
     grid-template-columns: 1fr !important;
@@ -172,7 +208,7 @@ body {
   section[style*="border-radius: 20"] {
     margin-left: 16px !important;
     margin-right: 16px !important;
-    padding: 40px 28px !important;
+    padding: 36px 24px !important;
     flex-direction: column !important;
     text-align: center !important;
   }
