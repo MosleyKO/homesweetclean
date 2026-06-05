@@ -73,24 +73,26 @@ export default function Nav() {
             Get a Quote ♥
           </Link>
 
-          {/* Hamburger */}
+          {/* Elegant menu icon */}
           <button
             onClick={() => setOpen(!open)}
             className="hamburger"
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 8,
-              display: "none",
-              flexDirection: "column",
-              gap: 5,
-            }}
+            style={{ background: "none", border: "none", cursor: "pointer", padding: 8, display: "none", flexDirection: "column", gap: 6 }}
             aria-label="Toggle menu"
           >
-            <span style={{ width: 22, height: 2, background: "var(--teal)", display: "block", transition: "transform 0.2s", transform: open ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
-            <span style={{ width: 22, height: 2, background: "var(--teal)", display: "block", opacity: open ? 0 : 1 }} />
-            <span style={{ width: 22, height: 2, background: "var(--teal)", display: "block", transition: "transform 0.2s", transform: open ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
+            {open ? (
+              // X close — two diagonal lines
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <line x1="3" y1="3" x2="17" y2="17" stroke="var(--teal)" strokeWidth="1.5" strokeLinecap="round" />
+                <line x1="17" y1="3" x2="3" y2="17" stroke="var(--teal)" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            ) : (
+              // Two-line refined menu icon
+              <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+                <line x1="0" y1="1" x2="22" y2="1" stroke="var(--teal)" strokeWidth="1.5" strokeLinecap="round" />
+                <line x1="4" y1="15" x2="22" y2="15" stroke="var(--teal)" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            )}
           </button>
         </div>
       </div>

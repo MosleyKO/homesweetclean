@@ -181,25 +181,53 @@ body {
     height: 240px !important;
   }
 
-  /* 6. Service card images — shorter */
+  /* Service card images — shorter, full cover (no zoom) */
   .service-card-img {
     height: 150px !important;
   }
 
-  /* 4. Service card icon — reposition for shorter image */
+  /* Service card icon — reposition for shorter image */
   .service-card-icon {
     top: 122px !important;
   }
 
-  /* 4. Service card body — tighten top padding */
+  /* Service card body — tighten top padding */
   .service-card-body {
     padding: 28px 20px 20px !important;
   }
 
-  /* 5. Reviews section heading spacing */
-  .reviews-heading {
+  /* Services section heading tighter on mobile */
+  .services-heading {
+    margin-bottom: 16px !important;
+    font-size: clamp(26px, 7vw, 36px) !important;
+  }
+  .services-section-header {
     margin-bottom: 24px !important;
-    font-size: clamp(24px, 7vw, 36px) !important;
+  }
+
+  /* Reviews heading tighter on mobile */
+  .reviews-heading {
+    margin-bottom: 20px !important;
+    font-size: clamp(24px, 7vw, 34px) !important;
+  }
+
+  /* CTA section — less padding, centered text on mobile */
+  .cta-section {
+    padding: 28px 24px !important;
+    text-align: center !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  .cta-section h2 {
+    font-size: clamp(22px, 6vw, 32px) !important;
+  }
+
+  /* General heading/body tightening — reduce gap between heading and paragraph */
+  h1, h2, h3 {
+    margin-bottom: 10px !important;
+  }
+  .eyebrow {
+    margin-bottom: 8px !important;
   }
 
   /* Two-col grids (about page) */

@@ -111,9 +111,9 @@ export default function HomePage() {
       {/* SERVICES */}
       <section style={{ padding: "60px 32px 80px", background: "var(--cream)" }}>
         <div style={{ maxWidth: 1300, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <div className="services-section-header" style={{ textAlign: "center", marginBottom: 36 }}>
             <div className="eyebrow" style={{ justifyContent: "center" }}>Our Services ♥</div>
-            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 600, color: "var(--teal)" }}>
+            <h2 className="services-heading" style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 600, color: "var(--teal)" }}>
               Cleaning Services to Fit{" "}
               <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>Your Needs</span>
             </h2>
@@ -123,7 +123,7 @@ export default function HomePage() {
               <div key={i} style={{ background: "white", borderRadius: 16, overflow: "visible", border: "1px solid var(--line)", position: "relative" }}>
                 {/* Photo */}
                 <div className="service-card-img" style={{ height: 200, position: "relative", borderRadius: "16px 16px 0 0", overflow: "hidden" }}>
-                  <Image src={s.img} alt={s.title} fill style={{ objectFit: "cover", objectPosition: "center", transform: "scale(0.95)", transformOrigin: "center" }} />
+                  <Image src={s.img} alt={s.title} fill style={{ objectFit: "cover", objectPosition: "center" }} />
                 </div>
                 {/* Floating icon — sits at bottom edge of image */}
                 <div className="service-card-icon" style={{
@@ -182,7 +182,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA BANNER */}
-      <section style={{ margin: "60px 32px 60px", background: "var(--teal)", borderRadius: 20, padding: "60px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
+      <section className="cta-section" style={{ margin: "60px 32px 60px", background: "var(--teal)", borderRadius: 20, padding: "60px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
         <div>
           <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(26px, 3vw, 40px)", fontWeight: 600, color: "white", marginBottom: 8 }}>
             Ready for a home you'll love{" "}
