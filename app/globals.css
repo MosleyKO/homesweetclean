@@ -230,6 +230,27 @@ body {
     margin-bottom: 8px !important;
   }
 
+  /* About page hero — less top padding */
+  .about-hero-section {
+    padding: 36px 20px 32px !important;
+  }
+
+  /* About hero image — hide on mobile (avoids back-to-back images with story section) */
+  .about-hero-img {
+    display: none !important;
+  }
+
+  /* Story section image — hide on mobile to avoid double images */
+  .story-img {
+    display: none !important;
+  }
+
+  /* Story signature — less margin */
+  .story-signature {
+    margin-top: 16px !important;
+    padding-top: 16px !important;
+  }
+
   /* Two-col grids (about page) */
   .two-col {
     grid-template-columns: 1fr !important;

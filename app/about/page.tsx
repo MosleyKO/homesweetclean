@@ -17,13 +17,13 @@ export default function AboutPage() {
   return (
     <>
       {/* HERO */}
-      <section style={{ background: "var(--cream)", padding: "80px 32px 60px" }}>
+      <section className="about-hero-section" style={{ background: "var(--cream)", padding: "80px 32px 60px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 72, alignItems: "center" }} className="two-col">
           <div>
             <div className="eyebrow">Meet the team</div>
             <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(40px, 5vw, 64px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.05, marginBottom: 20 }}>
               Hi, we're{" "}
-              <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>Kinsey & Koby.</span>
+              <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em", whiteSpace: "nowrap" }}>Kinsey & Koby.</span>
             </h1>
             <p style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7, marginBottom: 32, maxWidth: 460 }}>
               Southern Utah locals on a simple mission: give people their time back, one clean home at a time.
@@ -33,18 +33,18 @@ export default function AboutPage() {
               <a href="#story" className="btn-secondary">Our Story ↓</a>
             </div>
           </div>
-          <div style={{ height: 480, borderRadius: "160px 16px 160px 16px", overflow: "hidden", position: "relative" }}>
+          <div className="about-hero-img" style={{ height: 480, borderRadius: "160px 16px 160px 16px", overflow: "hidden", position: "relative" }}>
             <Image src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=85" alt="Beautiful clean home" fill style={{ objectFit: "cover" }} />
           </div>
         </div>
       </section>
 
       {/* STORY */}
-      <section id="story" style={{ padding: "100px 32px", background: "var(--cream-warm)" }}>
+      <section id="story" style={{ padding: "60px 32px", background: "var(--cream-warm)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }} className="two-col">
-          <div style={{ height: 540, borderRadius: 16, position: "relative", overflow: "hidden", display: "flex", alignItems: "flex-end" }}>
+          <div className="story-img" style={{ height: 540, borderRadius: 16, position: "relative", overflow: "hidden", display: "flex", alignItems: "flex-end" }}>
             <Image src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=900&q=85" alt="Bright clean kitchen" fill style={{ objectFit: "cover" }} />
-            <div style={{ background: "white", padding: "16px 22px", borderRadius: 10, margin: 24, boxShadow: "0 4px 24px rgba(31,78,95,0.08)" }}>
+            <div style={{ background: "white", padding: "16px 22px", borderRadius: 10, margin: 24, boxShadow: "0 4px 24px rgba(31,78,95,0.08)", position: "relative", zIndex: 1 }}>
               <div style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 600, fontSize: 15, color: "var(--teal)" }}>Kinsey & Koby</div>
               <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>Founders · Southern Utah</div>
             </div>
@@ -65,7 +65,7 @@ export default function AboutPage() {
             <p style={{ fontSize: 16, color: "var(--muted)", lineHeight: 1.75 }}>
               When we say we're invested in your home, we mean it. We show up. We pay attention. And we won't leave until it feels right.
             </p>
-            <div style={{ marginTop: 36, paddingTop: 28, borderTop: "1px solid var(--line)" }}>
+            <div className="story-signature" style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid var(--line)" }}>
               <div style={{ fontFamily: "var(--font-allura), cursive", fontSize: 40, color: "var(--blush)", lineHeight: 1 }}>Kinsey & Koby</div>
               <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 12, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.12em", marginTop: 6 }}>
                 Founders, Home Sweet Clean
@@ -81,7 +81,7 @@ export default function AboutPage() {
           <div className="eyebrow" style={{ justifyContent: "center" }}>Proudly local</div>
           <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(30px, 4vw, 44px)", fontWeight: 600, color: "var(--teal)", marginBottom: 20 }}>
             Proudly rooted in{" "}
-            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>Southern Utah.</span>
+            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em", whiteSpace: "nowrap" }}>Southern Utah.</span>
           </h2>
           <p style={{ fontSize: 17, color: "var(--muted)", maxWidth: 580, margin: "0 auto 56px", lineHeight: 1.7 }}>
             We're not a national chain or a faceless app — we're your neighbors. When you book with us, you're supporting a local business and getting service from people who actually live here.
@@ -159,11 +159,11 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section style={{ margin: "0 32px 60px", background: "var(--teal)", borderRadius: 20, padding: "60px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
+      <section className="cta-section" style={{ margin: "0 32px 60px", background: "var(--teal)", borderRadius: 20, padding: "60px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 32 }}>
         <div>
           <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(24px, 3vw, 38px)", fontWeight: 600, color: "white", marginBottom: 8 }}>
-            Ready for a{" "}
-            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>cleaner, happier home?</span>
+            Ready for a cleaner,{" "}
+            <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em", whiteSpace: "nowrap" }}>happier home?</span>
           </h2>
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 16 }}>Let us help take cleaning off your to-do list.</p>
         </div>
