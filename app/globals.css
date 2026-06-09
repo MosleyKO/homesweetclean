@@ -263,6 +263,26 @@ body {
     padding: 24px !important;
   }
 
+  /* Why Choose Us — value cards section tighter */
+  .value-cards-section {
+    padding: 48px 20px !important;
+  }
+  .value-card {
+    padding: 24px 20px !important;
+  }
+
+  /* Reviews page — hero tighter */
+  .reviews-hero-section {
+    padding: 36px 20px 28px !important;
+  }
+  /* Reviews cards — less gap and padding */
+  .reviews-grid-section {
+    padding: 24px 20px 48px !important;
+  }
+  .review-card {
+    padding: 20px !important;
+  }
+
   /* Stats grid (why choose us) */
   .stats-grid {
     grid-template-columns: repeat(2, 1fr) !important;

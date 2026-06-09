@@ -16,7 +16,7 @@ export default function ReviewsPage() {
   return (
     <>
       {/* HERO */}
-      <section style={{ background: "var(--cream)", padding: "80px 32px 60px", textAlign: "center" }}>
+      <section className="reviews-hero-section" style={{ background: "var(--cream)", padding: "80px 32px 60px", textAlign: "center" }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Client Reviews ♥</div>
           <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
@@ -39,10 +39,10 @@ export default function ReviewsPage() {
       </section>
 
       {/* REVIEWS GRID */}
-      <section style={{ padding: "60px 32px 100px", background: "var(--cream)" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24 }}>
+      <section className="reviews-grid-section" style={{ padding: "60px 32px 100px", background: "var(--cream)" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 16 }}>
           {reviews.map((r, i) => (
-            <div key={i} style={{
+            <div key={i} className="review-card" style={{
               background: "white",
               borderRadius: 16,
               padding: "32px 28px",

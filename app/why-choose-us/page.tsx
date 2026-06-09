@@ -51,11 +51,11 @@ export default function WhyChooseUsPage() {
       </section>
 
       {/* REASONS */}
-      <section style={{ padding: "100px 32px", background: "var(--cream)" }}>
+      <section className="value-cards-section" style={{ padding: "100px 32px", background: "var(--cream)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
             {reasons.map((r, i) => (
-              <div key={i} style={{
+              <div key={i} className="value-card" style={{
                 background: "white",
                 borderRadius: 16,
                 padding: "36px 28px",

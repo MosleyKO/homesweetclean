@@ -3,6 +3,7 @@ import { Fraunces, Montserrat, Outfit, Allura } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import ConditionalShell from "@/components/ConditionalShell";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -56,9 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${fraunces.variable} ${montserrat.variable} ${outfit.variable} ${allura.variable}`}>
       <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        <Nav />
-        <main style={{ flex: 1 }}>{children}</main>
-        <Footer />
+        <ConditionalShell>{children}</ConditionalShell>
       </body>
     </html>
   );
