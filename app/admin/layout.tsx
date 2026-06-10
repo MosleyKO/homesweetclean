@@ -28,7 +28,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         top: 0,
         zIndex: 50,
       }}>
-        <Image src='/logo-wordmark.png' alt='Home Sweet Clean' width={160} height={36} style={{ objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+        <span style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 20, color: 'white', fontWeight: 600, letterSpacing: '-0.01em' }}>
+          Home <span style={{ fontFamily: 'var(--font-allura), cursive', color: 'var(--blush)', fontSize: 26, fontWeight: 400 }}>Sweet</span> Clean
+        </span>
         <Link href='/' style={{
           display: 'inline-flex',
           alignItems: 'center',
