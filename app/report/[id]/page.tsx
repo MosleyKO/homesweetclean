@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { notFound } from 'next/navigation'
 import { CheckCircle, ClipboardList, Sparkles, ShieldCheck, Camera } from 'lucide-react'
 import PhotoLightbox from '@/components/PhotoLightbox'
@@ -18,6 +19,13 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
   if (!clean) notFound()
 
   const client = clean.clients as any
+
+  const { data: tokenRow } = await supabaseAdmin
+    .from('client_tokens')
+    .select('token')
+    .eq('client_id', client?.id)
+    .single()
+  const portalUrl = tokenRow ? `/portal/${tokenRow.token}` : null
   const photos = (clean.clean_photos as any[]) ?? []
   const isCommercial = client?.property_type === 'commercial'
 
@@ -221,6 +229,19 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Portal link */}
+        {portalUrl && (
+          <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', padding: '20px 24px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+            <div>
+              <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 16, fontWeight: 600, color: 'var(--teal)', marginBottom: 2 }}>Want to see all your past cleans?</div>
+              <div style={{ fontSize: 13, color: 'var(--muted)' }}>View your full clean history and past reports anytime.</div>
+            </div>
+            <a href={portalUrl} style={{ display: 'inline-block', background: 'var(--blush)', color: 'white', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '12px 24px', borderRadius: 50, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              View Clean History →
+            </a>
           </div>
         )}
 
