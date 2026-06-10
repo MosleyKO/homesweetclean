@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 
-export default function AdminLoginPage() {
+function LoginForm() {
   const searchParams = useSearchParams()
   const from = searchParams.get('from') ?? '/admin'
   const [password, setPassword] = useState('')
@@ -32,6 +32,40 @@ export default function AdminLoginPage() {
   }
 
   return (
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div>
+        <label style={{ display: 'block', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 8 }}>
+          Password
+        </label>
+        <input
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          autoFocus
+          required
+          style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '1.5px solid var(--line)', fontSize: 15, color: 'var(--teal)', outline: 'none', boxSizing: 'border-box', fontFamily: 'var(--font-outfit), sans-serif' }}
+        />
+      </div>
+
+      {error && (
+        <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#DC2626', fontWeight: 500 }}>
+          {error}
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={loading}
+        style={{ background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 50, padding: '14px', fontSize: 14, fontWeight: 700, fontFamily: 'var(--font-montserrat), sans-serif', letterSpacing: '0.06em', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1, marginTop: 4 }}
+      >
+        {loading ? 'Signing in…' : 'Sign In'}
+      </button>
+    </form>
+  )
+}
+
+export default function AdminLoginPage() {
+  return (
     <div style={{ minHeight: '100vh', background: '#F7F3EF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-outfit), sans-serif' }}>
       <div style={{ width: '100%', maxWidth: 400, padding: '0 20px' }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
@@ -44,35 +78,9 @@ export default function AdminLoginPage() {
         </div>
 
         <div style={{ background: 'white', borderRadius: 16, border: '1px solid var(--line)', padding: 32 }}>
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div>
-              <label style={{ display: 'block', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 8 }}>
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                autoFocus
-                required
-                style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '1.5px solid var(--line)', fontSize: 15, color: 'var(--teal)', outline: 'none', boxSizing: 'border-box', fontFamily: 'var(--font-outfit), sans-serif' }}
-              />
-            </div>
-
-            {error && (
-              <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#DC2626', fontWeight: 500 }}>
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              style={{ background: 'var(--teal)', color: 'white', border: 'none', borderRadius: 50, padding: '14px', fontSize: 14, fontWeight: 700, fontFamily: 'var(--font-montserrat), sans-serif', letterSpacing: '0.06em', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1, marginTop: 4 }}
-            >
-              {loading ? 'Signing in…' : 'Sign In'}
-            </button>
-          </form>
+          <Suspense fallback={null}>
+            <LoginForm />
+          </Suspense>
         </div>
       </div>
     </div>
