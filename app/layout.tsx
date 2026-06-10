@@ -57,6 +57,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${fraunces.variable} ${montserrat.variable} ${outfit.variable} ${allura.variable}`}>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#1F4E5F" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Home Sweet Clean" />
+        <link rel="apple-touch-icon" href="/logo-circle.png" />
+      </head>
       <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-LVNGLJJ252" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -66,6 +74,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('js', new Date());
             gtag('config', 'G-LVNGLJJ252');
           `}
+        </Script>
+        <Script id="register-sw" strategy="afterInteractive">
+          {`if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }`}
         </Script>
         <ConditionalShell>{children}</ConditionalShell>
       </body>

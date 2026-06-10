@@ -1,0 +1,17 @@
+{
+  "name": "Home Sweet Clean",
+  "short_name": "HSC",
+  "description": "Clean Spaces. Happy Places.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F0EA",
+  "theme_color": "#1F4E5F",
+  "icons": [
+    {
+      "src": "/logo-circle.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
