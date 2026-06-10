@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
@@ -11,13 +12,13 @@ export async function POST(req: NextRequest) {
   const ext = file.name.split('.').pop()
   const filename = `${cleanId}/${Date.now()}.${ext}`
 
-  const { error: uploadError } = await supabase.storage
+  const { error: uploadError } = await supabaseAdmin.storage
     .from('clean-photos')
     .upload(filename, file, { contentType: file.type })
 
   if (uploadError) return NextResponse.json({ error: uploadError.message }, { status: 500 })
 
-  const { data: { publicUrl } } = supabase.storage.from('clean-photos').getPublicUrl(filename)
+  const { data: { publicUrl } } = supabaseAdmin.storage.from('clean-photos').getPublicUrl(filename)
 
   const { data, error } = await supabase
     .from('clean_photos')
