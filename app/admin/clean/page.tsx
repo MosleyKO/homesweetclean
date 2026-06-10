@@ -35,6 +35,7 @@ function CleanFlow() {
   const [extras, setExtras] = useState<string[]>([])
   const [photos, setPhotos] = useState<Photo[]>([])
   const [uploading, setUploading] = useState(false)
+  const [uploadingNoticed, setUploadingNoticed] = useState(false)
   const [ending, setEnding] = useState(false)
   // Photo tag modal state
   const [pendingFiles, setPendingFiles] = useState<File[]>([])
@@ -43,6 +44,7 @@ function CleanFlow() {
   const [tagType, setTagType] = useState<'before' | 'after'>('before')
   const [showTagModal, setShowTagModal] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
+  const noticedFileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     supabase.from('clients').select('id, name, access_notes, client_notes, property_type').eq('status', 'active').order('name')
@@ -105,6 +107,24 @@ function CleanFlow() {
     }
     setUploading(false)
     setPendingFiles([])
+  }
+
+  const handleNoticedPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? [])
+    if (!cleanId || !files.length) return
+    setUploadingNoticed(true)
+    for (const file of files) {
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('clean_id', cleanId)
+      fd.append('room', 'Noticed')
+      fd.append('photo_type', 'noticed')
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (data.url) setPhotos(p => [...p, { id: data.id, url: data.url, room: 'Noticed', photo_type: 'noticed' }])
+    }
+    setUploadingNoticed(false)
+    if (noticedFileRef.current) noticedFileRef.current.value = ''
   }
 
   const removePhoto = async (photoId: string) => {
@@ -216,7 +236,24 @@ function CleanFlow() {
       <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', padding: 20, marginBottom: 16 }}>
         <label style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 6 }}>Things We Noticed</label>
         <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 10, fontFamily: 'var(--font-outfit), sans-serif' }}>Stains, damage, items to flag for the client</p>
-        <textarea style={{ width: '100%', padding: 12, borderRadius: 10, border: '1.5px solid var(--line)', fontSize: 15, fontFamily: 'var(--font-outfit), sans-serif', color: 'var(--teal)', resize: 'vertical', minHeight: 80, outline: 'none', boxSizing: 'border-box' }} placeholder="e.g. Scuff mark on hallway wall, soap scum build-up in master bath..." value={noticed} onChange={e => setNoticed(e.target.value)} />
+        <textarea style={{ width: '100%', padding: 12, borderRadius: 10, border: '1.5px solid var(--line)', fontSize: 15, fontFamily: 'var(--font-outfit), sans-serif', color: 'var(--teal)', resize: 'vertical', minHeight: 80, outline: 'none', boxSizing: 'border-box', marginBottom: 12 }} placeholder="e.g. Scuff mark on hallway wall, soap scum build-up in master bath..." value={noticed} onChange={e => setNoticed(e.target.value)} />
+        {/* Noticed photos */}
+        {photos.filter(p => p.photo_type === 'noticed').length > 0 && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 10 }}>
+            {photos.filter(p => p.photo_type === 'noticed').map(photo => (
+              <div key={photo.id} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden' }}>
+                <Image src={photo.url} alt="Noticed" fill style={{ objectFit: 'cover' }} />
+                <button onClick={() => removePhoto(photo.id)} style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', border: 'none', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                  <X size={12} color="white" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <input ref={noticedFileRef} type="file" accept="image/*" multiple capture="environment" onChange={handleNoticedPhoto} style={{ display: 'none' }} />
+        <button onClick={() => noticedFileRef.current?.click()} disabled={uploadingNoticed} style={{ width: '100%', padding: '10px', borderRadius: 10, border: '2px dashed var(--blush-soft)', background: 'var(--blush-bg)', color: 'var(--muted)', fontSize: 13, fontFamily: 'var(--font-outfit), sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <Camera size={14} />{uploadingNoticed ? 'Uploading...' : 'Add Photo of Issue'}
+        </button>
       </div>
 
       {/* Extras */}

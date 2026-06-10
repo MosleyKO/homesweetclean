@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Montserrat, Outfit, Allura } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -57,6 +58,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${fraunces.variable} ${montserrat.variable} ${outfit.variable} ${allura.variable}`}>
       <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-LVNGLJJ252" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-LVNGLJJ252');
+          `}
+        </Script>
         <ConditionalShell>{children}</ConditionalShell>
       </body>
     </html>

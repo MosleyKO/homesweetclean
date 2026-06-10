@@ -13,14 +13,15 @@ export async function GET(req: NextRequest) {
 
   const { data: clean } = await supabase
     .from('cleans')
-    .select('*, clients(name, email, address)')
+    .select('*, clients(id, name, email, emails, address, property_type)')
     .eq('id', cleanId)
     .single()
 
   if (!clean) return NextResponse.json({ error: 'Clean not found' }, { status: 404 })
 
   const client = clean.clients as any
-  if (!client?.email) return NextResponse.json({ error: 'Client has no email address' }, { status: 400 })
+  const allEmails = [client?.email, ...(client?.emails ?? [])].filter(Boolean) as string[]
+  if (!allEmails.length) return NextResponse.json({ error: 'Client has no email address' }, { status: 400 })
 
   const reportUrl = `${BASE_URL}/report/${cleanId}`
   const firstName = client.name?.split(' ')[0] ?? 'there'
@@ -121,7 +122,7 @@ export async function GET(req: NextRequest) {
 
   const { error } = await resend.emails.send({
     from: 'Home Sweet Clean <hello@homesweetclean.co>',
-    to: client.email,
+    to: allEmails,
     subject: `Your clean summary — ${clean.started_at ? fmtDate(clean.started_at) : 'Today'}`,
     html,
   })

@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { MapPin, Phone, Mail, Key, FileText, Sparkles } from 'lucide-react'
+import { MapPin, Phone, Mail, Key, FileText, Sparkles, Building2 } from 'lucide-react'
 
 export const revalidate = 0
 
@@ -36,9 +36,12 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
             {client.status}
           </span>
         </div>
-        <Link href={`/admin/clean?client=${client.id}`} className='btn-primary' style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-          <Sparkles size={14} /> Start Clean
-        </Link>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <Link href={`/admin/clients/${client.id}/edit`} className='btn-secondary'>Edit</Link>
+          <Link href={`/admin/clean?client=${client.id}`} className='btn-primary' style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <Sparkles size={14} /> Start Clean
+          </Link>
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 28 }}>
@@ -49,6 +52,8 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
             { icon: MapPin, val: client.address },
             { icon: Phone, val: client.phone },
             { icon: Mail, val: client.email },
+            ...(client.emails ?? []).map((e: string) => ({ icon: Mail, val: e })),
+            { icon: Building2, val: client.property_type ? (client.property_type.charAt(0).toUpperCase() + client.property_type.slice(1)) : null },
           ].map(({ icon: Icon, val }) => val ? (
             <div key={val} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 10 }}>
               <Icon size={14} color='var(--blush)' strokeWidth={1.75} style={{ marginTop: 3, flexShrink: 0 }} />
