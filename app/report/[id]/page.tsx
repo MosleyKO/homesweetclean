@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { notFound } from 'next/navigation'
+import crypto from 'crypto'
 import { CheckCircle, ClipboardList, Sparkles, ShieldCheck, Camera } from 'lucide-react'
 import PhotoLightbox from '@/components/PhotoLightbox'
 
@@ -20,12 +21,18 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
 
   const client = clean.clients as any
 
-  const { data: tokenRow } = await supabaseAdmin
-    .from('client_tokens')
-    .select('token')
-    .eq('client_id', client?.id)
-    .single()
-  const portalUrl = tokenRow ? `/portal/${tokenRow.token}` : null
+  let portalToken: string | null = null
+  if (client?.id) {
+    const { data: existing } = await supabaseAdmin.from('client_tokens').select('token').eq('client_id', client.id).single()
+    if (existing) {
+      portalToken = existing.token
+    } else {
+      const newToken = crypto.randomBytes(24).toString('hex')
+      await supabaseAdmin.from('client_tokens').insert([{ client_id: client.id, token: newToken }])
+      portalToken = newToken
+    }
+  }
+  const portalUrl = portalToken ? `/portal/${portalToken}` : null
   const photos = (clean.clean_photos as any[]) ?? []
   const isCommercial = client?.property_type === 'commercial'
 
