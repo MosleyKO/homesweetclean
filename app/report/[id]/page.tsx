@@ -11,7 +11,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
 
   const { data: clean } = await supabase
     .from('cleans')
-    .select('*, clients(name, address, email), clean_photos(id, url)')
+    .select('*, clients(name, address, email, property_type), clean_photos(id, url, room, photo_type)')
     .eq('id', id)
     .single()
 
@@ -19,6 +19,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
 
   const client = clean.clients as any
   const photos = (clean.clean_photos as any[]) ?? []
+  const isCommercial = client?.property_type === 'commercial'
 
   const duration = clean.started_at && clean.ended_at
     ? Math.round((new Date(clean.ended_at).getTime() - new Date(clean.started_at).getTime()) / 60000)
@@ -27,22 +28,29 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
   const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
   const fmtTime = (d: string) => new Date(d).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
 
+  // Group photos by room
+  const rooms = Array.from(new Set(photos.map((p: any) => p.room || 'General')))
+  const photosByRoom = rooms.map(room => ({
+    room,
+    before: photos.filter((p: any) => (p.room || 'General') === room && p.photo_type === 'before'),
+    after: photos.filter((p: any) => (p.room || 'General') === room && p.photo_type === 'after'),
+    untagged: photos.filter((p: any) => (p.room || 'General') === room && !p.photo_type),
+  }))
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--cream)', fontFamily: 'var(--font-outfit), sans-serif' }}>
-      {/* Sent banner */}
       {sent === '1' && (
         <div style={{ background: '#dcfce7', borderBottom: '1px solid #86efac', padding: '12px 24px', textAlign: 'center', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 13, fontWeight: 600, color: '#166534', letterSpacing: '0.04em' }}>
           ✓ Summary email sent to {client?.email}
         </div>
       )}
 
-      {/* Header */}
       <header style={{ background: 'var(--teal)', padding: '32px 24px', textAlign: 'center' }}>
         <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 22, color: 'white', fontWeight: 600, marginBottom: 4 }}>
           Home <span style={{ fontFamily: 'var(--font-allura), cursive', color: 'var(--blush)', fontSize: 28 }}>Sweet</span> Clean
         </div>
         <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', marginTop: 4 }}>
-          Clean Summary Report
+          {isCommercial ? 'Commercial' : ''} Clean Summary Report
         </div>
       </header>
 
@@ -54,10 +62,10 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
             <CheckCircle size={26} color="var(--sage-deep)" strokeWidth={1.5} />
           </div>
           <h1 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 26, fontWeight: 600, color: 'var(--teal)', margin: '0 0 6px' }}>
-            Your home is clean!
+            {isCommercial ? 'Your space is clean!' : 'Your home is clean!'}
           </h1>
           <p style={{ color: 'var(--muted)', fontSize: 15, margin: '0 0 24px' }}>
-            Here&apos;s a summary of today&apos;s clean at {client?.address ?? 'your home'}.
+            Here&apos;s a summary of today&apos;s clean{client?.address ? ` at ${client.address}` : ''}.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
             {[
@@ -95,23 +103,67 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
           </div>
         )}
 
-        {/* Photos */}
-        {photos.length > 0 && (
-          <div style={{ background: 'white', borderRadius: 16, border: '1px solid var(--line)', padding: '24px', marginBottom: 20 }}>
-            <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 17, fontWeight: 600, color: 'var(--teal)', margin: '0 0 6px' }}>Photos</h2>
-            <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 14px', fontFamily: 'var(--font-montserrat), sans-serif' }}>Tap any photo to view full size</p>
-            <PhotoLightbox photos={photos} />
+        {/* Things We Noticed */}
+        {clean.noticed && (
+          <div style={{ background: 'var(--blush-bg)', borderRadius: 16, border: '1px solid var(--blush-soft)', padding: '24px', marginBottom: 20 }}>
+            <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 17, fontWeight: 600, color: 'var(--teal)', margin: '0 0 10px' }}>Things We Noticed</h2>
+            <p style={{ color: 'var(--teal)', fontSize: 15, lineHeight: 1.7, margin: 0 }}>{clean.noticed}</p>
           </div>
         )}
 
-        {/* Footer message */}
+        {/* Photos grouped by room */}
+        {photos.length > 0 && (
+          <div style={{ background: 'white', borderRadius: 16, border: '1px solid var(--line)', padding: '24px', marginBottom: 20 }}>
+            <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 17, fontWeight: 600, color: 'var(--teal)', margin: '0 0 6px' }}>Photos</h2>
+            <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 20px', fontFamily: 'var(--font-montserrat), sans-serif' }}>Tap any photo to view full size</p>
+
+            {photosByRoom.map(({ room, before, after, untagged }) => (
+              <div key={room} style={{ marginBottom: 24 }}>
+                <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--teal)', marginBottom: 12, paddingBottom: 8, borderBottom: '1px solid var(--line)' }}>
+                  {room}
+                </div>
+
+                {before.length > 0 && after.length > 0 ? (
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div>
+                      <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 8, textAlign: 'center' }}>Before</div>
+                      <PhotoLightbox photos={before} />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--sage-deep)', marginBottom: 8, textAlign: 'center' }}>After</div>
+                      <PhotoLightbox photos={after} />
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {before.length > 0 && (
+                      <>
+                        <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 8 }}>Before</div>
+                        <PhotoLightbox photos={before} />
+                      </>
+                    )}
+                    {after.length > 0 && (
+                      <>
+                        <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--sage-deep)', marginBottom: 8, marginTop: before.length > 0 ? 12 : 0 }}>After</div>
+                        <PhotoLightbox photos={after} />
+                      </>
+                    )}
+                    {untagged.length > 0 && <PhotoLightbox photos={untagged} />}
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Footer */}
         <div style={{ background: 'var(--teal)', borderRadius: 16, padding: '28px 24px', textAlign: 'center' }}>
           <p style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 20, color: 'white', margin: '0 0 8px', fontWeight: 600 }}>
             Thank you, {client?.name?.split(' ')[0] ?? 'friend'}!
             <span style={{ fontFamily: 'var(--font-allura), cursive', color: 'var(--blush)', fontSize: 26, fontWeight: 400 }}> ♥</span>
           </p>
           <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 14, margin: '0 0 20px', lineHeight: 1.6 }}>
-            It was a pleasure cleaning your home today. We hope you enjoy the fresh, clean feeling!
+            {isCommercial ? 'It was a pleasure cleaning your space today.' : 'It was a pleasure cleaning your home today. We hope you enjoy the fresh, clean feeling!'}
           </p>
           <a href="mailto:hello@homesweetclean.co" style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, letterSpacing: '0.06em', color: 'var(--blush)', textDecoration: 'none' }}>
             hello@homesweetclean.co

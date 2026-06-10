@@ -20,9 +20,12 @@ export async function POST(req: NextRequest) {
 
   const { data: { publicUrl } } = supabaseAdmin.storage.from('clean-photos').getPublicUrl(filename)
 
+  const room = formData.get('room') as string | null
+  const photoType = formData.get('photo_type') as string | null
+
   const { data, error } = await supabase
     .from('clean_photos')
-    .insert([{ clean_id: cleanId, url: publicUrl }])
+    .insert([{ clean_id: cleanId, url: publicUrl, room: room || null, photo_type: photoType || null }])
     .select()
     .single()
 

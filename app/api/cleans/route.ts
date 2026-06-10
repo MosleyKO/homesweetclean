@@ -14,12 +14,14 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(data)
 }
 
-// Update a clean (end, notes, extras)
+// Update a clean (end, notes, extras, noticed)
 export async function PATCH(req: NextRequest) {
   const { id, ...updates } = await req.json()
+  const allowed = ['ended_at', 'notes', 'extras', 'noticed', 'summary_sent', 'summary_sent_at']
+  const safe = Object.fromEntries(Object.entries(updates).filter(([k]) => allowed.includes(k)))
   const { data, error } = await supabase
     .from('cleans')
-    .update(updates)
+    .update(safe)
     .eq('id', id)
     .select()
     .single()

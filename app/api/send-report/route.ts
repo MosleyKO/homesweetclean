@@ -1,6 +1,8 @@
 import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import crypto from 'crypto'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.homesweetclean.co'
@@ -22,6 +24,18 @@ export async function GET(req: NextRequest) {
 
   const reportUrl = `${BASE_URL}/report/${cleanId}`
   const firstName = client.name?.split(' ')[0] ?? 'there'
+  const isCommercial = client.property_type === 'commercial'
+
+  // Get or create portal token
+  let portalUrl = ''
+  const { data: existingToken } = await supabaseAdmin.from('client_tokens').select('token').eq('client_id', client.id).single()
+  if (existingToken) {
+    portalUrl = `${BASE_URL}/portal/${existingToken.token}`
+  } else {
+    const token = crypto.randomBytes(24).toString('hex')
+    await supabaseAdmin.from('client_tokens').insert([{ client_id: client.id, token }])
+    portalUrl = `${BASE_URL}/portal/${token}`
+  }
 
   const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
   const fmtTime = (d: string) => new Date(d).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
@@ -48,6 +62,8 @@ export async function GET(req: NextRequest) {
       </div>`
     : ''
 
+  const spaceWord = isCommercial ? 'space' : 'home'
+
   const html = `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -61,7 +77,7 @@ export async function GET(req: NextRequest) {
 
   <div style="background:white;border-radius:16px;border:1px solid #E8DDD6;padding:32px;margin-bottom:16px;text-align:center;">
     <div style="width:52px;height:52px;border-radius:50%;background:#FCEFEC;display:inline-block;line-height:52px;margin-bottom:16px;font-size:22px;">&#10003;</div>
-    <h1 style="font-size:22px;font-weight:700;color:#1F4E5F;margin:0 0 8px;">Your home is clean, ${firstName}!</h1>
+    <h1 style="font-size:22px;font-weight:700;color:#1F4E5F;margin:0 0 8px;">Your ${spaceWord} is clean, ${firstName}!</h1>
     <p style="color:#6B7280;font-size:15px;margin:0 0 24px;line-height:1.6;">Here's a summary of today's clean${addressStr}.</p>
     <table width="100%" cellpadding="0" cellspacing="8" border="0">
       <tr>
@@ -88,9 +104,14 @@ export async function GET(req: NextRequest) {
     <a href="${reportUrl}" style="display:inline-block;background:#E8A6A6;color:white;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:14px 32px;border-radius:50px;text-decoration:none;">View Full Report &amp; Photos &#8594;</a>
   </div>
 
+  <div style="background:white;border-radius:14px;border:1px solid #E8DDD6;padding:20px 24px;text-align:center;margin-bottom:16px;">
+    <p style="color:#1F4E5F;font-size:14px;font-weight:600;margin:0 0 8px;">Want to see all your past cleans?</p>
+    <a href="${portalUrl}" style="font-size:13px;color:#E8A6A6;font-weight:700;text-decoration:none;letter-spacing:0.04em;">View Your Clean History &#8594;</a>
+  </div>
+
   <div style="background:#1F4E5F;border-radius:14px;padding:24px;text-align:center;">
     <p style="color:white;font-size:16px;font-weight:700;margin:0 0 6px;">Thank you for trusting us! &#9829;</p>
-    <p style="color:rgba(255,255,255,0.6);font-size:13px;margin:0 0 14px;line-height:1.6;">We hope you enjoy coming home to a fresh, clean space.</p>
+    <p style="color:rgba(255,255,255,0.6);font-size:13px;margin:0 0 14px;line-height:1.6;">${isCommercial ? 'It was a pleasure cleaning your space today.' : 'We hope you enjoy coming home to a fresh, clean space.'}</p>
     <a href="mailto:hello@homesweetclean.co" style="color:#E8A6A6;font-size:12px;font-weight:600;text-decoration:none;">hello@homesweetclean.co</a>
   </div>
 

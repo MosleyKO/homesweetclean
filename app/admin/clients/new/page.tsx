@@ -38,6 +38,7 @@ export default function NewClientPage() {
     address: '',
     frequency: '',
     status: 'active',
+    property_type: 'residential',
     access_notes: '',
     client_notes: '',
   })
@@ -77,6 +78,13 @@ export default function NewClientPage() {
                 <option value="active">Active</option>
                 <option value="lead">Lead</option>
                 <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div>
+              <label style={labelStyle}>Property Type</label>
+              <select style={inputStyle} value={form.property_type} onChange={e => set('property_type', e.target.value)}>
+                <option value="residential">Residential</option>
+                <option value="commercial">Commercial</option>
               </select>
             </div>
           </div>
