@@ -74,7 +74,7 @@ export default async function AdminDashboard() {
                   ? Math.round((new Date(clean.ended_at).getTime() - new Date(clean.started_at).getTime()) / 60000)
                   : null
                 return (
-                  <tr key={clean.id} style={{ borderTop: '1px solid var(--line)' }}>
+                  <tr key={clean.id} style={{ borderTop: '1px solid var(--line)', cursor: 'pointer' }} onClick={() => { window.location.href = `/admin/cleans/${clean.id}` }}>
                     <td style={{ padding: '14px 24px', fontWeight: 600, color: 'var(--teal)', fontSize: 14 }}>{(clean.clients as any)?.name ?? '—'}</td>
                     <td style={{ padding: '14px 24px', color: 'var(--muted)', fontSize: 14 }}>
                       {clean.started_at ? new Date(clean.started_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}

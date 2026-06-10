@@ -106,7 +106,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                   : null
                 const fmt = (d: string) => new Date(d).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
                 return (
-                  <tr key={clean.id} style={{ borderTop: '1px solid var(--line)' }}>
+                  <tr key={clean.id} style={{ borderTop: '1px solid var(--line)', cursor: 'pointer' }} onClick={() => { window.location.href = `/admin/cleans/${clean.id}` }}>
                     <td style={{ padding: '14px 24px', fontWeight: 600, color: 'var(--teal)', fontSize: 14 }}>
                       {clean.started_at ? new Date(clean.started_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
                     </td>

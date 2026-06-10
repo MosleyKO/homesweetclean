@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Users, LayoutDashboard, Sparkles } from 'lucide-react'
+import Image from 'next/image'
 
 const nav = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -27,11 +28,28 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         top: 0,
         zIndex: 50,
       }}>
-        <span style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 20, color: 'white', fontWeight: 600 }}>
-          HSC <span style={{ fontFamily: 'var(--font-allura), cursive', color: 'var(--blush)', fontSize: 26 }}>Admin</span>
-        </span>
-        <Link href='/' style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.6)', textDecoration: 'none', letterSpacing: '0.06em' }}>
-          ← BACK TO SITE
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Image src='/logo-circle.png' alt='Home Sweet Clean' width={32} height={32} style={{ borderRadius: '50%' }} />
+          <span style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 18, color: 'white', fontWeight: 600 }}>
+            Home <span style={{ fontFamily: 'var(--font-allura), cursive', color: 'var(--blush)', fontSize: 22 }}>Sweet</span> Clean
+          </span>
+        </div>
+        <Link href='/' style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          fontFamily: 'var(--font-montserrat), sans-serif',
+          fontSize: 12,
+          fontWeight: 600,
+          letterSpacing: '0.06em',
+          color: 'var(--teal)',
+          background: 'white',
+          textDecoration: 'none',
+          padding: '8px 16px',
+          borderRadius: 50,
+          transition: 'opacity 0.15s',
+        }}>
+          ← Back to Site
         </Link>
       </header>
 
