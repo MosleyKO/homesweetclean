@@ -94,7 +94,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: 'var(--cream)' }}>
-                {['Date', 'Start', 'End', 'Duration', 'Photos', 'Summary'].map(h => (
+                {['Date', 'Start', 'End', 'Duration', 'Photos', 'Summary', ''].map(h => (
                   <th key={h} style={{ padding: '10px 24px', textAlign: 'left', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>{h}</th>
                 ))}
               </tr>
@@ -106,7 +106,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                   : null
                 const fmt = (d: string) => new Date(d).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
                 return (
-                  <tr key={clean.id} style={{ borderTop: '1px solid var(--line)', cursor: 'pointer' }} onClick={() => { window.location.href = `/admin/cleans/${clean.id}` }}>
+                  <tr key={clean.id} style={{ borderTop: '1px solid var(--line)' }}>
                     <td style={{ padding: '14px 24px', fontWeight: 600, color: 'var(--teal)', fontSize: 14 }}>
                       {clean.started_at ? new Date(clean.started_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
                     </td>
@@ -118,6 +118,11 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                       <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: clean.summary_sent ? '#dcfce7' : '#fef9c3', color: clean.summary_sent ? '#166534' : '#854d0e' }}>
                         {clean.summary_sent ? 'Sent' : 'Pending'}
                       </span>
+                    </td>
+                    <td style={{ padding: '14px 24px' }}>
+                      <Link href={`/admin/cleans/${clean.id}`} style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--blush)', textDecoration: 'none', letterSpacing: '0.06em' }}>
+                        VIEW →
+                      </Link>
                     </td>
                   </tr>
                 )

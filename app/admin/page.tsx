@@ -63,7 +63,7 @@ export default async function AdminDashboard() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: 'var(--cream)' }}>
-                {['Client', 'Date', 'Duration', 'Summary'].map(h => (
+                {['Client', 'Date', 'Duration', 'Summary', ''].map(h => (
                   <th key={h} style={{ padding: '10px 24px', textAlign: 'left', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>{h}</th>
                 ))}
               </tr>
@@ -74,7 +74,7 @@ export default async function AdminDashboard() {
                   ? Math.round((new Date(clean.ended_at).getTime() - new Date(clean.started_at).getTime()) / 60000)
                   : null
                 return (
-                  <tr key={clean.id} style={{ borderTop: '1px solid var(--line)', cursor: 'pointer' }} onClick={() => { window.location.href = `/admin/cleans/${clean.id}` }}>
+                  <tr key={clean.id} style={{ borderTop: '1px solid var(--line)' }}>
                     <td style={{ padding: '14px 24px', fontWeight: 600, color: 'var(--teal)', fontSize: 14 }}>{(clean.clients as any)?.name ?? '—'}</td>
                     <td style={{ padding: '14px 24px', color: 'var(--muted)', fontSize: 14 }}>
                       {clean.started_at ? new Date(clean.started_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
@@ -95,6 +95,11 @@ export default async function AdminDashboard() {
                       }}>
                         {clean.summary_sent ? 'Sent' : 'Pending'}
                       </span>
+                    </td>
+                    <td style={{ padding: '14px 24px' }}>
+                      <Link href={`/admin/cleans/${clean.id}`} style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--blush)', textDecoration: 'none', letterSpacing: '0.06em' }}>
+                        VIEW →
+                      </Link>
                     </td>
                   </tr>
                 )
