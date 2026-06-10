@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
-import Image from 'next/image'
 import { CheckCircle } from 'lucide-react'
+import PhotoLightbox from '@/components/PhotoLightbox'
 
 export const revalidate = 0
 
@@ -98,14 +98,9 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
         {/* Photos */}
         {photos.length > 0 && (
           <div style={{ background: 'white', borderRadius: 16, border: '1px solid var(--line)', padding: '24px', marginBottom: 20 }}>
-            <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 17, fontWeight: 600, color: 'var(--teal)', margin: '0 0 14px' }}>Photos</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
-              {photos.map((photo: any) => (
-                <div key={photo.id} style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 10, overflow: 'hidden' }}>
-                  <Image src={photo.url} alt="Clean photo" fill style={{ objectFit: 'cover' }} />
-                </div>
-              ))}
-            </div>
+            <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 17, fontWeight: 600, color: 'var(--teal)', margin: '0 0 6px' }}>Photos</h2>
+            <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 14px', fontFamily: 'var(--font-montserrat), sans-serif' }}>Tap any photo to view full size</p>
+            <PhotoLightbox photos={photos} />
           </div>
         )}
 

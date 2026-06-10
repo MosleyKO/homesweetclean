@@ -28,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         top: 0,
         zIndex: 50,
       }}>
-        <Image src='/logo-wordmark.png' alt='Home Sweet Clean' width={160} height={36} style={{ objectFit: 'contain' }} />
+        <Image src='/logo-wordmark.png' alt='Home Sweet Clean' width={160} height={36} style={{ objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
         <Link href='/' style={{
           display: 'inline-flex',
           alignItems: 'center',

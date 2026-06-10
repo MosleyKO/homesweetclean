@@ -37,12 +37,10 @@ export async function GET(req: NextRequest) {
   <div style="max-width:560px;margin:0 auto;padding:32px 16px;">
 
     <!-- Header -->
-    <div style="text-align:center;margin-bottom:28px;">
-      <div style="font-size:24px;font-weight:700;color:#1F4E5F;">
-        Home Sweet Clean
-      </div>
-      <div style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#6B7280;margin-top:4px;">
-        Clean Summary
+    <div style="background:#1F4E5F;border-radius:16px;padding:28px 24px;text-align:center;margin-bottom:20px;">
+      <img src="${BASE_URL}/logo-wordmark.png" alt="Home Sweet Clean" width="160" style="display:inline-block;filter:brightness(0) invert(1);margin-bottom:12px;" />
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.5);">
+        Clean Summary Report
       </div>
     </div>
 
