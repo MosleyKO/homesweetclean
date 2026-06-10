@@ -66,7 +66,11 @@ export default function Nav() {
             color: "var(--teal)",
             textDecoration: "none",
             display: "none",
-          }} className="nav-phone">
+          }} className="nav-phone" onClick={() => {
+            if (typeof window !== "undefined" && window.gtag) {
+              window.gtag("event", "phone_call_click", { event_category: "contact", event_label: "nav_desktop" });
+            }
+          }}>
             (435) 681-0314
           </a>
           <Link href="/contact" className="btn-primary nav-cta-btn" style={{ fontSize: 12, padding: "11px 22px" }}>
@@ -124,7 +128,11 @@ export default function Nav() {
               fontSize: 14,
               color: "var(--teal)",
               textDecoration: "none",
-          }}><Phone size={14} strokeWidth={1.5} style={{ display: "inline", marginRight: 6 }} />(435) 681-0314</a>
+            }} onClick={() => {
+              if (typeof window !== "undefined" && window.gtag) {
+                window.gtag("event", "phone_call_click", { event_category: "contact", event_label: "nav_mobile" });
+              }
+            }}><Phone size={14} strokeWidth={1.5} style={{ display: "inline", marginRight: 6 }} />(435) 681-0314</a>
             <Link href="/contact" className="btn-primary" onClick={() => setOpen(false)} style={{ textAlign: "center" }}>
               Get a Quote ♥
             </Link>

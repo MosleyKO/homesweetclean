@@ -18,6 +18,9 @@ export default function ContactPage() {
       if (res.ok) {
         setStatus("success");
         setForm({ name: "", email: "", phone: "", propertyType: "", service: "", bedrooms: "", address: "", message: "" });
+        if (typeof window !== "undefined" && window.gtag) {
+          window.gtag("event", "generate_lead", { event_category: "contact", event_label: "quote_form" });
+        }
       } else {
         setStatus("error");
       }
@@ -180,7 +183,15 @@ export default function ContactPage() {
                 <div>
                   <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 6 }}>{item.label}</div>
                   {item.href ? (
-                    <a href={item.href} style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 18, fontWeight: 600, color: "var(--teal)", textDecoration: "none" }}>{item.value}</a>
+                    <a
+                      href={item.href}
+                      style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 18, fontWeight: 600, color: "var(--teal)", textDecoration: "none" }}
+                      onClick={() => {
+                        if (item.href?.startsWith("tel:") && typeof window !== "undefined" && window.gtag) {
+                          window.gtag("event", "phone_call_click", { event_category: "contact", event_label: "contact_page" });
+                        }
+                      }}
+                    >{item.value}</a>
                   ) : (
                     <p style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 16, fontWeight: 500, color: "var(--teal)" }}>{item.value}</p>
                   )}
