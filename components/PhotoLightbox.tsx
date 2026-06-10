@@ -6,7 +6,7 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface Photo { id: string; url: string }
 
-export default function PhotoLightbox({ photos }: { photos: Photo[] }) {
+export default function PhotoLightbox({ photos, columns = 2 }: { photos: Photo[], columns?: number }) {
   const [open, setOpen] = useState(false)
   const [index, setIndex] = useState(0)
 
@@ -21,7 +21,7 @@ export default function PhotoLightbox({ photos }: { photos: Photo[] }) {
 
   return (
     <>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, 1fr)`, gap: 10 }}>
         {photos.map((photo, i) => (
           <div
             key={photo.id}

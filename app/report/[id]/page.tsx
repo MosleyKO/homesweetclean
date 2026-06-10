@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
-import { CheckCircle, ClipboardList, Sparkles, ShieldCheck } from 'lucide-react'
+import { CheckCircle, ClipboardList, Sparkles, ShieldCheck, Camera } from 'lucide-react'
 import PhotoLightbox from '@/components/PhotoLightbox'
 
 export const revalidate = 0
@@ -180,7 +180,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
           <div style={{ background: 'white', borderRadius: 16, border: '1px solid var(--line)', padding: '28px', marginBottom: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
               <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--blush-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <span style={{ fontSize: 16 }}>📷</span>
+                <Camera size={16} color="var(--blush)" strokeWidth={1.75} />
               </div>
               <div>
                 <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 18, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Before &amp; After Photos</h2>
@@ -198,22 +198,22 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                       <div>
                         <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 6, textAlign: 'center' }}>Before</div>
-                        <PhotoLightbox photos={before} />
+                        <PhotoLightbox photos={before} columns={1} />
                       </div>
                       <div>
                         <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--sage-deep)', marginBottom: 6, textAlign: 'center' }}>After</div>
-                        <PhotoLightbox photos={after} />
+                        <PhotoLightbox photos={after} columns={1} />
                       </div>
                     </div>
                   ) : (
                     <>
                       {before.length > 0 && <>
                         <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 6 }}>Before</div>
-                        <PhotoLightbox photos={before} />
+                        <PhotoLightbox photos={before} columns={1} />
                       </>}
                       {after.length > 0 && <>
                         <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--sage-deep)', marginBottom: 6, marginTop: before.length > 0 ? 12 : 0 }}>After</div>
-                        <PhotoLightbox photos={after} />
+                        <PhotoLightbox photos={after} columns={1} />
                       </>}
                       {untagged.length > 0 && <PhotoLightbox photos={untagged} />}
                     </>
