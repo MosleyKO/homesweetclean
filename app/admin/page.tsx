@@ -30,7 +30,7 @@ export default async function AdminDashboard() {
   return (
     <div style={{ maxWidth: 900 }}>
       <style>{`
-        .dash-actions { display: flex; gap: 12; flex-wrap: wrap; margin-bottom: 40px; }
+        .dash-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
         .dash-action-start { }
         .dash-action-add { }
         .dash-today { display: none; }

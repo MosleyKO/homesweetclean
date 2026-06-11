@@ -39,7 +39,7 @@ export default async function ClientsPage() {
   }))
 
   return (
-    <div style={{ maxWidth: 900 }}>
+    <div style={{ maxWidth: 1200 }}>
       <style>{`
         .clients-desktop { display: block; }
         .clients-mobile { display: none; }
@@ -68,7 +68,7 @@ export default async function ClientsPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ background: 'var(--cream)' }}>
-                  {['Name', 'Address', 'Phone', 'Frequency', 'Status', ''].map(h => (
+                  {['Name', 'Address', 'Phone', 'Frequency', 'Last Clean', 'Status', ''].map(h => (
                     <th key={h} style={{ padding: '10px 24px', textAlign: 'left', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>{h}</th>
                   ))}
                 </tr>
@@ -82,6 +82,9 @@ export default async function ClientsPage() {
                       <td style={{ padding: '14px 24px', color: 'var(--muted)', fontSize: 14 }}>{client.address ?? '—'}</td>
                       <td style={{ padding: '14px 24px', color: 'var(--muted)', fontSize: 14 }}>{client.phone ?? '—'}</td>
                       <td style={{ padding: '14px 24px', color: 'var(--muted)', fontSize: 14 }}>{client.frequency ?? '—'}</td>
+                      <td style={{ padding: '14px 24px', color: 'var(--muted)', fontSize: 14 }}>
+                        {lastCleanMap[client.id] ? new Date(lastCleanMap[client.id]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                      </td>
                       <td style={{ padding: '14px 24px' }}>
                         <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: s.bg, color: s.color, textTransform: 'capitalize' }}>
                           {client.status}
