@@ -39,11 +39,11 @@ export default async function AdminDashboard() {
         .dash-recent-cards { display: none; }
 
         @media (max-width: 768px) {
-          .dash-today { display: block; margin-bottom: 16px; }
-          .dash-actions { flex-direction: column; gap: 10px; margin-bottom: 16px; }
-          .dash-action-start { display: block; background: var(--blush); color: white; text-align: center; padding: 18px; border-radius: 50px; font-family: var(--font-montserrat), sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; }
-          .dash-action-add { display: block; background: white; color: var(--teal); text-align: center; padding: 16px; border-radius: 50px; font-family: var(--font-montserrat), sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border: 1.5px solid var(--line); }
-          .dash-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 0; margin-top: 16px; }
+          .dash-today { display: block; margin-bottom: 12px; }
+          .dash-actions { flex-direction: column; gap: 10px; margin-bottom: 12px; }
+          .dash-action-start { display: block; background: var(--blush); color: white; text-align: center; padding: 16px; border-radius: 50px; font-family: var(--font-montserrat), sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; }
+          .dash-action-add { display: block; background: white; color: var(--teal); text-align: center; padding: 14px; border-radius: 50px; font-family: var(--font-montserrat), sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border: 1.5px solid var(--line); }
+          .dash-stats { grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 0; margin-top: 12px; }
           .dash-recent-table { display: none; }
           .dash-recent-cards { display: block; }
         }
@@ -58,27 +58,24 @@ export default async function AdminDashboard() {
 
       {/* Today's Activity — mobile only */}
       <div className="dash-today">
-        <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', padding: '20px' }}>
-          <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 16, fontWeight: 600, color: 'var(--teal)', margin: '0 0 16px' }}>Today&apos;s Activity</h2>
-          <div style={{ display: 'flex', gap: 0 }}>
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, paddingRight: 20 }}>
-              <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Timer size={18} color="#3B82F6" strokeWidth={1.75} />
-              </div>
-              <div>
-                <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 22, fontWeight: 700, color: 'var(--teal)', lineHeight: 1 }}>{inProgress}</div>
-                <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 3 }}>Clean in progress</div>
-              </div>
+        <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--line)', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 0 }}>
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Timer size={15} color="#3B82F6" strokeWidth={1.75} />
             </div>
-            <div style={{ width: 1, background: 'var(--line)' }} />
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12, paddingLeft: 20 }}>
-              <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#FEFCE8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Clock size={18} color="#F4B942" strokeWidth={1.75} />
-              </div>
-              <div>
-                <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 22, fontWeight: 700, color: 'var(--teal)', lineHeight: 1 }}>{pendingSummaries ?? 0}</div>
-                <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 3 }}>Summary pending</div>
-              </div>
+            <div>
+              <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 20, fontWeight: 700, color: 'var(--teal)', lineHeight: 1 }}>{inProgress}</div>
+              <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>In progress</div>
+            </div>
+          </div>
+          <div style={{ width: 1, background: 'var(--line)', alignSelf: 'stretch', margin: '0 16px' }} />
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#FEFCE8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Clock size={15} color="#F4B942" strokeWidth={1.75} />
+            </div>
+            <div>
+              <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 20, fontWeight: 700, color: 'var(--teal)', lineHeight: 1 }}>{pendingSummaries ?? 0}</div>
+              <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>Summary pending</div>
             </div>
           </div>
         </div>
@@ -87,12 +84,10 @@ export default async function AdminDashboard() {
       {/* Stats — desktop only */}
       <div className="dash-stats">
         {stats.map(({ label, value, icon: Icon, color }) => (
-          <div key={label} style={{ background: 'white', borderRadius: 14, padding: '20px', border: '1px solid var(--line)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-              <span style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)' }}>{label}</span>
-              <Icon size={16} color={color} strokeWidth={1.75} />
-            </div>
-            <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 36, fontWeight: 600, color: 'var(--teal)' }}>{value}</div>
+          <div key={label} style={{ background: 'white', borderRadius: 12, padding: '12px 10px', border: '1px solid var(--line)', textAlign: 'center' }}>
+            <Icon size={16} color={color} strokeWidth={1.75} style={{ marginBottom: 6 }} />
+            <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 24, fontWeight: 600, color: 'var(--teal)', lineHeight: 1, marginBottom: 4 }}>{value}</div>
+            <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 9, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--muted)', lineHeight: 1.3 }}>{label}</div>
           </div>
         ))}
       </div>
@@ -184,13 +179,11 @@ export default async function AdminDashboard() {
                   </div>
                 </div>
                 {/* Duration */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--muted)', fontSize: 12, flexShrink: 0 }}>
-                  {duration ? (
-                    <><Clock size={12} strokeWidth={1.75} /> {duration} min</>
-                  ) : clean.started_at ? (
-                    <><Timer size={12} strokeWidth={1.75} color="#3B82F6" /> <span style={{ color: '#3B82F6' }}>In progress</span></>
-                  ) : '—'}
-                </div>
+                {duration ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--muted)', fontSize: 12, flexShrink: 0 }}>
+                    <Clock size={12} strokeWidth={1.75} /> {duration} min
+                  </div>
+                ) : null}
                 {/* Status badge */}
                 <div style={{ flexShrink: 0 }}>
                   {clean.summary_sent ? (
