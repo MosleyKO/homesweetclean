@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Home, Sparkles, ArrowRightLeft, CalendarDays, ShieldCheck, Leaf, Star } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Home Sweet Clean | House Cleaning Services in St. George, UT",
+  description: "Professional home cleaning services in St. George, Washington, Hurricane, Ivins & Santa Clara, Utah. Trusted, detail-focused, locally owned. Get a free quote today.",
+};
 
 const iconStyle = { width: 22, height: 22, color: "var(--blush)", strokeWidth: 1.5 };
 
@@ -66,7 +72,7 @@ export default function HomePage() {
         }}>
           <Image
             src="/hero.png"
-            alt="Clean beautiful home"
+            alt="Professionally cleaned living room in Southern Utah home"
             fill
             style={{ objectFit: "cover", objectPosition: "center" }}
             priority
@@ -93,7 +99,7 @@ export default function HomePage() {
       <section style={{ padding: "60px 32px", background: "var(--cream-warm)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 72, alignItems: "center" }} className="about-grid">
           <div className="about-img" style={{ height: 480, borderRadius: 16, overflow: "hidden", position: "relative" }}>
-            <Image src="/about-home.png" alt="Home Sweet Clean team" fill style={{ objectFit: "cover" }} />
+            <Image src="/about-home.png" alt="Clean, bright home interior cleaned by Home Sweet Clean in Southern Utah" fill style={{ objectFit: "cover" }} />
           </div>
           <div>
             <div className="eyebrow">About Home Sweet Clean ♥</div>

@@ -39,6 +39,10 @@ export const metadata: Metadata = {
   title: "Home Sweet Clean — Clean Spaces. Happy Places.",
   description: "Reliable, detail-focused home cleaning services in Southern Utah. Serving St. George, Washington, Hurricane, Ivins, and Santa Clara.",
   metadataBase: new URL("https://www.homesweetclean.co"),
+  icons: {
+    icon: "/favicon-32.png",
+    apple: "/logo-circle.png",
+  },
   openGraph: {
     title: "Home Sweet Clean — Clean Spaces. Happy Places.",
     description: "Reliable, detail-focused home cleaning services in Southern Utah. Book your clean today and get your time back.",

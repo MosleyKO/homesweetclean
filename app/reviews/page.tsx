@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Reviews | Home Sweet Clean — 5-Star House Cleaning in Southern Utah",
+  description: "Read verified 5-star reviews from happy clients across St. George, Washington, Hurricane, Ivins, and Santa Clara, Utah. See why families love Home Sweet Clean.",
+};
 
 const reviews = [
   { text: "Home Sweet Clean lives up to their name! My house has never looked better and the team is so kind and professional. I've tried other services and nothing compares.", author: "Jessica M.", location: "St. George, UT", stars: 5 },

@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "About Us | Home Sweet Clean — Southern Utah Cleaning Company",
+  description: "Meet Kinsey & Koby, the local Southern Utah founders behind Home Sweet Clean. Learn our story and why we're passionate about giving families their time back.",
+};
 
 const promises = [
   { title: "Friendly, professional service", desc: "We're approachable, respectful, and here to help." },
@@ -34,7 +40,7 @@ export default function AboutPage() {
             </div>
           </div>
           <div className="about-hero-img" style={{ height: 480, borderRadius: "160px 16px 160px 16px", overflow: "hidden", position: "relative" }}>
-            <Image src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=85" alt="Beautiful clean home" fill style={{ objectFit: "cover" }} />
+            <Image src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=85" alt="Beautiful clean home in Southern Utah" fill style={{ objectFit: "cover" }} />
           </div>
         </div>
       </section>
@@ -43,7 +49,7 @@ export default function AboutPage() {
       <section id="story" style={{ padding: "60px 32px", background: "var(--cream-warm)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }} className="two-col">
           <div className="story-img" style={{ height: 540, borderRadius: 16, position: "relative", overflow: "hidden", display: "flex", alignItems: "flex-end" }}>
-            <Image src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=900&q=85" alt="Bright clean kitchen" fill style={{ objectFit: "cover" }} />
+            <Image src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=900&q=85" alt="Bright clean kitchen after a Home Sweet Clean deep cleaning service" fill style={{ objectFit: "cover" }} />
             <div style={{ background: "white", padding: "16px 22px", borderRadius: 10, margin: 24, boxShadow: "0 4px 24px rgba(31,78,95,0.08)", position: "relative", zIndex: 1 }}>
               <div style={{ fontFamily: "var(--font-fraunces), serif", fontWeight: 600, fontSize: 15, color: "var(--teal)" }}>Kinsey & Koby</div>
               <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>Founders · Southern Utah</div>
@@ -131,7 +137,7 @@ export default function AboutPage() {
       <section style={{ padding: "100px 32px", background: "var(--cream)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 80, alignItems: "center" }} className="two-col">
           <div style={{ height: 500, borderRadius: 16, overflow: "hidden", position: "relative" }}>
-            <Image src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=900&q=85" alt="Clean sparkling bathroom" fill style={{ objectFit: "cover" }} />
+            <Image src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=900&q=85" alt="Sparkling clean bathroom after a professional deep clean in St. George Utah" fill style={{ objectFit: "cover" }} />
           </div>
           <div>
             <div className="eyebrow">Our promise</div>

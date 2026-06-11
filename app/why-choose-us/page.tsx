@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Home, Leaf, ShieldCheck, RefreshCw, Sparkles, MessageCircle, Heart, BadgeCheck } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Why Choose Home Sweet Clean | St. George, Utah House Cleaning",
+  description: "Locally owned, insured, eco-friendly, and 5-star rated. Here's why Southern Utah families trust Home Sweet Clean for reliable, detail-focused home cleaning.",
+};
 
 const iconStyle = { width: 24, height: 24, color: "var(--blush)", strokeWidth: 1.5 };
 
