@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { Camera, X, CheckCircle } from 'lucide-react'
+import { Camera, X, CheckCircle, Key } from 'lucide-react'
 import Image from 'next/image'
 
 const EXTRAS = [
@@ -152,8 +152,8 @@ function CleanFlow() {
   // ── SELECT ──
   if (phase === 'select') return (
     <div style={{ maxWidth: 480, margin: '0 auto' }}>
-      <div style={{ marginBottom: 28 }}>
-        <p className="eyebrow" style={{ marginBottom: 6 }}>New Clean</p>
+      <div style={{ marginBottom: 16 }}>
+        <p className="eyebrow" style={{ marginBottom: 4 }}>New Clean</p>
         <h1 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 30, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Who are we cleaning for?</h1>
       </div>
       <input style={{ width: '100%', padding: '14px 16px', borderRadius: 12, border: '1.5px solid var(--line)', fontSize: 16, fontFamily: 'var(--font-outfit), sans-serif', color: 'var(--teal)', background: 'white', outline: 'none', boxSizing: 'border-box', marginBottom: 16 }} placeholder="Search clients..." value={search} onChange={e => setSearch(e.target.value)} autoFocus />
@@ -162,15 +162,21 @@ function CleanFlow() {
           <button key={client.id} onClick={() => setSelectedClient(client)} style={{ background: selectedClient?.id === client.id ? 'var(--blush-bg)' : 'white', border: selectedClient?.id === client.id ? '2px solid var(--blush)' : '1.5px solid var(--line)', borderRadius: 12, padding: '16px 20px', textAlign: 'left', cursor: 'pointer', transition: 'all 0.15s' }}>
             <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 17, fontWeight: 600, color: 'var(--teal)' }}>{client.name}</div>
             <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 3, fontFamily: 'var(--font-montserrat), sans-serif', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{client.property_type}</div>
-            {client.access_notes && <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>🔑 {client.access_notes}</div>}
+            {client.access_notes && <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4, display: 'flex', alignItems: 'flex-start', gap: 6 }}><Key size={13} strokeWidth={1.75} style={{ flexShrink: 0, marginTop: 1 }} />{client.access_notes}</div>}
           </button>
         ))}
         {filtered.length === 0 && <div style={{ textAlign: 'center', color: 'var(--muted)', padding: 32, fontSize: 14 }}>No clients found.</div>}
       </div>
+      {selectedClient?.client_notes && (
+        <div style={{ background: 'var(--cream-warm)', borderRadius: 12, padding: '14px 16px', marginTop: 16, fontSize: 14, color: 'var(--teal)', lineHeight: 1.6 }}><strong>Note:</strong> {selectedClient.client_notes}</div>
+      )}
+
+      {/* Fixed Start Clean bar — appears above bottom nav when client selected */}
       {selectedClient && (
-        <div style={{ marginTop: 28 }}>
-          {selectedClient.client_notes && <div style={{ background: 'var(--cream-warm)', borderRadius: 12, padding: '14px 16px', marginBottom: 16, fontSize: 14, color: 'var(--teal)', lineHeight: 1.6 }}><strong>Note:</strong> {selectedClient.client_notes}</div>}
-          <button onClick={startClean} className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 16, padding: 18 }}>Start Clean →</button>
+        <div style={{ position: 'fixed', bottom: 70, left: 0, right: 0, padding: '12px 16px', background: 'white', borderTop: '1px solid var(--line)', zIndex: 40 }}>
+          <button onClick={startClean} className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 16, padding: 16 }}>
+            Start Clean for {selectedClient.name} →
+          </button>
         </div>
       )}
     </div>
@@ -223,7 +229,7 @@ function CleanFlow() {
       </div>
 
       {selectedClient?.access_notes && (
-        <div style={{ background: 'var(--blush-bg)', border: '1px solid var(--blush-soft)', borderRadius: 12, padding: '12px 16px', marginBottom: 20, fontSize: 13, color: 'var(--teal)' }}>🔑 {selectedClient.access_notes}</div>
+        <div style={{ background: 'var(--blush-bg)', border: '1px solid var(--blush-soft)', borderRadius: 12, padding: '12px 16px', marginBottom: 20, fontSize: 13, color: 'var(--teal)', display: 'flex', alignItems: 'flex-start', gap: 8 }}><Key size={14} strokeWidth={1.75} style={{ flexShrink: 0, marginTop: 1 }} />{selectedClient.access_notes}</div>
       )}
 
       {/* Notes */}
