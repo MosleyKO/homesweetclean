@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { MapPin, Phone, Mail, Key, FileText, Sparkles, Building2 } from 'lucide-react'
 import StripeSection from '@/components/StripeSection'
+import DeleteClientButton from '@/components/DeleteClientButton'
 
 export const revalidate = 0
 

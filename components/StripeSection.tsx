@@ -59,6 +59,7 @@ export default function StripeSection({
   const [searching, setSearching] = useState(false)
   const [syncing, setSyncing] = useState(false)
   const [linking, setLinking] = useState(false)
+  const [syncError, setSyncError] = useState<string | null>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleSearch = (val: string) => {
@@ -95,13 +96,22 @@ export default function StripeSection({
     const id = cid ?? customerId
     if (!id) return
     setSyncing(true)
-    const res = await fetch('/api/stripe/sync-invoices', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clientId, stripeCustomerId: id }),
-    })
-    const data = await res.json()
-    if (data.ok) router.refresh()
+    setSyncError(null)
+    try {
+      const res = await fetch('/api/stripe/sync-invoices', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId, stripeCustomerId: id }),
+      })
+      const data = await res.json()
+      if (data.ok) {
+        router.refresh()
+      } else {
+        setSyncError(data.error ?? 'Sync failed')
+      }
+    } catch (e) {
+      setSyncError('Network error — try again')
+    }
     setSyncing(false)
   }
 
@@ -175,6 +185,13 @@ export default function StripeSection({
           )}
         </div>
       </div>
+
+      {/* Sync error */}
+      {syncError && (
+        <div style={{ padding: '10px 24px', background: '#fee2e2', borderBottom: '1px solid #fca5a5', fontSize: 13, color: '#991b1b', fontFamily: 'var(--font-outfit), sans-serif' }}>
+          Sync error: {syncError}
+        </div>
+      )}
 
       {/* Search modal */}
       {showSearch && (

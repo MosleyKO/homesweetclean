@@ -19,29 +19,42 @@ export async function POST(req: NextRequest) {
       limit: 100,
     });
 
-    const rows = stripeInvoices.data.map(inv => ({
-      client_id: clientId,
-      stripe_invoice_id: inv.id,
-      stripe_customer_id: stripeCustomerId,
-      amount_due: inv.amount_due,
-      amount_paid: inv.amount_paid,
-      currency: inv.currency,
-      status: inv.status,
-      description: inv.description ?? (inv.lines?.data?.[0]?.description ?? null),
-      invoice_url: inv.hosted_invoice_url ?? null,
-      invoice_pdf: inv.invoice_pdf ?? null,
-      due_date: inv.due_date ? new Date(inv.due_date * 1000).toISOString() : null,
-      paid_at: inv.status_transitions?.paid_at
+    const rows = stripeInvoices.data.map(inv => {
+      const paidAt = typeof inv.status_transitions?.paid_at === 'number'
         ? new Date(inv.status_transitions.paid_at * 1000).toISOString()
-        : null,
-      invoice_created_at: new Date(inv.created * 1000).toISOString(),
-    }));
+        : null;
+      const firstLineDesc = Array.isArray(inv.lines?.data) && inv.lines.data.length > 0
+        ? (inv.lines.data[0].description ?? null)
+        : null;
+      return {
+        client_id: clientId,
+        stripe_invoice_id: inv.id,
+        stripe_customer_id: stripeCustomerId,
+        amount_due: inv.amount_due ?? 0,
+        amount_paid: inv.amount_paid ?? 0,
+        currency: inv.currency ?? 'usd',
+        status: inv.status ?? 'draft',
+        description: inv.description ?? firstLineDesc,
+        invoice_url: inv.hosted_invoice_url ?? null,
+        invoice_pdf: inv.invoice_pdf ?? null,
+        due_date: inv.due_date ? new Date(inv.due_date * 1000).toISOString() : null,
+        paid_at: paidAt,
+        invoice_created_at: new Date(inv.created * 1000).toISOString(),
+      };
+    });
+
+    if (rows.length === 0) {
+      return NextResponse.json({ ok: true, count: 0 });
+    }
 
     const { error } = await supabaseAdmin
       .from("invoices")
       .upsert(rows, { onConflict: "stripe_invoice_id" });
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) {
+      console.error("Supabase upsert error:", error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
 
     return NextResponse.json({ ok: true, count: rows.length });
   } catch (err: unknown) {
