@@ -335,3 +335,43 @@ body {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
+
+/* =====================
+   INNER SERVICE PAGES (residential / commercial)
+   ===================== */
+@media (max-width: 768px) {
+  /* Hero — reduce top/bottom padding */
+  .inner-page-hero {
+    padding-top: 32px !important;
+    padding-bottom: 28px !important;
+  }
+  /* Hero h1 — smaller font so heading stays 2 lines max */
+  .inner-page-h1 {
+    font-size: clamp(28px, 8vw, 40px) !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Why-us strip — 2×2 grid instead of 4 stacked */
+  .why-us-strip-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+  }
+
+  /* Chips rows — allow wrapping on mobile */
+  .chips-row {
+    flex-wrap: wrap !important;
+  }
+
+  /* Area heading — remove nowrap, smaller font */
+  .area-heading {
+    white-space: normal !important;
+    font-size: clamp(22px, 6vw, 32px) !important;
+  }
+
+  /* Service sections — less top/bottom padding */
+  .inner-page-hero + * + * + section,
+  section#services {
+    padding-top: 36px !important;
+    padding-bottom: 48px !important;
+  }
+}

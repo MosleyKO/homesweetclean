@@ -47,10 +47,10 @@ export default function ResidentialPage() {
   return (
     <>
       {/* HERO */}
-      <section style={{ background: "var(--cream)", padding: "80px 32px 60px", textAlign: "center" }}>
+      <section className="inner-page-hero" style={{ background: "var(--cream)", padding: "80px 32px 60px", textAlign: "center" }}>
         <div style={{ maxWidth: 750, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Residential Cleaning ♥</div>
-          <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(38px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
+          <h1 className="inner-page-h1" style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(38px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
             Your home, cleaned by{" "}
             <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>people who care.</span>
           </h1>
@@ -66,7 +66,7 @@ export default function ResidentialPage() {
 
       {/* WHY US STRIP */}
       <section style={{ background: "var(--teal)", padding: "40px 32px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 32 }}>
+        <div className="why-us-strip-grid" style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 32 }}>
           {reasons.map((r, i) => (
             <div key={i} style={{ textAlign: "center" }}>
               <div style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 16, fontWeight: 600, color: "white", marginBottom: 6 }}>{r.title}</div>
@@ -129,14 +129,14 @@ export default function ResidentialPage() {
       <section style={{ padding: "60px 32px", background: "var(--cream-warm)", textAlign: "center" }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Where We Clean ♥</div>
-          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(26px, 3vw, 38px)", fontWeight: 600, color: "var(--teal)", marginBottom: 16 }}>
+          <h2 className="area-heading" style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(26px, 3vw, 38px)", fontWeight: 600, color: "var(--teal)", marginBottom: 16 }}>
             Proudly serving{" "}
             <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>Washington County.</span>
           </h2>
-          <p style={{ fontSize: 16, color: "var(--muted)", lineHeight: 1.7, marginBottom: 32 }}>
+          <p style={{ fontSize: 16, color: "var(--muted)", lineHeight: 1.7, marginBottom: 24 }}>
             We provide residential cleaning services across Southern Utah — including St. George, Washington, Hurricane, Ivins, and Santa Clara.
           </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <div className="chips-row" style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
             {["St. George", "Washington", "Hurricane", "Ivins", "Santa Clara"].map(city => (
               <span key={city} style={{ background: "white", border: "1px solid var(--line)", borderRadius: 24, padding: "8px 20px", fontFamily: "var(--font-montserrat), sans-serif", fontSize: 13, fontWeight: 600, color: "var(--teal)" }}>
                 {city}, UT
