@@ -13,7 +13,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
 
   const { data: clean } = await supabase
     .from('cleans')
-    .select('*, clients(name, address, email, property_type), clean_photos(id, url, room, photo_type)')
+    .select('*, clients(id, name, address, email, property_type), clean_photos(id, url, room, photo_type)')
     .eq('id', id)
     .single()
 
