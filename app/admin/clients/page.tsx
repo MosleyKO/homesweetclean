@@ -13,7 +13,7 @@ const statusColors: Record<string, { bg: string; color: string }> = {
 
 export default async function ClientsPage() {
   const [{ data: clients }, { data: recentCleans }] = await Promise.all([
-    supabase.from('clients').select('*').order('name', { ascending: true }),
+    supabase.from('clients').select('*').neq('status', 'lead').order('name', { ascending: true }),
     supabase.from('cleans').select('client_id, started_at').order('started_at', { ascending: false }),
   ])
 

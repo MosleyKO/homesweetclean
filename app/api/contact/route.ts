@@ -1,14 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(req: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const { name, email, phone, propertyType, service, bedrooms, address, message } = await req.json();
+  const body = await req.json();
+  const { name, email, phone, propertyType, service, bedrooms, address, message } = body;
+
+  // Capture source from headers/referrer
+  const referer = req.headers.get("referer") ?? "";
+  let sourceDetail = "";
+  try {
+    const url = new URL(referer);
+    const utm = url.searchParams.get("utm_source");
+    if (utm) sourceDetail = utm;
+  } catch {}
 
   if (!name || !email) {
     return NextResponse.json({ error: "Name and email are required" }, { status: 400 });
   }
 
+  // Save lead to DB
+  await supabaseAdmin.from("clients").insert([{
+    name,
+    email,
+    phone: phone || null,
+    address: address || null,
+    property_type: propertyType || "residential",
+    frequency: service || null,
+    bedrooms: bedrooms || null,
+    client_notes: message || null,
+    status: "lead",
+    pipeline_stage: "new_inquiry",
+    source: "website_form",
+    source_detail: sourceDetail || null,
+  }]);
+
+  // Send notification email
   try {
     const result = await resend.emails.send({
       from: "Home Sweet Clean <quotes@homesweetclean.co>",
@@ -33,7 +66,7 @@ export async function POST(req: NextRequest) {
               <tr><td style="padding: 12px 0; font-weight: 600; vertical-align: top;">Message</td><td style="padding: 12px 0;">${message || "None"}</td></tr>
             </table>
             <div style="margin-top: 28px; padding: 20px; background: #FCEFEC; border-radius: 8px;">
-              <p style="margin: 0; font-size: 14px; color: #6B7280;">Reply directly to this email to respond to ${name}.</p>
+              <p style="margin: 0; font-size: 14px; color: #6B7280;">Reply directly to this email to respond to ${name}. This lead has been added to your pipeline.</p>
             </div>
           </div>
         </div>
@@ -42,13 +75,10 @@ export async function POST(req: NextRequest) {
 
     if (result.error) {
       console.error("Resend error:", result.error);
-      return NextResponse.json({ error: result.error.message }, { status: 500 });
     }
-
-    return NextResponse.json({ ok: true });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error("Email send error:", message);
-    return NextResponse.json({ error: message }, { status: 500 });
+  } catch (err) {
+    console.error("Email send error:", err);
   }
+
+  return NextResponse.json({ ok: true });
 }

@@ -2,11 +2,12 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Users, LayoutDashboard, Sparkles } from 'lucide-react'
+import { Users, LayoutDashboard, Sparkles, Kanban } from 'lucide-react'
 
 const nav = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/clients', label: 'Clients', icon: Users },
+  { href: '/admin/pipeline', label: 'Pipeline', icon: Kanban },
   { href: '/admin/clean', label: 'Start Clean', icon: Sparkles },
 ]
 
