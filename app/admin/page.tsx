@@ -1,12 +1,13 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { Users, Sparkles, CheckCircle, Clock, Send, UserPlus, FileText, ChevronRight, DollarSign } from 'lucide-react'
+import { Users, Sparkles, CheckCircle, Clock, Send, UserPlus, FileText, ChevronRight, DollarSign, TrendingUp } from 'lucide-react'
 
 export const revalidate = 0
 
 export default async function AdminDashboard() {
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1).toISOString()
   const dayOfWeek = now.getDay()
   const monday = new Date(now)
   monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1))
@@ -17,22 +18,55 @@ export default async function AdminDashboard() {
     { data: allCleans },
     { count: pendingSummaries },
     { data: invoicesMTD },
+    { data: invoicesHistory },
   ] = await Promise.all([
     supabase.from('clients').select('id, name, status'),
     supabase.from('cleans').select('*, clients(name)').order('started_at', { ascending: false }).limit(60),
     supabase.from('cleans').select('*', { count: 'exact', head: true }).eq('summary_sent', false).not('ended_at', 'is', null),
     supabase.from('invoices').select('amount_paid').gte('invoice_created_at', startOfMonth),
+    supabase.from('invoices').select('amount_paid, invoice_created_at').gte('invoice_created_at', sixMonthsAgo).order('invoice_created_at', { ascending: true }),
   ])
 
-  // Stat counts
   const activeClients = clients?.filter(c => c.status === 'active').length ?? 0
   const newLeads = clients?.filter(c => c.status === 'lead').length ?? 0
   const inactiveClients = clients?.filter(c => c.status === 'inactive').length ?? 0
-  const totalClients = clients?.length ?? 0
   const cleaningsMTD = allCleans?.filter(c => c.started_at && c.started_at >= startOfMonth).length ?? 0
   const revenueMTD = (invoicesMTD ?? []).reduce((sum, inv) => sum + (inv.amount_paid ?? 0), 0) / 100
 
-  // Cleans this week bar chart data
+  // Monthly revenue for line chart (last 6 months)
+  const monthlyRevenue: Record<string, number> = {}
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    monthlyRevenue[key] = 0
+  }
+  for (const inv of invoicesHistory ?? []) {
+    if (!inv.invoice_created_at) continue
+    const d = new Date(inv.invoice_created_at)
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    if (key in monthlyRevenue) monthlyRevenue[key] += (inv.amount_paid ?? 0) / 100
+  }
+  const revenueEntries = Object.entries(monthlyRevenue)
+  const revenueValues = revenueEntries.map(([, v]) => v)
+  const revenueLabels = revenueEntries.map(([k]) => {
+    const [y, m] = k.split('-')
+    return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString('en-US', { month: 'short' })
+  })
+  const maxRevenue = Math.max(...revenueValues, 1)
+
+  // Build SVG line chart points (300×80 viewBox)
+  const chartW = 300, chartH = 80, padL = 4, padR = 4, padT = 10, padB = 4
+  const pts = revenueValues.map((v, i) => {
+    const x = padL + (i / (revenueValues.length - 1 || 1)) * (chartW - padL - padR)
+    const y = padT + (1 - v / maxRevenue) * (chartH - padT - padB)
+    return { x, y, v }
+  })
+  const polyline = pts.map(p => `${p.x},${p.y}`).join(' ')
+  const areaPath = pts.length > 0
+    ? `M${pts[0].x},${chartH} L${polyline.replace(/ /g, ' L')} L${pts[pts.length - 1].x},${chartH} Z`
+    : ''
+
+  // Cleans this week
   const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   const cleansByDay = [0, 0, 0, 0, 0, 0, 0]
   for (const clean of allCleans ?? []) {
@@ -46,13 +80,9 @@ export default async function AdminDashboard() {
   const todayIdx = (now.getDay() + 6) % 7
   const totalCleansWeek = cleansByDay.reduce((a, b) => a + b, 0)
 
-  // Recent cleans (top 5 for table)
   const recentCleans = (allCleans ?? []).slice(0, 5)
-
-  // Pending summaries list for right panel
   const pendingList = (allCleans ?? []).filter((c: any) => !c.summary_sent && c.ended_at).slice(0, 6)
 
-  // Recent activity derived from cleans
   type ActivityEvent = { label: string; name: string; date: string }
   const activityEvents: ActivityEvent[] = []
   for (const clean of (allCleans ?? []).slice(0, 25)) {
@@ -71,13 +101,11 @@ export default async function AdminDashboard() {
   return (
     <div>
       <style>{`
-        .dash-heading { margin-bottom: 28px; }
-        .dash-heading-sub { font-size: 14px; color: var(--muted); margin: 4px 0 0; }
         .dash-layout { display: flex; gap: 24px; align-items: flex-start; }
         .dash-left { flex: 1; min-width: 0; }
-        .dash-right { width: 290px; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; }
-        .dash-stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
-        .dash-actions-row { display: flex; gap: 16px; margin-bottom: 28px; }
+        .dash-right { width: 280px; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; }
+        .dash-stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .dash-actions-row { display: flex; gap: 16px; margin-bottom: 24px; }
         .dash-table { display: block; }
         .dash-bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
         .dash-cards { display: none; }
@@ -85,7 +113,6 @@ export default async function AdminDashboard() {
         .dash-mobile-action-col { display: none; }
 
         @media (max-width: 768px) {
-          .dash-heading-sub { display: none; }
           .dash-layout { flex-direction: column; }
           .dash-right { display: none; width: 100%; }
           .dash-stat-cards { display: none; }
@@ -98,13 +125,6 @@ export default async function AdminDashboard() {
         }
       `}</style>
 
-      {/* Page heading */}
-      <div className="dash-heading">
-        <p className="eyebrow" style={{ marginBottom: 6 }}>Home Sweet Clean</p>
-        <h1 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 32, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Dashboard</h1>
-        <p className="dash-heading-sub">Here&apos;s what&apos;s happening with your business today.</p>
-      </div>
-
       <div className="dash-layout">
         {/* ── LEFT COLUMN ── */}
         <div className="dash-left">
@@ -112,7 +132,7 @@ export default async function AdminDashboard() {
           {/* Mobile: compact stat row */}
           <div className="dash-mobile-stat-row">
             {[
-              { label: 'Clients', value: totalClients, icon: Users, color: 'var(--teal)' },
+              { label: 'Clients', value: activeClients + newLeads + inactiveClients, icon: Users, color: 'var(--teal)' },
               { label: 'Active', value: activeClients, icon: CheckCircle, color: 'var(--sage-deep)' },
               { label: 'Cleans', value: cleaningsMTD, icon: Sparkles, color: 'var(--blush)' },
               { label: 'Pending', value: pendingSummaries ?? 0, icon: Clock, color: '#F4B942' },
@@ -131,7 +151,7 @@ export default async function AdminDashboard() {
             <Link href='/admin/clients/new' style={{ display: 'block', background: 'white', color: 'var(--teal)', textAlign: 'center', padding: 14, borderRadius: 50, fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', border: '1.5px solid var(--line)' }}>+ Add Client</Link>
           </div>
 
-          {/* Desktop: stat cards */}
+          {/* Desktop: stat cards — horizontal layout (icon left, text right) */}
           <div className="dash-stat-cards">
             {[
               { label: 'REVENUE (MTD)', value: `$${revenueMTD.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`, sub: 'From invoices this month', icon: DollarSign, bg: '#dcfce7', iconColor: '#16a34a' },
@@ -139,13 +159,15 @@ export default async function AdminDashboard() {
               { label: 'NEW LEADS', value: newLeads, sub: 'In pipeline', icon: UserPlus, bg: '#fce7f3', iconColor: '#ec4899' },
               { label: 'SUMMARIES PENDING', value: pendingSummaries ?? 0, sub: 'Require attention', icon: FileText, bg: '#fef9c3', iconColor: '#ca8a04' },
             ].map(({ label, value, sub, icon: Icon, bg, iconColor }) => (
-              <div key={label} style={{ background: 'white', borderRadius: 14, padding: 20, border: '1px solid var(--line)' }}>
-                <div style={{ width: 40, height: 40, borderRadius: '50%', background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+              <div key={label} style={{ background: 'white', borderRadius: 14, padding: '16px 18px', border: '1px solid var(--line)', display: 'flex', alignItems: 'center', gap: 14 }}>
+                <div style={{ width: 42, height: 42, borderRadius: 12, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Icon size={18} color={iconColor} strokeWidth={1.75} />
                 </div>
-                <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 6 }}>{label}</div>
-                <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 34, fontWeight: 600, color: 'var(--teal)', lineHeight: 1, marginBottom: 6 }}>{value}</div>
-                <div style={{ fontSize: 12, color: 'var(--muted)' }}>{sub}</div>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 9, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 3 }}>{label}</div>
+                  <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 26, fontWeight: 600, color: 'var(--teal)', lineHeight: 1, marginBottom: 2 }}>{value}</div>
+                  <div style={{ fontSize: 11, color: 'var(--muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{sub}</div>
+                </div>
               </div>
             ))}
           </div>
@@ -159,8 +181,8 @@ export default async function AdminDashboard() {
           {/* Recent cleans — desktop table */}
           <div className="dash-table">
             <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
-              <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 18, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Recent Cleans</h2>
+              <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--line)' }}>
+                <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 17, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Recent Cleans</h2>
               </div>
               {recentCleans.length > 0 ? (
                 <>
@@ -179,19 +201,19 @@ export default async function AdminDashboard() {
                           : null
                         return (
                           <tr key={clean.id} style={{ borderTop: '1px solid var(--line)' }}>
-                            <td style={{ padding: '14px 24px', fontWeight: 600, color: 'var(--teal)', fontSize: 14 }}>{(clean.clients as any)?.name ?? '—'}</td>
-                            <td style={{ padding: '14px 24px', color: 'var(--muted)', fontSize: 14 }}>
+                            <td style={{ padding: '13px 24px', fontWeight: 600, color: 'var(--teal)', fontSize: 14 }}>{(clean.clients as any)?.name ?? '—'}</td>
+                            <td style={{ padding: '13px 24px', color: 'var(--muted)', fontSize: 14 }}>
                               {clean.started_at ? new Date(clean.started_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
                             </td>
-                            <td style={{ padding: '14px 24px', color: 'var(--muted)', fontSize: 14 }}>
+                            <td style={{ padding: '13px 24px', color: 'var(--muted)', fontSize: 14 }}>
                               {duration ? `${duration} min` : clean.started_at ? 'In progress' : '—'}
                             </td>
-                            <td style={{ padding: '14px 24px' }}>
+                            <td style={{ padding: '13px 24px' }}>
                               <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: clean.summary_sent ? '#dcfce7' : '#fef9c3', color: clean.summary_sent ? '#166534' : '#854d0e' }}>
                                 {clean.summary_sent ? 'Sent' : 'Pending'}
                               </span>
                             </td>
-                            <td style={{ padding: '14px 24px' }}>
+                            <td style={{ padding: '13px 24px' }}>
                               <Link href={`/admin/cleans/${clean.id}`} style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--blush)', textDecoration: 'none', letterSpacing: '0.06em' }}>VIEW →</Link>
                             </td>
                           </tr>
@@ -199,7 +221,7 @@ export default async function AdminDashboard() {
                       })}
                     </tbody>
                   </table>
-                  <div style={{ padding: '14px 24px', borderTop: '1px solid var(--line)', textAlign: 'center' }}>
+                  <div style={{ padding: '12px 24px', borderTop: '1px solid var(--line)', textAlign: 'center' }}>
                     <Link href='/admin/clients' style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--blush)', textDecoration: 'none', letterSpacing: '0.06em' }}>VIEW ALL CLEANS →</Link>
                   </div>
                 </>
@@ -211,11 +233,11 @@ export default async function AdminDashboard() {
             </div>
           </div>
 
-          {/* Desktop: bottom row — Recent Activity + Cleans This Week */}
+          {/* Desktop: bottom row */}
           <div className="dash-bottom-row">
             {/* Recent Activity */}
             <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
-              <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--line)' }}>
+              <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--line)' }}>
                 <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 15, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Recent Activity</h3>
               </div>
               {activity.length > 0 ? activity.map((ev, i) => {
@@ -225,9 +247,9 @@ export default async function AdminDashboard() {
                 const iconColor = isSummary ? '#16a34a' : isCompleted ? '#0284c7' : '#ec4899'
                 const Icon = isSummary ? Send : isCompleted ? CheckCircle : Sparkles
                 return (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 20px', borderTop: i > 0 ? '1px solid var(--line)' : undefined, gap: 10 }}>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 20px', borderTop: i > 0 ? '1px solid var(--line)' : undefined, gap: 10 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: iconBg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: 26, height: 26, borderRadius: '50%', background: iconBg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <Icon size={11} color={iconColor} strokeWidth={2} />
                       </div>
                       <span style={{ fontSize: 12, color: 'var(--teal)', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -244,28 +266,28 @@ export default async function AdminDashboard() {
               )}
             </div>
 
-            {/* Cleans This Week */}
+            {/* Cleans This Week — slimmer bars */}
             <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
-              <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 15, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Cleans This Week</h3>
                 <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-outfit), sans-serif' }}>Total: {totalCleansWeek}</span>
               </div>
-              <div style={{ padding: '20px 16px 12px' }}>
-                <svg viewBox="0 0 280 110" style={{ width: '100%', overflow: 'visible' }}>
+              <div style={{ padding: '16px 16px 10px' }}>
+                <svg viewBox="0 0 240 80" style={{ width: '100%', overflow: 'visible' }}>
                   {cleansByDay.map((count, i) => {
-                    const barW = 28
-                    const gap = 12
-                    const x = i * (barW + gap) + 2
-                    const barH = (count / maxBars) * 72
-                    const y = 82 - barH
+                    const barW = 16
+                    const gap = 18
+                    const x = i * (barW + gap) + 4
+                    const barH = (count / maxBars) * 52
+                    const y = 58 - barH
                     const isToday = i === todayIdx
                     return (
                       <g key={i}>
-                        <rect x={x} y={barH > 0 ? y : 78} width={barW} height={barH > 0 ? barH : 4} rx={5} fill={isToday ? 'var(--blush)' : '#fce7f3'} />
+                        <rect x={x} y={barH > 0 ? y : 54} width={barW} height={barH > 0 ? barH : 4} rx={4} fill={isToday ? 'var(--blush)' : '#fce7f3'} />
                         {count > 0 && (
-                          <text x={x + barW / 2} y={y - 5} textAnchor="middle" fontSize="10" fill="var(--teal)" fontFamily="var(--font-montserrat), sans-serif" fontWeight="700">{count}</text>
+                          <text x={x + barW / 2} y={y - 4} textAnchor="middle" fontSize="8" fill="var(--teal)" fontFamily="var(--font-montserrat), sans-serif" fontWeight="700">{count}</text>
                         )}
-                        <text x={x + barW / 2} y={98} textAnchor="middle" fontSize="9" fill={isToday ? 'var(--blush)' : 'var(--muted)'} fontFamily="var(--font-montserrat), sans-serif" fontWeight={isToday ? '700' : '500'}>{weekDays[i]}</text>
+                        <text x={x + barW / 2} y={70} textAnchor="middle" fontSize="7.5" fill={isToday ? 'var(--blush)' : 'var(--muted)'} fontFamily="var(--font-montserrat), sans-serif" fontWeight={isToday ? '700' : '500'}>{weekDays[i]}</text>
                       </g>
                     )
                   })}
@@ -322,11 +344,11 @@ export default async function AdminDashboard() {
 
           {/* Pipeline Overview */}
           <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
-            <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 15, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Pipeline Overview</h3>
               <Link href='/admin/pipeline' style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, color: 'var(--blush)', textDecoration: 'none', letterSpacing: '0.04em' }}>View all</Link>
             </div>
-            <div style={{ padding: '6px 0' }}>
+            <div style={{ padding: '4px 0' }}>
               {[
                 { label: 'New Leads', count: newLeads, dot: '#f59e0b' },
                 { label: 'Active Clients', count: activeClients, dot: '#22c55e' },
@@ -346,7 +368,7 @@ export default async function AdminDashboard() {
 
           {/* Summaries to Send */}
           <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
-            <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 15, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Summaries to Send</h3>
               {(pendingSummaries ?? 0) > 0 && (
                 <span style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 700, background: '#fef9c3', color: '#854d0e', padding: '2px 8px', borderRadius: 20 }}>
@@ -355,7 +377,7 @@ export default async function AdminDashboard() {
               )}
             </div>
             {pendingList.length > 0 ? pendingList.map((clean: any, i: number) => (
-              <Link key={clean.id} href={`/admin/cleans/${clean.id}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 20px', borderTop: i > 0 ? '1px solid var(--line)' : undefined, textDecoration: 'none', gap: 8 }}>
+              <Link key={clean.id} href={`/admin/cleans/${clean.id}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 20px', borderTop: i > 0 ? '1px solid var(--line)' : undefined, textDecoration: 'none', gap: 8 }}>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--teal)', fontFamily: 'var(--font-montserrat), sans-serif' }}>{(clean.clients as any)?.name ?? '—'}</div>
                   <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
@@ -365,24 +387,62 @@ export default async function AdminDashboard() {
                 <ChevronRight size={14} color='var(--blush)' strokeWidth={2.5} />
               </Link>
             )) : (
-              <div style={{ padding: '28px 20px', textAlign: 'center', fontSize: 13, color: 'var(--muted)', fontFamily: 'var(--font-outfit), sans-serif' }}>
+              <div style={{ padding: '24px 20px', textAlign: 'center', fontSize: 13, color: 'var(--muted)', fontFamily: 'var(--font-outfit), sans-serif' }}>
                 All summaries sent ✓
               </div>
             )}
           </div>
 
-          {/* Revenue overview */}
-          {revenueMTD > 0 && (
-            <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', padding: 20 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
-                <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 15, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Revenue Overview</h3>
-              </div>
-              <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 32, fontWeight: 600, color: 'var(--teal)', margin: '10px 0 2px' }}>
-                ${revenueMTD.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-              </div>
-              <div style={{ fontSize: 12, color: 'var(--muted)' }}>This month</div>
+          {/* Revenue Trend — line chart */}
+          <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', padding: '18px 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+              <TrendingUp size={14} color='var(--blush)' strokeWidth={2} />
+              <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 15, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Revenue Trend</h3>
             </div>
-          )}
+            <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 28, fontWeight: 600, color: 'var(--teal)', margin: '8px 0 2px' }}>
+              ${revenueMTD.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+            </div>
+            <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 14 }}>This month</div>
+            <svg viewBox={`0 0 ${chartW} ${chartH}`} style={{ width: '100%', overflow: 'visible' }}>
+              <defs>
+                <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="var(--blush)" stopOpacity="0.18" />
+                  <stop offset="100%" stopColor="var(--blush)" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              {/* Area fill */}
+              {pts.length > 1 && <path d={areaPath} fill="url(#revenueGrad)" />}
+              {/* Line */}
+              {pts.length > 1 && (
+                <polyline
+                  points={polyline}
+                  fill="none"
+                  stroke="var(--blush)"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                />
+              )}
+              {/* Dots */}
+              {pts.map((p, i) => (
+                <circle key={i} cx={p.x} cy={p.y} r="3" fill="var(--blush)" stroke="white" strokeWidth="1.5" />
+              ))}
+              {/* Month labels */}
+              {revenueLabels.map((label, i) => (
+                <text
+                  key={i}
+                  x={padL + (i / (revenueLabels.length - 1 || 1)) * (chartW - padL - padR)}
+                  y={chartH + 14}
+                  textAnchor="middle"
+                  fontSize="8"
+                  fill="var(--muted)"
+                  fontFamily="var(--font-montserrat), sans-serif"
+                >
+                  {label}
+                </text>
+              ))}
+            </svg>
+          </div>
         </div>
       </div>
     </div>
