@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Home, Sparkles, ArrowRightLeft, CalendarDays, Leaf, ShieldCheck, RefreshCw, MessageCircle, Heart, BadgeCheck } from "lucide-react";
+import { Home, Sparkles, ArrowRightLeft, CalendarDays } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Residential Cleaning Services in St. George, UT | Home Sweet Clean",
@@ -36,24 +36,18 @@ const services = [
   },
 ];
 
-const stripReasons = [
+const stats = [
+  { number: "100%", label: "Satisfaction Rate" },
+  { number: "5★", label: "Average Review" },
+  { number: "Local", label: "Southern Utah Based" },
+  { number: "Insured", label: "Fully Background Checked" },
+];
+
+const reasons = [
   { title: "Locally owned & operated", desc: "We're your neighbors — not a franchise. Southern Utah locals serving Southern Utah families." },
   { title: "Vetted & insured", desc: "Every cleaner is fully insured and background checked for your peace of mind." },
   { title: "Eco-friendly products", desc: "Safe for your kids, your pets, and your home. We clean without compromise." },
   { title: "Satisfaction guaranteed", desc: "Not happy with something? We'll come back and make it right. No questions asked." },
-];
-
-const valueIconStyle = { width: 24, height: 24, color: "var(--blush)", strokeWidth: 1.5 };
-
-const valueCards = [
-  { icon: <Home {...valueIconStyle} />, title: "Locally Owned & Operated", desc: "We're your neighbors — not a national franchise. When you hire us, you're investing in your own community." },
-  { icon: <Leaf {...valueIconStyle} />, title: "Safe & Eco-Friendly Products", desc: "We use products that are safe for your kids, your pets, and the planet. Clean without compromise." },
-  { icon: <ShieldCheck {...valueIconStyle} />, title: "Insured & Background Checked", desc: "Every member of our team is fully insured and background checked. Your home is in safe hands." },
-  { icon: <RefreshCw {...valueIconStyle} />, title: "Consistent, Reliable Service", desc: "We show up when we say we will — every single time. No surprises, no excuses." },
-  { icon: <Sparkles {...valueIconStyle} />, title: "Detail-Obsessed Cleaning", desc: "We don't just clean what you can see. We focus on the corners, the edges, the things others skip." },
-  { icon: <MessageCircle {...valueIconStyle} />, title: "Communication You Can Count On", desc: "Easy scheduling, clear confirmations, and a team that's always reachable. No chasing us down." },
-  { icon: <Heart {...valueIconStyle} />, title: "We Genuinely Care", desc: "This isn't just a job to us. We're passionate about the homes we clean and the families we serve." },
-  { icon: <BadgeCheck {...valueIconStyle} />, title: "Satisfaction Guaranteed", desc: "Not happy with something? We'll come back and make it right. No questions asked." },
 ];
 
 export default function ResidentialPage() {
@@ -77,15 +71,29 @@ export default function ResidentialPage() {
         </div>
       </section>
 
-      {/* WHY US STRIP */}
-      <section style={{ background: "var(--teal)", padding: "40px 32px" }}>
-        <div className="why-us-strip-grid" style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 32 }}>
-          {stripReasons.map((r, i) => (
-            <div key={i} style={{ textAlign: "center" }}>
-              <div style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 16, fontWeight: 600, color: "white", marginBottom: 6 }}>{r.title}</div>
-              <div style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", lineHeight: 1.6 }}>{r.desc}</div>
+      {/* STATS */}
+      <section style={{ background: "var(--teal)", padding: "48px 32px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 24, textAlign: "center" }} className="stats-grid">
+          {stats.map((s, i) => (
+            <div key={i}>
+              <div style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 36, fontWeight: 700, color: "var(--blush)", lineHeight: 1 }}>{s.number}</div>
+              <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.65)", marginTop: 8 }}>{s.label}</div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* WHY US STRIP */}
+      <section style={{ background: "var(--teal)", padding: "0 32px 48px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", borderTop: "1px solid rgba(255,255,255,0.15)", paddingTop: 40 }}>
+          <div className="why-us-strip-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 32 }}>
+            {reasons.map((r, i) => (
+              <div key={i} style={{ textAlign: "center" }}>
+                <div style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 16, fontWeight: 600, color: "white", marginBottom: 6 }}>{r.title}</div>
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", lineHeight: 1.6 }}>{r.desc}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -144,30 +152,6 @@ export default function ResidentialPage() {
                     <Link href="/contact" className="btn-primary" style={{ textAlign: "center" }}>Book This Service</Link>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* VALUE STACK */}
-      <section className="value-cards-section" style={{ padding: "80px 32px", background: "var(--cream-warm)" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 40 }}>
-            <div className="eyebrow" style={{ justifyContent: "center" }}>Why Choose Us ♥</div>
-            <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1 }}>
-              Cleaning you can{" "}
-              <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>actually trust.</span>
-            </h2>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
-            {valueCards.map((r, i) => (
-              <div key={i} className="value-card" style={{ background: "white", borderRadius: 16, padding: "36px 28px", border: "1px solid var(--line)" }}>
-                <div style={{ width: 52, height: 52, borderRadius: "50%", background: "var(--blush-bg)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
-                  {r.icon}
-                </div>
-                <h3 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 20, fontWeight: 600, color: "var(--teal)", marginBottom: 12 }}>{r.title}</h3>
-                <p style={{ fontSize: 15, color: "var(--muted)", lineHeight: 1.7 }}>{r.desc}</p>
               </div>
             ))}
           </div>
