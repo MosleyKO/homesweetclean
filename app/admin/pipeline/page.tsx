@@ -33,7 +33,7 @@ export default async function PipelinePage() {
             {total} active {total === 1 ? 'lead' : 'leads'}
           </p>
         </div>
-        <Link href='/admin/clients/new' className='btn-primary' style={{ display: 'inline-flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+        <Link href='/admin/clients/new?lead=1' className='btn-primary' style={{ display: 'inline-flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
           <UserPlus size={15} /> Add Lead
         </Link>
       </div>
@@ -49,7 +49,7 @@ export default async function PipelinePage() {
           <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 20 }}>
             Leads from your quote form will appear here automatically.
           </p>
-          <Link href='/admin/clients/new' className='btn-primary' style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <Link href='/admin/clients/new?lead=1' className='btn-primary' style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <UserPlus size={15} /> Add Manually
           </Link>
         </div>

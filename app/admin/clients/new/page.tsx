@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
 const inputStyle = {
@@ -30,6 +30,8 @@ const labelStyle = {
 
 export default function NewClientPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const isLead = searchParams.get('lead') === '1'
   const [saving, setSaving] = useState(false)
   const [form, setForm] = useState({
     name: '',
@@ -37,10 +39,12 @@ export default function NewClientPage() {
     phone: '',
     address: '',
     frequency: '',
-    status: 'active',
+    status: isLead ? 'lead' : 'active',
     property_type: 'residential',
     access_notes: '',
     client_notes: '',
+    pipeline_stage: isLead ? 'new_inquiry' : '',
+    source: isLead ? 'manual' : '',
   })
 
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }))
@@ -50,7 +54,7 @@ export default function NewClientPage() {
     setSaving(true)
     const { error } = await supabase.from('clients').insert([form])
     if (!error) {
-      router.push('/admin/clients')
+      router.push(isLead ? '/admin/pipeline' : '/admin/clients')
     } else {
       alert('Something went wrong. Please try again.')
       setSaving(false)
@@ -60,8 +64,8 @@ export default function NewClientPage() {
   return (
     <div style={{ maxWidth: 640 }}>
       <div style={{ marginBottom: 32 }}>
-        <p className="eyebrow" style={{ marginBottom: 6 }}>Clients</p>
-        <h1 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 32, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Add New Client</h1>
+        <p className="eyebrow" style={{ marginBottom: 6 }}>{isLead ? 'Pipeline' : 'Clients'}</p>
+        <h1 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 32, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>{isLead ? 'Add New Lead' : 'Add New Client'}</h1>
       </div>
 
       <form onSubmit={handleSubmit}>
