@@ -7,21 +7,30 @@ export async function GET(req: NextRequest) {
   if (!q || q.length < 2) return NextResponse.json({ customers: [] });
 
   try {
-    const results = await stripe.customers.search({
-      query: `name~"${q}" OR email~"${q}"`,
-      limit: 10,
-    });
+    // Run name and email searches in parallel, then merge + dedupe
+    const [byName, byEmail] = await Promise.allSettled([
+      stripe.customers.search({ query: `name~"${q}"`, limit: 10 }),
+      stripe.customers.search({ query: `email~"${q}"`, limit: 10 }),
+    ]);
 
-    const customers = results.data.map(c => ({
-      id: c.id,
-      name: c.name ?? "",
-      email: c.email ?? "",
-      phone: c.phone ?? "",
-    }));
+    const seen = new Set<string>();
+    const merged = [];
 
-    return NextResponse.json({ customers });
+    for (const result of [byName, byEmail]) {
+      if (result.status === 'fulfilled') {
+        for (const c of result.value.data) {
+          if (!seen.has(c.id)) {
+            seen.add(c.id);
+            merged.push({ id: c.id, name: c.name ?? "", email: c.email ?? "", phone: c.phone ?? "" });
+          }
+        }
+      }
+    }
+
+    return NextResponse.json({ customers: merged });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
+    console.error("Stripe search error:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
