@@ -158,7 +158,7 @@ export default function ContactPage() {
 
                 {status === "error" && (
                   <p style={{ color: "#E53E3E", fontSize: 14, fontFamily: "var(--font-montserrat), sans-serif" }}>
-                    Something went wrong. Please try again or call us directly at (435) 681-0314.
+                    Something went wrong. Please try again or call us directly at (435) 900-7866.
                   </p>
                 )}
 
@@ -172,7 +172,7 @@ export default function ContactPage() {
           {/* CONTACT INFO */}
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {[
-              { icon: <Phone size={20} color="var(--blush)" strokeWidth={1.5} />, label: "Call or Text", value: "(435) 681-0314", href: "tel:4356810314" },
+              { icon: <Phone size={20} color="var(--blush)" strokeWidth={1.5} />, label: "Call or Text", value: "(435) 900-7866", href: "tel:4359007866" },
               { icon: <Mail size={20} color="var(--blush)" strokeWidth={1.5} />, label: "Email Us", value: "hello@homesweetclean.co", href: "mailto:hello@homesweetclean.co" },
               { icon: <MapPin size={20} color="var(--blush)" strokeWidth={1.5} />, label: "Service Area", value: "St. George · Washington · Hurricane · Ivins · Santa Clara", href: null },
             ].map((item, i) => (

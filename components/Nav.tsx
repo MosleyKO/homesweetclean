@@ -135,7 +135,7 @@ export default function Nav() {
 
         {/* CTA */}
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <a href="tel:4356810314" style={{
+          <a href="tel:4359007866" style={{
             fontFamily: "var(--font-montserrat), sans-serif",
             fontSize: 13,
             fontWeight: 500,
@@ -147,7 +147,7 @@ export default function Nav() {
               window.gtag("event", "phone_call_click", { event_category: "contact", event_label: "nav_desktop" });
             }
           }}>
-            (435) 681-0314
+            (435) 900-7866
           </a>
           <Link href="/contact" className="btn-primary nav-cta-btn" style={{ fontSize: 12, padding: "11px 22px" }}>
             Get a Quote ♥
@@ -244,7 +244,7 @@ export default function Nav() {
           ))}
 
           <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 12 }}>
-            <a href="tel:4356810314" style={{
+            <a href="tel:4359007866" style={{
               fontFamily: "var(--font-montserrat), sans-serif",
               fontSize: 14,
               color: "var(--teal)",
@@ -253,7 +253,7 @@ export default function Nav() {
               if (typeof window !== "undefined" && window.gtag) {
                 window.gtag("event", "phone_call_click", { event_category: "contact", event_label: "nav_mobile" });
               }
-            }}><Phone size={14} strokeWidth={1.5} style={{ display: "inline", marginRight: 6 }} />(435) 681-0314</a>
+            }}><Phone size={14} strokeWidth={1.5} style={{ display: "inline", marginRight: 6 }} />(435) 900-7866</a>
             <Link href="/contact" className="btn-primary" onClick={() => setOpen(false)} style={{ textAlign: "center" }}>
               Get a Quote ♥
             </Link>

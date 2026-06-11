@@ -67,7 +67,7 @@ export default function Footer() {
             Contact Us
           </h4>
           {[
-            { icon: <Phone size={14} strokeWidth={1.5} />, text: "(435) 681-0314" },
+            { icon: <Phone size={14} strokeWidth={1.5} />, text: "(435) 900-7866" },
             { icon: <Mail size={14} strokeWidth={1.5} />, text: "hello@homesweetclean.co" },
             { icon: <MapPin size={14} strokeWidth={1.5} />, text: "Southern Utah" },
           ].map((item, i) => (

@@ -91,7 +91,7 @@ export default function ServicesPage() {
         </div>
         <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
           <Link href="/contact" className="btn-primary">Get a Free Quote ♥</Link>
-          <a href="tel:4356810314" className="btn-secondary" style={{ color: "white", borderColor: "rgba(255,255,255,0.3)" }}>Call Us</a>
+          <a href="tel:4359007866" className="btn-secondary" style={{ color: "white", borderColor: "rgba(255,255,255,0.3)" }}>Call Us</a>
         </div>
       </section>
     </>
