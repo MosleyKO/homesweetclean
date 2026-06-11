@@ -1,200 +1,386 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { Users, Sparkles, CheckCircle, Clock, Timer, Send } from 'lucide-react'
+import { Users, Sparkles, CheckCircle, Clock, Send, UserPlus, FileText, ChevronRight, DollarSign } from 'lucide-react'
 
 export const revalidate = 0
 
 export default async function AdminDashboard() {
-  const [{ count: totalClients }, { count: activeClients }, { count: totalCleans }, { count: pendingSummaries }] = await Promise.all([
-    supabase.from('clients').select('*', { count: 'exact', head: true }),
-    supabase.from('clients').select('*', { count: 'exact', head: true }).eq('status', 'active'),
-    supabase.from('cleans').select('*', { count: 'exact', head: true }),
+  const now = new Date()
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+  const dayOfWeek = now.getDay()
+  const monday = new Date(now)
+  monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1))
+  monday.setHours(0, 0, 0, 0)
+
+  const [
+    { data: clients },
+    { data: allCleans },
+    { count: pendingSummaries },
+    { data: invoicesMTD },
+  ] = await Promise.all([
+    supabase.from('clients').select('id, name, status'),
+    supabase.from('cleans').select('*, clients(name)').order('started_at', { ascending: false }).limit(60),
     supabase.from('cleans').select('*', { count: 'exact', head: true }).eq('summary_sent', false).not('ended_at', 'is', null),
+    supabase.from('invoices').select('amount_paid').gte('invoice_created_at', startOfMonth),
   ])
 
-  const { data: recentCleans } = await supabase
-    .from('cleans')
-    .select('*, clients(name)')
-    .order('started_at', { ascending: false })
-    .limit(5)
+  // Stat counts
+  const activeClients = clients?.filter(c => c.status === 'active').length ?? 0
+  const newLeads = clients?.filter(c => c.status === 'lead').length ?? 0
+  const inactiveClients = clients?.filter(c => c.status === 'inactive').length ?? 0
+  const totalClients = clients?.length ?? 0
+  const cleaningsMTD = allCleans?.filter(c => c.started_at && c.started_at >= startOfMonth).length ?? 0
+  const revenueMTD = (invoicesMTD ?? []).reduce((sum, inv) => sum + (inv.amount_paid ?? 0), 0) / 100
 
-  const inProgress = recentCleans?.filter((c: any) => c.started_at && !c.ended_at).length ?? 0
+  // Cleans this week bar chart data
+  const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  const cleansByDay = [0, 0, 0, 0, 0, 0, 0]
+  for (const clean of allCleans ?? []) {
+    if (!clean.started_at) continue
+    const d = new Date(clean.started_at)
+    if (d < monday) continue
+    const idx = (d.getDay() + 6) % 7
+    cleansByDay[idx]++
+  }
+  const maxBars = Math.max(...cleansByDay, 1)
+  const todayIdx = (now.getDay() + 6) % 7
+  const totalCleansWeek = cleansByDay.reduce((a, b) => a + b, 0)
 
-  const stats = [
-    { label: 'Total Clients', value: totalClients ?? 0, icon: Users, color: 'var(--teal)' },
-    { label: 'Active Clients', value: activeClients ?? 0, icon: CheckCircle, color: 'var(--sage-deep)' },
-    { label: 'Total Cleans', value: totalCleans ?? 0, icon: Sparkles, color: 'var(--blush)' },
-    { label: 'Summaries Pending', value: pendingSummaries ?? 0, icon: Clock, color: '#F4B942' },
-  ]
+  // Recent cleans (top 5 for table)
+  const recentCleans = (allCleans ?? []).slice(0, 5)
+
+  // Pending summaries list for right panel
+  const pendingList = (allCleans ?? []).filter((c: any) => !c.summary_sent && c.ended_at).slice(0, 6)
+
+  // Recent activity derived from cleans
+  type ActivityEvent = { label: string; name: string; date: string }
+  const activityEvents: ActivityEvent[] = []
+  for (const clean of (allCleans ?? []).slice(0, 25)) {
+    const name = (clean.clients as any)?.name ?? 'Unknown'
+    if (clean.summary_sent && clean.summary_sent_at) {
+      activityEvents.push({ label: 'Summary sent to', name, date: clean.summary_sent_at })
+    } else if (clean.ended_at) {
+      activityEvents.push({ label: 'Clean completed for', name, date: clean.ended_at })
+    } else if (clean.started_at) {
+      activityEvents.push({ label: 'Clean started for', name, date: clean.started_at })
+    }
+  }
+  activityEvents.sort((a, b) => b.date.localeCompare(a.date))
+  const activity = activityEvents.slice(0, 6)
 
   return (
-    <div style={{ maxWidth: 900 }}>
+    <div>
       <style>{`
-        .dash-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
-        .dash-action-start { }
-        .dash-action-add { }
-        .dash-today { display: none; }
-        .dash-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 40px; }
-        .dash-recent-table { display: block; }
-        .dash-recent-cards { display: none; }
+        .dash-heading { margin-bottom: 28px; }
+        .dash-heading-sub { font-size: 14px; color: var(--muted); margin: 4px 0 0; }
+        .dash-layout { display: flex; gap: 24px; align-items: flex-start; }
+        .dash-left { flex: 1; min-width: 0; }
+        .dash-right { width: 290px; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; }
+        .dash-stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+        .dash-actions-row { display: flex; gap: 16px; margin-bottom: 28px; }
+        .dash-table { display: block; }
+        .dash-bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .dash-cards { display: none; }
+        .dash-mobile-stat-row { display: none; }
+        .dash-mobile-action-col { display: none; }
 
         @media (max-width: 768px) {
-          .dash-today { display: none; }
-          .dash-actions { flex-direction: column; gap: 10px; margin-bottom: 12px; margin-top: 20px; }
-          .dash-action-start { display: block; background: var(--blush); color: white; text-align: center; padding: 16px; border-radius: 50px; font-family: var(--font-montserrat), sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; }
-          .dash-action-add { display: block; background: white; color: var(--teal); text-align: center; padding: 14px; border-radius: 50px; font-family: var(--font-montserrat), sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border: 1.5px solid var(--line); }
-          .dash-stats { grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 0; margin-top: 12px; }
-          .dash-recent-table { display: none; }
-          .dash-recent-cards { display: block; }
+          .dash-heading-sub { display: none; }
+          .dash-layout { flex-direction: column; }
+          .dash-right { display: none; width: 100%; }
+          .dash-stat-cards { display: none; }
+          .dash-actions-row { display: none; }
+          .dash-bottom-row { display: none; }
+          .dash-table { display: none; }
+          .dash-cards { display: block; }
+          .dash-mobile-stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 0; margin-top: 12px; }
+          .dash-mobile-action-col { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; margin-top: 20px; }
         }
       `}</style>
 
-      <div style={{ marginBottom: 24 }}>
+      {/* Page heading */}
+      <div className="dash-heading">
         <p className="eyebrow" style={{ marginBottom: 6 }}>Home Sweet Clean</p>
-        <h1 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 32, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>
-          Dashboard
-        </h1>
+        <h1 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 32, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Dashboard</h1>
+        <p className="dash-heading-sub">Here&apos;s what&apos;s happening with your business today.</p>
       </div>
 
-      {/* Today's Activity — mobile only */}
-      <div className="dash-today">
-        <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--line)', padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 0 }}>
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Timer size={15} color="#3B82F6" strokeWidth={1.75} />
-            </div>
-            <div>
-              <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 20, fontWeight: 700, color: 'var(--teal)', lineHeight: 1 }}>{inProgress}</div>
-              <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>In progress</div>
-            </div>
-          </div>
-          <div style={{ width: 1, background: 'var(--line)', alignSelf: 'stretch', margin: '0 16px' }} />
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#FEFCE8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Clock size={15} color="#F4B942" strokeWidth={1.75} />
-            </div>
-            <div>
-              <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 20, fontWeight: 700, color: 'var(--teal)', lineHeight: 1 }}>{pendingSummaries ?? 0}</div>
-              <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>Summary pending</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div className="dash-layout">
+        {/* ── LEFT COLUMN ── */}
+        <div className="dash-left">
 
-      {/* Stats — desktop only */}
-      <div className="dash-stats">
-        {stats.map(({ label, value, icon: Icon, color }) => (
-          <div key={label} style={{ background: 'white', borderRadius: 12, padding: '12px 10px', border: '1px solid var(--line)', textAlign: 'center' }}>
-            <Icon size={16} color={color} strokeWidth={1.75} style={{ marginBottom: 6 }} />
-            <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 24, fontWeight: 600, color: 'var(--teal)', lineHeight: 1, marginBottom: 4 }}>{value}</div>
-            <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 9, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--muted)', lineHeight: 1.3 }}>{label}</div>
+          {/* Mobile: compact stat row */}
+          <div className="dash-mobile-stat-row">
+            {[
+              { label: 'Clients', value: totalClients, icon: Users, color: 'var(--teal)' },
+              { label: 'Active', value: activeClients, icon: CheckCircle, color: 'var(--sage-deep)' },
+              { label: 'Cleans', value: cleaningsMTD, icon: Sparkles, color: 'var(--blush)' },
+              { label: 'Pending', value: pendingSummaries ?? 0, icon: Clock, color: '#F4B942' },
+            ].map(({ label, value, icon: Icon, color }) => (
+              <div key={label} style={{ background: 'white', borderRadius: 12, padding: '12px 10px', border: '1px solid var(--line)', textAlign: 'center' }}>
+                <Icon size={16} color={color} strokeWidth={1.75} style={{ marginBottom: 6 }} />
+                <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 24, fontWeight: 600, color: 'var(--teal)', lineHeight: 1, marginBottom: 4 }}>{value}</div>
+                <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 9, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--muted)', lineHeight: 1.3 }}>{label}</div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      {/* Quick actions */}
-      <div className="dash-actions">
-        <Link href='/admin/clean' className='btn-primary dash-action-start'>+ Start a Clean</Link>
-        <Link href='/admin/clients/new' className='btn-secondary dash-action-add'>+ Add Client</Link>
-      </div>
-
-      {/* Recent cleans — desktop table */}
-      <div className="dash-recent-table">
-        <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
-          <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 18, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Recent Cleans</h2>
+          {/* Mobile: action buttons */}
+          <div className="dash-mobile-action-col">
+            <Link href='/admin/clean' style={{ display: 'block', background: 'var(--blush)', color: 'white', textAlign: 'center', padding: 16, borderRadius: 50, fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none' }}>+ Start a Clean</Link>
+            <Link href='/admin/clients/new' style={{ display: 'block', background: 'white', color: 'var(--teal)', textAlign: 'center', padding: 14, borderRadius: 50, fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', border: '1.5px solid var(--line)' }}>+ Add Client</Link>
           </div>
-          {recentCleans && recentCleans.length > 0 ? (
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ background: 'var(--cream)' }}>
-                  {['Client', 'Date', 'Duration', 'Summary', ''].map(h => (
-                    <th key={h} style={{ padding: '10px 24px', textAlign: 'left', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {recentCleans.map((clean: any) => {
-                  const duration = clean.started_at && clean.ended_at
-                    ? Math.round((new Date(clean.ended_at).getTime() - new Date(clean.started_at).getTime()) / 60000)
-                    : null
-                  return (
-                    <tr key={clean.id} style={{ borderTop: '1px solid var(--line)' }}>
-                      <td style={{ padding: '14px 24px', fontWeight: 600, color: 'var(--teal)', fontSize: 14 }}>{(clean.clients as any)?.name ?? '—'}</td>
-                      <td style={{ padding: '14px 24px', color: 'var(--muted)', fontSize: 14 }}>
-                        {clean.started_at ? new Date(clean.started_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
-                      </td>
-                      <td style={{ padding: '14px 24px', color: 'var(--muted)', fontSize: 14 }}>
-                        {duration ? `${duration} min` : clean.started_at ? 'In progress' : '—'}
-                      </td>
-                      <td style={{ padding: '14px 24px' }}>
-                        <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: clean.summary_sent ? '#dcfce7' : '#fef9c3', color: clean.summary_sent ? '#166534' : '#854d0e' }}>
-                          {clean.summary_sent ? 'Sent' : 'Pending'}
-                        </span>
-                      </td>
-                      <td style={{ padding: '14px 24px' }}>
-                        <Link href={`/admin/cleans/${clean.id}`} style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--blush)', textDecoration: 'none', letterSpacing: '0.06em' }}>
-                          VIEW →
-                        </Link>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          ) : (
-            <div style={{ padding: '48px 24px', textAlign: 'center', color: 'var(--muted)', fontFamily: 'var(--font-outfit), sans-serif' }}>
-              No cleans logged yet. <Link href='/admin/clean' style={{ color: 'var(--blush)', fontWeight: 600 }}>Start your first one →</Link>
-            </div>
-          )}
-        </div>
-      </div>
 
-      {/* Recent cleans — mobile cards */}
-      <div className="dash-recent-cards">
-        <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
-          <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 16, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Recent Cleans</h2>
-            <Link href='/admin/clients' style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--muted)', textDecoration: 'none' }}>View all →</Link>
-          </div>
-          {recentCleans && recentCleans.length > 0 ? recentCleans.map((clean: any) => {
-            const duration = clean.started_at && clean.ended_at
-              ? Math.round((new Date(clean.ended_at).getTime() - new Date(clean.started_at).getTime()) / 60000)
-              : null
-            const name: string = (clean.clients as any)?.name ?? '—'
-            const initials = name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()
-            return (
-              <Link key={clean.id} href={`/admin/cleans/${clean.id}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderTop: '1px solid var(--line)', textDecoration: 'none' }}>
-                {/* Avatar */}
-                <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'var(--blush-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 13, fontWeight: 700, color: 'var(--blush)' }}>
-                  {initials}
+          {/* Desktop: stat cards */}
+          <div className="dash-stat-cards">
+            {[
+              { label: 'REVENUE (MTD)', value: `$${revenueMTD.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`, sub: 'From invoices this month', icon: DollarSign, bg: '#dcfce7', iconColor: '#16a34a' },
+              { label: 'CLEANINGS (MTD)', value: cleaningsMTD, sub: `${activeClients} active clients`, icon: Sparkles, bg: '#e0f2fe', iconColor: '#0284c7' },
+              { label: 'NEW LEADS', value: newLeads, sub: 'In pipeline', icon: UserPlus, bg: '#fce7f3', iconColor: '#ec4899' },
+              { label: 'SUMMARIES PENDING', value: pendingSummaries ?? 0, sub: 'Require attention', icon: FileText, bg: '#fef9c3', iconColor: '#ca8a04' },
+            ].map(({ label, value, sub, icon: Icon, bg, iconColor }) => (
+              <div key={label} style={{ background: 'white', borderRadius: 14, padding: 20, border: '1px solid var(--line)' }}>
+                <div style={{ width: 40, height: 40, borderRadius: '50%', background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+                  <Icon size={18} color={iconColor} strokeWidth={1.75} />
                 </div>
-                {/* Name + date */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 14, fontWeight: 600, color: 'var(--teal)' }}>{name}</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 3 }}>
-                    <span style={{ fontSize: 11, color: 'var(--muted)' }}>
-                      {clean.started_at ? new Date(clean.started_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 6 }}>{label}</div>
+                <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 34, fontWeight: 600, color: 'var(--teal)', lineHeight: 1, marginBottom: 6 }}>{value}</div>
+                <div style={{ fontSize: 12, color: 'var(--muted)' }}>{sub}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: action buttons */}
+          <div className="dash-actions-row">
+            <Link href='/admin/clean' className='btn-primary'>+ Start a Clean</Link>
+            <Link href='/admin/clients/new' className='btn-secondary'>+ Add Client</Link>
+          </div>
+
+          {/* Recent cleans — desktop table */}
+          <div className="dash-table">
+            <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
+              <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 18, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Recent Cleans</h2>
+              </div>
+              {recentCleans.length > 0 ? (
+                <>
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ background: 'var(--cream)' }}>
+                        {['Client', 'Date', 'Duration', 'Status', ''].map(h => (
+                          <th key={h} style={{ padding: '10px 24px', textAlign: 'left', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {recentCleans.map((clean: any) => {
+                        const duration = clean.started_at && clean.ended_at
+                          ? Math.round((new Date(clean.ended_at).getTime() - new Date(clean.started_at).getTime()) / 60000)
+                          : null
+                        return (
+                          <tr key={clean.id} style={{ borderTop: '1px solid var(--line)' }}>
+                            <td style={{ padding: '14px 24px', fontWeight: 600, color: 'var(--teal)', fontSize: 14 }}>{(clean.clients as any)?.name ?? '—'}</td>
+                            <td style={{ padding: '14px 24px', color: 'var(--muted)', fontSize: 14 }}>
+                              {clean.started_at ? new Date(clean.started_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                            </td>
+                            <td style={{ padding: '14px 24px', color: 'var(--muted)', fontSize: 14 }}>
+                              {duration ? `${duration} min` : clean.started_at ? 'In progress' : '—'}
+                            </td>
+                            <td style={{ padding: '14px 24px' }}>
+                              <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: clean.summary_sent ? '#dcfce7' : '#fef9c3', color: clean.summary_sent ? '#166534' : '#854d0e' }}>
+                                {clean.summary_sent ? 'Sent' : 'Pending'}
+                              </span>
+                            </td>
+                            <td style={{ padding: '14px 24px' }}>
+                              <Link href={`/admin/cleans/${clean.id}`} style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--blush)', textDecoration: 'none', letterSpacing: '0.06em' }}>VIEW →</Link>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                  <div style={{ padding: '14px 24px', borderTop: '1px solid var(--line)', textAlign: 'center' }}>
+                    <Link href='/admin/clients' style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--blush)', textDecoration: 'none', letterSpacing: '0.06em' }}>VIEW ALL CLEANS →</Link>
+                  </div>
+                </>
+              ) : (
+                <div style={{ padding: '48px 24px', textAlign: 'center', color: 'var(--muted)', fontFamily: 'var(--font-outfit), sans-serif' }}>
+                  No cleans yet. <Link href='/admin/clean' style={{ color: 'var(--blush)', fontWeight: 600 }}>Start your first one →</Link>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Desktop: bottom row — Recent Activity + Cleans This Week */}
+          <div className="dash-bottom-row">
+            {/* Recent Activity */}
+            <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
+              <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--line)' }}>
+                <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 15, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Recent Activity</h3>
+              </div>
+              {activity.length > 0 ? activity.map((ev, i) => {
+                const isSummary = ev.label.includes('summary')
+                const isCompleted = ev.label.includes('completed')
+                const iconBg = isSummary ? '#dcfce7' : isCompleted ? '#e0f2fe' : '#fce7f3'
+                const iconColor = isSummary ? '#16a34a' : isCompleted ? '#0284c7' : '#ec4899'
+                const Icon = isSummary ? Send : isCompleted ? CheckCircle : Sparkles
+                return (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 20px', borderTop: i > 0 ? '1px solid var(--line)' : undefined, gap: 10 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: iconBg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Icon size={11} color={iconColor} strokeWidth={2} />
+                      </div>
+                      <span style={{ fontSize: 12, color: 'var(--teal)', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {ev.label} <strong>{ev.name}</strong>
+                      </span>
+                    </div>
+                    <span style={{ fontSize: 11, color: 'var(--muted)', flexShrink: 0 }}>
+                      {new Date(ev.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </span>
                   </div>
+                )
+              }) : (
+                <div style={{ padding: '32px 20px', textAlign: 'center', color: 'var(--muted)', fontSize: 13 }}>No recent activity</div>
+              )}
+            </div>
+
+            {/* Cleans This Week */}
+            <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
+              <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 15, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Cleans This Week</h3>
+                <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-outfit), sans-serif' }}>Total: {totalCleansWeek}</span>
+              </div>
+              <div style={{ padding: '20px 16px 12px' }}>
+                <svg viewBox="0 0 280 110" style={{ width: '100%', overflow: 'visible' }}>
+                  {cleansByDay.map((count, i) => {
+                    const barW = 28
+                    const gap = 12
+                    const x = i * (barW + gap) + 2
+                    const barH = (count / maxBars) * 72
+                    const y = 82 - barH
+                    const isToday = i === todayIdx
+                    return (
+                      <g key={i}>
+                        <rect x={x} y={barH > 0 ? y : 78} width={barW} height={barH > 0 ? barH : 4} rx={5} fill={isToday ? 'var(--blush)' : '#fce7f3'} />
+                        {count > 0 && (
+                          <text x={x + barW / 2} y={y - 5} textAnchor="middle" fontSize="10" fill="var(--teal)" fontFamily="var(--font-montserrat), sans-serif" fontWeight="700">{count}</text>
+                        )}
+                        <text x={x + barW / 2} y={98} textAnchor="middle" fontSize="9" fill={isToday ? 'var(--blush)' : 'var(--muted)'} fontFamily="var(--font-montserrat), sans-serif" fontWeight={isToday ? '700' : '500'}>{weekDays[i]}</text>
+                      </g>
+                    )
+                  })}
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile: recent cleans cards */}
+          <div className="dash-cards">
+            <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
+              <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 16, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Recent Cleans</h2>
+                <Link href='/admin/clients' style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--muted)', textDecoration: 'none' }}>View all →</Link>
+              </div>
+              {recentCleans.length > 0 ? recentCleans.map((clean: any) => {
+                const name: string = (clean.clients as any)?.name ?? '—'
+                const initials = name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()
+                return (
+                  <Link key={clean.id} href={`/admin/cleans/${clean.id}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderTop: '1px solid var(--line)', textDecoration: 'none' }}>
+                    <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'var(--blush-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 13, fontWeight: 700, color: 'var(--blush)' }}>
+                      {initials}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 14, fontWeight: 600, color: 'var(--teal)' }}>{name}</div>
+                      <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 3 }}>
+                        {clean.started_at ? new Date(clean.started_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                      </div>
+                    </div>
+                    <div style={{ flexShrink: 0 }}>
+                      {clean.summary_sent ? (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: '#dcfce7', color: '#166534' }}>
+                          <Send size={10} /> Sent
+                        </span>
+                      ) : (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: '#FEFCE8', color: '#854d0e' }}>
+                          <Clock size={10} /> Pending
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                )
+              }) : (
+                <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--muted)', fontSize: 14 }}>
+                  No cleans yet. <Link href='/admin/clean' style={{ color: 'var(--blush)', fontWeight: 600 }}>Start your first →</Link>
                 </div>
-                {/* Status badge */}
-                <div style={{ flexShrink: 0 }}>
-                  {clean.summary_sent ? (
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: '#dcfce7', color: '#166534' }}>
-                      <Send size={10} /> Sent
-                    </span>
-                  ) : (
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: '#FEFCE8', color: '#854d0e' }}>
-                      <Clock size={10} /> Pending
-                    </span>
-                  )}
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* ── RIGHT PANEL ── */}
+        <div className="dash-right">
+
+          {/* Pipeline Overview */}
+          <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
+            <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 15, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Pipeline Overview</h3>
+              <Link href='/admin/pipeline' style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, color: 'var(--blush)', textDecoration: 'none', letterSpacing: '0.04em' }}>View all</Link>
+            </div>
+            <div style={{ padding: '6px 0' }}>
+              {[
+                { label: 'New Leads', count: newLeads, dot: '#f59e0b' },
+                { label: 'Active Clients', count: activeClients, dot: '#22c55e' },
+                { label: 'Inactive', count: inactiveClients, dot: '#94a3b8' },
+                { label: 'Summaries Pending', count: pendingSummaries ?? 0, dot: '#0284c7' },
+              ].map(({ label, count, dot }) => (
+                <div key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 20px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: dot, flexShrink: 0 }} />
+                    <span style={{ fontSize: 13, color: 'var(--teal)', fontFamily: 'var(--font-outfit), sans-serif' }}>{label}</span>
+                  </div>
+                  <span style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 13, fontWeight: 700, color: 'var(--teal)' }}>{count}</span>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Summaries to Send */}
+          <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
+            <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 15, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Summaries to Send</h3>
+              {(pendingSummaries ?? 0) > 0 && (
+                <span style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 700, background: '#fef9c3', color: '#854d0e', padding: '2px 8px', borderRadius: 20 }}>
+                  {pendingSummaries}
+                </span>
+              )}
+            </div>
+            {pendingList.length > 0 ? pendingList.map((clean: any, i: number) => (
+              <Link key={clean.id} href={`/admin/cleans/${clean.id}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 20px', borderTop: i > 0 ? '1px solid var(--line)' : undefined, textDecoration: 'none', gap: 8 }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--teal)', fontFamily: 'var(--font-montserrat), sans-serif' }}>{(clean.clients as any)?.name ?? '—'}</div>
+                  <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
+                    {clean.ended_at ? new Date(clean.ended_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                  </div>
+                </div>
+                <ChevronRight size={14} color='var(--blush)' strokeWidth={2.5} />
               </Link>
-            )
-          }) : (
-            <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--muted)', fontSize: 14 }}>
-              No cleans yet. <Link href='/admin/clean' style={{ color: 'var(--blush)', fontWeight: 600 }}>Start your first →</Link>
+            )) : (
+              <div style={{ padding: '28px 20px', textAlign: 'center', fontSize: 13, color: 'var(--muted)', fontFamily: 'var(--font-outfit), sans-serif' }}>
+                All summaries sent ✓
+              </div>
+            )}
+          </div>
+
+          {/* Revenue overview */}
+          {revenueMTD > 0 && (
+            <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', padding: 20 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+                <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 15, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Revenue Overview</h3>
+              </div>
+              <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 32, fontWeight: 600, color: 'var(--teal)', margin: '10px 0 2px' }}>
+                ${revenueMTD.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--muted)' }}>This month</div>
             </div>
           )}
         </div>
