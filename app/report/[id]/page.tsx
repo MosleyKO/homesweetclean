@@ -61,19 +61,26 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
   return (
     <div style={{ minHeight: '100vh', background: '#F7F3EF', fontFamily: 'var(--font-outfit), sans-serif' }}>
       <style>{`
-        .report-container { max-width: 720px; margin: 0 auto; padding: 28px 20px 64px; }
-        .hero-card { background: white; border-radius: 16px; border: 1px solid #E8DDD6; padding: 28px; margin-bottom: 20px; display: flex; align-items: center; gap: 24px; }
-        .hero-left { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0; }
-        .hero-stats { display: flex; gap: 0; border-left: 1px solid #E8DDD6; padding-left: 24px; flex-shrink: 0; }
-        .stat-cell { padding: 0 20px; text-align: center; border-right: 1px solid #E8DDD6; }
-        .stat-cell:last-child { border-right: none; padding-right: 0; }
-        .middle-row { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
-        .photos-rooms { display: flex; flex-direction: column; gap: 24px; }
+        .report-container { max-width: 720px; margin: 0 auto; padding: 20px 16px 64px; }
+        .hero-card { background: white; border-radius: 16px; border: 1px solid #E8DDD6; padding: 20px; margin-bottom: 14px; }
+        .hero-left { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+        .hero-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border-top: 1px solid #E8DDD6; padding-top: 14px; }
+        .stat-cell { padding: 10px 12px; text-align: center; border-right: 1px solid #E8DDD6; border-bottom: 1px solid #E8DDD6; }
+        .stat-cell:nth-child(2n) { border-right: none; }
+        .stat-cell:nth-last-child(-n+2) { border-bottom: none; }
+        .middle-row { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
+        .photos-rooms { display: flex; flex-direction: column; gap: 20px; }
 
         @media (min-width: 900px) {
           .report-container { max-width: 1160px; padding: 36px 40px 80px; }
-          .hero-card { padding: 32px 36px; }
-          .middle-row { flex-direction: row; align-items: stretch; }
+          .hero-card { padding: 32px 36px; display: flex; align-items: center; gap: 24px; }
+          .hero-left { margin-bottom: 0; flex: 1; min-width: 0; }
+          .hero-stats { display: flex; grid-template-columns: unset; border-top: none; border-left: 1px solid #E8DDD6; padding-top: 0; padding-left: 24px; flex-shrink: 0; }
+          .stat-cell { padding: 0 20px; border-right: 1px solid #E8DDD6; border-bottom: none; }
+          .stat-cell:nth-child(2n) { border-right: 1px solid #E8DDD6; }
+          .stat-cell:nth-last-child(-n+2) { border-bottom: none; }
+          .stat-cell:last-child { border-right: none; padding-right: 0; }
+          .middle-row { flex-direction: row; align-items: stretch; gap: 16px; margin-bottom: 20px; }
           .middle-card { flex: 1; }
           .photos-rooms { flex-direction: row; align-items: flex-start; gap: 20px; }
           .photos-room-col { flex: 1; min-width: 0; }
