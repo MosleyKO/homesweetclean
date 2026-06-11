@@ -39,8 +39,8 @@ export default async function AdminDashboard() {
         .dash-recent-cards { display: none; }
 
         @media (max-width: 768px) {
-          .dash-today { display: block; margin-bottom: 12px; }
-          .dash-actions { flex-direction: column; gap: 10px; margin-bottom: 12px; }
+          .dash-today { display: none; }
+          .dash-actions { flex-direction: column; gap: 10px; margin-bottom: 12px; margin-top: 20px; }
           .dash-action-start { display: block; background: var(--blush); color: white; text-align: center; padding: 16px; border-radius: 50px; font-family: var(--font-montserrat), sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; }
           .dash-action-add { display: block; background: white; color: var(--teal); text-align: center; padding: 14px; border-radius: 50px; font-family: var(--font-montserrat), sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border: 1.5px solid var(--line); }
           .dash-stats { grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 0; margin-top: 12px; }
@@ -178,12 +178,6 @@ export default async function AdminDashboard() {
                     </span>
                   </div>
                 </div>
-                {/* Duration */}
-                {duration ? (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--muted)', fontSize: 12, flexShrink: 0 }}>
-                    <Clock size={12} strokeWidth={1.75} /> {duration} min
-                  </div>
-                ) : null}
                 {/* Status badge */}
                 <div style={{ flexShrink: 0 }}>
                   {clean.summary_sent ? (
