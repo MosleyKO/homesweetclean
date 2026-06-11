@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Search, MapPin, Phone, UserPlus, Users, CheckCircle, Clock, Sparkles, MoreHorizontal } from 'lucide-react'
+import { Search, UserPlus, Users, CheckCircle, Clock, Sparkles } from 'lucide-react'
 
 interface Client {
   id: string
@@ -89,44 +89,26 @@ export default function ClientsMobileView({ clients, total, active, inactive }: 
           const av = avatarColor(client.name)
           return (
             <div key={client.id} style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', padding: '16px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-              {/* Left: avatar + info */}
-              <div style={{ display: 'flex', gap: 12, minWidth: 0 }}>
+              {/* Left: avatar + name + last clean */}
+              <div style={{ display: 'flex', gap: 12, alignItems: 'center', minWidth: 0 }}>
                 <div style={{ width: 44, height: 44, borderRadius: '50%', background: av.bg, color: av.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 13, fontWeight: 700 }}>
                   {initials(client.name)}
                 </div>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 14, fontWeight: 700, color: 'var(--teal)', marginBottom: 6, lineHeight: 1.2 }}>{client.name}</div>
-                  {client.address && (
-                    <div style={{ display: 'flex', gap: 5, alignItems: 'flex-start', marginBottom: 4 }}>
-                      <MapPin size={11} color="var(--muted)" strokeWidth={1.75} style={{ marginTop: 2, flexShrink: 0 }} />
-                      <span style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.4 }}>{client.address}</span>
-                    </div>
-                  )}
-                  {client.phone && (
-                    <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-                      <Phone size={11} color="var(--muted)" strokeWidth={1.75} />
-                      <span style={{ fontSize: 12, color: 'var(--muted)' }}>{client.phone}</span>
-                    </div>
-                  )}
+                  <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 14, fontWeight: 700, color: 'var(--teal)', lineHeight: 1.3 }}>{client.name}</div>
+                  <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 3 }}>
+                    Last clean: {client.lastClean ? fmtDate(client.lastClean) : '—'}
+                  </div>
                 </div>
               </div>
 
-              {/* Right: last clean + actions */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, borderLeft: '1px solid var(--line)', paddingLeft: 12, position: 'relative' }}>
-                <Link href={`/admin/clients/${client.id}/edit`} style={{ position: 'absolute', top: 0, right: 0, padding: 4, color: 'var(--muted)', display: 'flex' }}>
-                  <MoreHorizontal size={16} />
+              {/* Right: two buttons side by side */}
+              <div style={{ display: 'flex', alignItems: 'center', borderLeft: '1px solid var(--line)', paddingLeft: 12, gap: 8 }}>
+                <Link href={`/admin/clean?client=${client.id}`} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, background: 'var(--blush)', color: 'white', borderRadius: 50, padding: '10px 8px', fontSize: 11, fontWeight: 700, fontFamily: 'var(--font-montserrat), sans-serif', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                  <Sparkles size={11} /> Clean
                 </Link>
-                <div>
-                  <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 2 }}>Last Clean</div>
-                  <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 700, color: 'var(--teal)' }}>
-                    {client.lastClean ? fmtDate(client.lastClean) : '—'}
-                  </div>
-                </div>
-                <Link href={`/admin/clean?client=${client.id}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: 'var(--blush)', color: 'white', borderRadius: 50, padding: '9px 12px', fontSize: 12, fontWeight: 700, fontFamily: 'var(--font-montserrat), sans-serif', textDecoration: 'none', letterSpacing: '0.04em' }}>
-                  Start Clean <Sparkles size={12} />
-                </Link>
-                <Link href={`/admin/clients/${client.id}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, background: 'white', color: 'var(--teal)', border: '1.5px solid var(--line)', borderRadius: 50, padding: '8px 12px', fontSize: 12, fontWeight: 700, fontFamily: 'var(--font-montserrat), sans-serif', textDecoration: 'none' }}>
-                  View Client →
+                <Link href={`/admin/clients/${client.id}`} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'white', color: 'var(--teal)', border: '1.5px solid var(--line)', borderRadius: 50, padding: '10px 8px', fontSize: 11, fontWeight: 700, fontFamily: 'var(--font-montserrat), sans-serif', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                  View →
                 </Link>
               </div>
             </div>
