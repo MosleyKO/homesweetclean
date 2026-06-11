@@ -79,14 +79,14 @@ export default function CommercialPage() {
       </section>
 
       {/* BUSINESS TYPES */}
-      <section style={{ background: "var(--blush-bg)", padding: "48px 32px", textAlign: "center" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <p style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 12, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 20 }}>
+      <section style={{ background: "var(--blush-bg)", padding: "32px 32px", textAlign: "center" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <p style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 12, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 14 }}>
             We clean for
           </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "nowrap" }}>
             {businessTypes.map(type => (
-              <span key={type} style={{ background: "white", border: "1px solid var(--line)", borderRadius: 24, padding: "10px 22px", fontFamily: "var(--font-fraunces), serif", fontSize: 15, fontWeight: 600, color: "var(--teal)" }}>
+              <span key={type} style={{ background: "white", border: "1px solid var(--line)", borderRadius: 24, padding: "7px 14px", fontFamily: "var(--font-montserrat), sans-serif", fontSize: 13, fontWeight: 600, color: "var(--teal)", whiteSpace: "nowrap" }}>
                 {type}
               </span>
             ))}
@@ -144,19 +144,19 @@ export default function CommercialPage() {
       </section>
 
       {/* SERVICE AREAS */}
-      <section style={{ padding: "60px 32px", background: "var(--cream-warm)", textAlign: "center" }}>
-        <div style={{ maxWidth: 700, margin: "0 auto" }}>
+      <section style={{ padding: "48px 32px", background: "var(--cream-warm)", textAlign: "center" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Where We Clean ♥</div>
-          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(26px, 3vw, 38px)", fontWeight: 600, color: "var(--teal)", marginBottom: 16 }}>
+          <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(24px, 2.5vw, 34px)", fontWeight: 600, color: "var(--teal)", marginBottom: 12, whiteSpace: "nowrap" }}>
             Serving businesses across{" "}
             <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.2em" }}>Washington County.</span>
           </h2>
-          <p style={{ fontSize: 16, color: "var(--muted)", lineHeight: 1.7, marginBottom: 32 }}>
+          <p style={{ fontSize: 15, color: "var(--muted)", lineHeight: 1.7, marginBottom: 24 }}>
             We provide commercial cleaning services throughout Southern Utah — including St. George, Washington, Hurricane, Ivins, and Santa Clara.
           </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "nowrap" }}>
             {["St. George", "Washington", "Hurricane", "Ivins", "Santa Clara"].map(city => (
-              <span key={city} style={{ background: "white", border: "1px solid var(--line)", borderRadius: 24, padding: "8px 20px", fontFamily: "var(--font-montserrat), sans-serif", fontSize: 13, fontWeight: 600, color: "var(--teal)" }}>
+              <span key={city} style={{ background: "white", border: "1px solid var(--line)", borderRadius: 24, padding: "7px 16px", fontFamily: "var(--font-montserrat), sans-serif", fontSize: 13, fontWeight: 600, color: "var(--teal)", whiteSpace: "nowrap" }}>
                 {city}, UT
               </span>
             ))}
