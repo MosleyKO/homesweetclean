@@ -266,32 +266,36 @@ export default async function AdminDashboard() {
               )}
             </div>
 
-            {/* Cleans This Week — slimmer bars */}
+            {/* Cleans This Week */}
             <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', overflow: 'hidden' }}>
               <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 15, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Cleans This Week</h3>
-                <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-outfit), sans-serif' }}>Total: {totalCleansWeek}</span>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 22, fontWeight: 600, color: 'var(--blush)', lineHeight: 1 }}>{totalCleansWeek}</div>
+                  <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 9, fontWeight: 600, letterSpacing: '0.06em', color: 'var(--muted)', textTransform: 'uppercase', marginTop: 2 }}>Total</div>
+                </div>
               </div>
-              <div style={{ padding: '16px 16px 10px' }}>
-                <svg viewBox="0 0 240 80" style={{ width: '100%', overflow: 'visible' }}>
+              <div style={{ padding: '14px 16px 8px' }}>
+                <svg viewBox="0 0 240 72" style={{ width: '100%', overflow: 'visible' }}>
                   {cleansByDay.map((count, i) => {
-                    const barW = 16
-                    const gap = 18
-                    const x = i * (barW + gap) + 4
-                    const barH = (count / maxBars) * 52
-                    const y = 58 - barH
+                    const barW = 10
+                    const gap = 24
+                    const x = i * (barW + gap) + 3
+                    const barH = (count / maxBars) * 44
+                    const y = 48 - barH
                     const isToday = i === todayIdx
                     return (
                       <g key={i}>
-                        <rect x={x} y={barH > 0 ? y : 54} width={barW} height={barH > 0 ? barH : 4} rx={4} fill={isToday ? 'var(--blush)' : '#fce7f3'} />
-                        {count > 0 && (
-                          <text x={x + barW / 2} y={y - 4} textAnchor="middle" fontSize="8" fill="var(--teal)" fontFamily="var(--font-montserrat), sans-serif" fontWeight="700">{count}</text>
-                        )}
-                        <text x={x + barW / 2} y={70} textAnchor="middle" fontSize="7.5" fill={isToday ? 'var(--blush)' : 'var(--muted)'} fontFamily="var(--font-montserrat), sans-serif" fontWeight={isToday ? '700' : '500'}>{weekDays[i]}</text>
+                        <rect x={x} y={barH > 0 ? y : 44} width={barW} height={barH > 0 ? barH : 4} rx={3} fill={isToday ? 'var(--blush)' : '#fce7f3'} />
+                        <text x={x + barW / 2} y={barH > 0 ? y - 4 : 40} textAnchor="middle" fontSize="7" fill="var(--teal)" fontFamily="var(--font-montserrat), sans-serif" fontWeight="700">{count}</text>
+                        <text x={x + barW / 2} y={62} textAnchor="middle" fontSize="7" fill={isToday ? 'var(--blush)' : 'var(--muted)'} fontFamily="var(--font-montserrat), sans-serif" fontWeight={isToday ? '700' : '400'}>{weekDays[i]}</text>
                       </g>
                     )
                   })}
                 </svg>
+              </div>
+              <div style={{ padding: '10px 20px', borderTop: '1px solid var(--line)', textAlign: 'center' }}>
+                <Link href='/admin/clients' style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 700, color: 'var(--blush)', textDecoration: 'none', letterSpacing: '0.08em' }}>VIEW REPORTS →</Link>
               </div>
             </div>
           </div>
