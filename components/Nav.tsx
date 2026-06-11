@@ -88,13 +88,14 @@ export default function Nav() {
             </Link>
             <div className="services-dropdown" style={{
               position: "absolute",
-              top: "calc(100% + 16px)",
+              top: "100%",
               left: "50%",
               transform: "translateX(-50%)",
               background: "white",
               border: "1px solid var(--line)",
               borderRadius: 12,
               padding: "8px 0",
+              paddingTop: 24,
               minWidth: 180,
               boxShadow: "0 8px 32px rgba(31,78,95,0.10)",
               zIndex: 100,

@@ -34,40 +34,42 @@ export default function ServicesPage() {
   return (
     <>
       {/* HERO */}
-      <section style={{ background: "var(--cream)", padding: "80px 32px 60px", textAlign: "center" }}>
+      <section style={{ background: "var(--cream)", padding: "36px 32px 20px", textAlign: "center" }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Our Services ♥</div>
-          <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(38px, 5vw, 60px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 20 }}>
+          <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 12 }}>
             Cleaning services for your{" "}
             <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>home & business.</span>
           </h1>
-          <p style={{ fontSize: 17, color: "var(--muted)", lineHeight: 1.7 }}>
+          <p style={{ fontSize: 16, color: "var(--muted)", lineHeight: 1.6 }}>
             Whether it&apos;s your family home or your place of business — we bring the same detail-focused standard to every space we clean in Southern Utah.
           </p>
         </div>
       </section>
 
       {/* SEGMENT CARDS */}
-      <section style={{ padding: "60px 32px 100px", background: "var(--cream)" }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 32 }}>
+      <section style={{ padding: "20px 32px 32px", background: "var(--cream)" }}>
+        <div style={{ maxWidth: 1000, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
           {segments.map((s) => (
             <div key={s.label} style={{ background: "white", borderRadius: 20, border: "1px solid var(--line)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
-              <div style={{ background: "var(--blush-bg)", padding: "40px 40px 32px" }}>
-                <div style={{ width: 64, height: 64, borderRadius: "50%", background: "white", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20, boxShadow: "0 2px 12px rgba(232,166,166,0.15)" }}>
-                  {s.icon}
+              <div style={{ background: "var(--blush-bg)", padding: "24px 28px 16px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 10 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: "white", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 2px 10px rgba(232,166,166,0.15)" }}>
+                    {s.icon}
+                  </div>
+                  <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--blush)" }}>
+                    {s.label}
+                  </div>
                 </div>
-                <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--blush)", marginBottom: 8 }}>
-                  {s.label}
-                </div>
-                <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 30, fontWeight: 600, color: "var(--teal)", marginBottom: 12 }}>{s.headline}</h2>
-                <p style={{ fontSize: 15, color: "var(--muted)", lineHeight: 1.7 }}>{s.desc}</p>
+                <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 26, fontWeight: 600, color: "var(--teal)", marginBottom: 8 }}>{s.headline}</h2>
+                <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.6 }}>{s.desc}</p>
               </div>
-              <div style={{ padding: "28px 40px 40px", flex: 1, display: "flex", flexDirection: "column" }}>
-                <ul style={{ listStyle: "none", padding: 0, marginBottom: 28, flex: 1 }}>
+              <div style={{ padding: "16px 28px 24px", flex: 1, display: "flex", flexDirection: "column" }}>
+                <ul style={{ listStyle: "none", padding: 0, marginBottom: 16, flex: 1 }}>
                   {s.services.map((item, j) => (
-                    <li key={j} style={{ display: "flex", gap: 12, alignItems: "center", padding: "10px 0", borderBottom: j < s.services.length - 1 ? "1px solid var(--line)" : "none" }}>
-                      <span style={{ width: 18, height: 18, borderRadius: "50%", background: "var(--sage)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, flexShrink: 0 }}>✓</span>
-                      <span style={{ fontSize: 15, color: "var(--teal)" }}>{item}</span>
+                    <li key={j} style={{ display: "flex", gap: 10, alignItems: "center", padding: "7px 0", borderBottom: j < s.services.length - 1 ? "1px solid var(--line)" : "none" }}>
+                      <span style={{ width: 16, height: 16, borderRadius: "50%", background: "var(--sage)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, flexShrink: 0 }}>✓</span>
+                      <span style={{ fontSize: 14, color: "var(--teal)" }}>{item}</span>
                     </li>
                   ))}
                 </ul>
