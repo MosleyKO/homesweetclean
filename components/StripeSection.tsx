@@ -308,7 +308,7 @@ export default function StripeSection({
             </div>
 
             {/* Mobile cards */}
-            <div className="invoices-mobile" style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div className="invoices-mobile" style={{ padding: '12px 16px', flexDirection: 'column', gap: 10 }}>
               {invoices.map(inv => {
                 const s = STATUS_STYLES[inv.status ?? 'draft'] ?? STATUS_STYLES.draft
                 return (
