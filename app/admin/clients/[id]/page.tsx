@@ -64,7 +64,8 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
             {client.status}
           </span>
         </div>
-        <div className="client-header-actions" style={{ display: 'flex', gap: 10 }}>
+        <div className="client-header-actions" style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <DeleteClientButton clientId={client.id} clientName={client.name} />
           <Link href={`/admin/clients/${client.id}/edit`} className='btn-secondary'>Edit</Link>
           <Link href={`/admin/clean?client=${client.id}`} className='btn-primary' style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <Sparkles size={14} /> Start Clean
