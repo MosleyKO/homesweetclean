@@ -10,7 +10,10 @@ const STAGES = [
   { key: 'contacted', label: 'Contacted', color: '#1d4ed8', bg: '#dbeafe' },
   { key: 'quoted', label: 'Quoted', color: '#6d28d9', bg: '#ede9fe' },
   { key: 'scheduled', label: 'Scheduled', color: '#065f46', bg: '#d1fae5' },
+  { key: 'not_interested', label: 'Not Interested', color: '#6b7280', bg: '#f1f5f9' },
 ]
+
+const ADVANCE_STAGES = STAGES.filter(s => s.key !== 'not_interested')
 
 const SOURCE_ICONS: Record<string, React.ReactNode> = {
   website_form: <Globe size={11} />,
@@ -43,15 +46,18 @@ type Lead = {
   created_at: string
 }
 
-function LeadCard({ lead, onStageChange, onConvert, converting }: {
+function LeadCard({ lead, onStageChange, onConvert, converting, allStages }: {
   lead: Lead
   onStageChange: (id: string, stage: string) => Promise<void>
   onConvert: (id: string) => Promise<void>
   converting: string | null
+  allStages: typeof STAGES
 }) {
-  const stageIdx = STAGES.findIndex(s => s.key === lead.pipeline_stage)
-  const nextStage = STAGES[stageIdx + 1]
-  const isLast = stageIdx === STAGES.length - 1
+  const advanceStages = ADVANCE_STAGES
+  const stageIdx = advanceStages.findIndex(s => s.key === lead.pipeline_stage)
+  const nextStage = advanceStages[stageIdx + 1]
+  const isScheduled = lead.pipeline_stage === 'scheduled'
+  const isNotInterested = lead.pipeline_stage === 'not_interested'
   const isConverting = converting === lead.id
   const sourceLabel = SOURCE_LABELS[lead.source ?? ''] ?? lead.source ?? 'Manual'
   const sourceIcon = SOURCE_ICONS[lead.source ?? ''] ?? <Plus size={11} />
@@ -121,23 +127,10 @@ function LeadCard({ lead, onStageChange, onConvert, converting }: {
         }}>
           View
         </Link>
-        {isLast ? (
+
+        {isNotInterested ? (
           <button
-            onClick={() => onConvert(lead.id)}
-            disabled={isConverting}
-            style={{
-              fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif',
-              letterSpacing: '0.06em', color: 'white', background: 'var(--teal)',
-              border: 'none', padding: '6px 12px', borderRadius: 8, cursor: 'pointer',
-              display: 'inline-flex', alignItems: 'center', gap: 5, opacity: isConverting ? 0.6 : 1,
-            }}
-          >
-            <UserCheck size={12} />
-            {isConverting ? 'Converting...' : 'Convert to Client'}
-          </button>
-        ) : nextStage && (
-          <button
-            onClick={() => onStageChange(lead.id, nextStage.key)}
+            onClick={() => onStageChange(lead.id, 'new_inquiry')}
             style={{
               fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif',
               letterSpacing: '0.06em', color: 'var(--teal)', background: 'var(--cream)',
@@ -145,9 +138,59 @@ function LeadCard({ lead, onStageChange, onConvert, converting }: {
               display: 'inline-flex', alignItems: 'center', gap: 5,
             }}
           >
-            <ArrowRight size={12} /> {nextStage.label}
+            <ArrowRight size={12} /> Reopen
           </button>
-        )}
+        ) : isScheduled ? (
+          <>
+            <button
+              onClick={() => onConvert(lead.id)}
+              disabled={isConverting}
+              style={{
+                fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif',
+                letterSpacing: '0.06em', color: 'white', background: 'var(--teal)',
+                border: 'none', padding: '6px 12px', borderRadius: 8, cursor: 'pointer',
+                display: 'inline-flex', alignItems: 'center', gap: 5, opacity: isConverting ? 0.6 : 1,
+              }}
+            >
+              <UserCheck size={12} />
+              {isConverting ? 'Converting...' : 'Convert to Client'}
+            </button>
+            <button
+              onClick={() => onStageChange(lead.id, 'not_interested')}
+              style={{
+                fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif',
+                letterSpacing: '0.06em', color: '#6b7280', background: 'white',
+                border: '1px solid var(--line)', padding: '6px 12px', borderRadius: 8, cursor: 'pointer',
+              }}
+            >
+              Not Interested
+            </button>
+          </>
+        ) : nextStage ? (
+          <>
+            <button
+              onClick={() => onStageChange(lead.id, nextStage.key)}
+              style={{
+                fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif',
+                letterSpacing: '0.06em', color: 'var(--teal)', background: 'var(--cream)',
+                border: '1px solid var(--line)', padding: '6px 12px', borderRadius: 8, cursor: 'pointer',
+                display: 'inline-flex', alignItems: 'center', gap: 5,
+              }}
+            >
+              <ArrowRight size={12} /> {nextStage.label}
+            </button>
+            <button
+              onClick={() => onStageChange(lead.id, 'not_interested')}
+              style={{
+                fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif',
+                letterSpacing: '0.06em', color: '#6b7280', background: 'white',
+                border: '1px solid var(--line)', padding: '6px 12px', borderRadius: 8, cursor: 'pointer',
+              }}
+            >
+              Not Interested
+            </button>
+          </>
+        ) : null}
       </div>
     </div>
   )
@@ -186,7 +229,7 @@ export default function PipelineBoard({ leads: initialLeads }: { leads: Lead[] }
     }
   }
 
-  const cardProps = { onStageChange: handleStageChange, onConvert: handleConvert, converting }
+  const cardProps = { onStageChange: handleStageChange, onConvert: handleConvert, converting, allStages: STAGES }
 
   return (
     <>

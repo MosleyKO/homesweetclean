@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
@@ -28,7 +28,7 @@ const labelStyle = {
   display: 'block',
 }
 
-export default function NewClientPage() {
+function NewClientForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const isLead = searchParams.get('lead') === '1'
@@ -76,14 +76,15 @@ export default function NewClientPage() {
               <label style={labelStyle}>Name *</label>
               <input style={inputStyle} required value={form.name} onChange={e => set('name', e.target.value)} placeholder="Seven Oaks" />
             </div>
-            <div>
-              <label style={labelStyle}>Status</label>
-              <select style={inputStyle} value={form.status} onChange={e => set('status', e.target.value)}>
-                <option value="active">Active</option>
-                <option value="lead">Lead</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
+            {!isLead && (
+              <div>
+                <label style={labelStyle}>Status</label>
+                <select style={inputStyle} value={form.status} onChange={e => set('status', e.target.value)}>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            )}
             <div>
               <label style={labelStyle}>Property Type</label>
               <select style={inputStyle} value={form.property_type} onChange={e => set('property_type', e.target.value)}>
@@ -142,5 +143,13 @@ export default function NewClientPage() {
         </div>
       </form>
     </div>
+  )
+}
+
+export default function NewClientPage() {
+  return (
+    <Suspense>
+      <NewClientForm />
+    </Suspense>
   )
 }
