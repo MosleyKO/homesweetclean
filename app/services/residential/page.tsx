@@ -43,12 +43,6 @@ const stats = [
   { number: "Insured", label: "Fully Background Checked" },
 ];
 
-const reasons = [
-  { title: "Locally owned & operated", desc: "We're your neighbors — not a franchise. Southern Utah locals serving Southern Utah families." },
-  { title: "Vetted & insured", desc: "Every cleaner is fully insured and background checked for your peace of mind." },
-  { title: "Eco-friendly products", desc: "Safe for your kids, your pets, and your home. We clean without compromise." },
-  { title: "Satisfaction guaranteed", desc: "Not happy with something? We'll come back and make it right. No questions asked." },
-];
 
 export default function ResidentialPage() {
   return (
@@ -80,20 +74,6 @@ export default function ResidentialPage() {
               <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 12, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.65)", marginTop: 8 }}>{s.label}</div>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* WHY US STRIP */}
-      <section style={{ background: "var(--teal)", padding: "0 32px 48px" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", borderTop: "1px solid rgba(255,255,255,0.15)", paddingTop: 40 }}>
-          <div className="why-us-strip-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 32 }}>
-            {reasons.map((r, i) => (
-              <div key={i} style={{ textAlign: "center" }}>
-                <div style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 16, fontWeight: 600, color: "white", marginBottom: 6 }}>{r.title}</div>
-                <div style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", lineHeight: 1.6 }}>{r.desc}</div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
