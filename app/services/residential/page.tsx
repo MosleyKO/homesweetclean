@@ -86,33 +86,50 @@ export default function ResidentialPage() {
               <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>home & schedule.</span>
             </h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
             {services.map((s, i) => (
-              <div key={i} style={{ background: "white", borderRadius: 20, border: "1px solid var(--line)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
-                <div style={{ background: "var(--blush-bg)", padding: "24px 28px 16px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 10 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: "50%", background: "white", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 2px 10px rgba(232,166,166,0.15)" }}>
-                      {s.icon}
-                    </div>
-                    <div style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--blush)" }}>
-                      {s.title}
-                    </div>
+              <div key={i}>
+                {/* DESKTOP: 2-col grid */}
+                <div className="service-desktop-card" style={{ background: "white", borderRadius: 20, padding: "48px", border: "1px solid var(--line)", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "start" }}>
+                  <div>
+                    <div style={{ width: 56, height: 56, borderRadius: "50%", background: "var(--blush-bg)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>{s.icon}</div>
+                    <h2 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 32, fontWeight: 600, color: "var(--teal)", marginBottom: 16 }}>{s.title}</h2>
+                    <p style={{ fontSize: 16, color: "var(--muted)", lineHeight: 1.75, marginBottom: 28 }}>{s.desc}</p>
+                    <Link href="/contact" className="btn-primary">Book This Service</Link>
                   </div>
-                  <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.6 }}>{s.desc}</p>
+                  <div>
+                    <h4 style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 20 }}>What&apos;s Included</h4>
+                    <ul style={{ listStyle: "none", padding: 0 }}>
+                      {s.includes.map((item, j) => (
+                        <li key={j} style={{ display: "flex", gap: 12, alignItems: "center", padding: "10px 0", borderBottom: j < s.includes.length - 1 ? "1px solid var(--line)" : "none" }}>
+                          <span style={{ width: 20, height: 20, borderRadius: "50%", background: "var(--sage)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, flexShrink: 0 }}>✓</span>
+                          <span style={{ fontSize: 15, color: "var(--teal)" }}>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-                <div style={{ padding: "16px 28px 24px", flex: 1, display: "flex", flexDirection: "column" }}>
-                  <h4 style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 12 }}>
-                    What&apos;s Included
-                  </h4>
-                  <ul style={{ listStyle: "none", padding: 0, marginBottom: 16, flex: 1 }}>
-                    {s.includes.map((item, j) => (
-                      <li key={j} style={{ display: "flex", gap: 10, alignItems: "center", padding: "7px 0", borderBottom: j < s.includes.length - 1 ? "1px solid var(--line)" : "none" }}>
-                        <span style={{ width: 16, height: 16, borderRadius: "50%", background: "var(--sage)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, flexShrink: 0 }}>✓</span>
-                        <span style={{ fontSize: 14, color: "var(--teal)" }}>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link href="/contact" className="btn-primary" style={{ textAlign: "center" }}>Book This Service</Link>
+                {/* MOBILE: hub card style */}
+                <div className="service-mobile-card" style={{ background: "white", borderRadius: 20, border: "1px solid var(--line)", overflow: "hidden", flexDirection: "column" }}>
+                  <div style={{ background: "var(--blush-bg)", padding: "24px 28px 16px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 10 }}>
+                      <div style={{ width: 44, height: 44, borderRadius: "50%", background: "white", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 2px 10px rgba(232,166,166,0.15)" }}>{s.icon}</div>
+                      <div style={{ fontFamily: "var(--font-fraunces), serif", fontSize: 20, fontWeight: 600, color: "var(--teal)" }}>{s.title}</div>
+                    </div>
+                    <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.6 }}>{s.desc}</p>
+                  </div>
+                  <div style={{ padding: "16px 28px 24px", flex: 1, display: "flex", flexDirection: "column" }}>
+                    <h4 style={{ fontFamily: "var(--font-montserrat), sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 12 }}>What&apos;s Included</h4>
+                    <ul style={{ listStyle: "none", padding: 0, marginBottom: 16, flex: 1 }}>
+                      {s.includes.map((item, j) => (
+                        <li key={j} style={{ display: "flex", gap: 10, alignItems: "center", padding: "7px 0", borderBottom: j < s.includes.length - 1 ? "1px solid var(--line)" : "none" }}>
+                          <span style={{ width: 16, height: 16, borderRadius: "50%", background: "var(--sage)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, flexShrink: 0 }}>✓</span>
+                          <span style={{ fontSize: 14, color: "var(--teal)" }}>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Link href="/contact" className="btn-primary" style={{ textAlign: "center" }}>Book This Service</Link>
+                  </div>
                 </div>
               </div>
             ))}
