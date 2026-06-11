@@ -221,53 +221,54 @@ function CleanFlow() {
       )}
 
       {/* Timer */}
-      <div style={{ background: 'var(--teal)', borderRadius: 16, padding: 24, marginBottom: 24, textAlign: 'center' }}>
-        <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.6)', marginBottom: 6 }}>CLEANING</div>
-        <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 26, fontWeight: 600, color: 'white', marginBottom: 4 }}>{selectedClient?.name}</div>
-        <div style={{ fontFamily: 'var(--font-outfit), sans-serif', fontSize: 48, fontWeight: 300, color: 'var(--blush)', letterSpacing: '0.02em' }}>{formatElapsed(elapsed)}</div>
-        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>Started {startTime?.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</div>
+      <div style={{ background: 'var(--teal)', borderRadius: 14, padding: '16px 20px', marginBottom: 12, textAlign: 'center' }}>
+        <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.6)', marginBottom: 2 }}>CLEANING</div>
+        <div style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 22, fontWeight: 600, color: 'white', marginBottom: 2 }}>{selectedClient?.name}</div>
+        <div style={{ fontFamily: 'var(--font-outfit), sans-serif', fontSize: 42, fontWeight: 300, color: 'var(--blush)', letterSpacing: '0.02em', lineHeight: 1.1 }}>{formatElapsed(elapsed)}</div>
+        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>Started {startTime?.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</div>
       </div>
 
       {selectedClient?.access_notes && (
-        <div style={{ background: 'var(--blush-bg)', border: '1px solid var(--blush-soft)', borderRadius: 12, padding: '12px 16px', marginBottom: 20, fontSize: 13, color: 'var(--teal)', display: 'flex', alignItems: 'flex-start', gap: 8 }}><Key size={14} strokeWidth={1.75} style={{ flexShrink: 0, marginTop: 1 }} />{selectedClient.access_notes}</div>
+        <div style={{ background: 'var(--blush-bg)', border: '1px solid var(--blush-soft)', borderRadius: 10, padding: '10px 14px', marginBottom: 10, fontSize: 13, color: 'var(--teal)', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+          <Key size={13} strokeWidth={1.75} style={{ flexShrink: 0, marginTop: 1 }} />{selectedClient.access_notes}
+        </div>
       )}
 
       {/* Notes */}
-      <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', padding: 20, marginBottom: 16 }}>
-        <label style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 10 }}>Clean Notes</label>
-        <textarea style={{ width: '100%', padding: 12, borderRadius: 10, border: '1.5px solid var(--line)', fontSize: 15, fontFamily: 'var(--font-outfit), sans-serif', color: 'var(--teal)', resize: 'vertical', minHeight: 80, outline: 'none', boxSizing: 'border-box' }} placeholder="General notes about today's clean..." value={notes} onChange={e => setNotes(e.target.value)} />
+      <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--line)', padding: '14px 16px', marginBottom: 10 }}>
+        <label style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 8 }}>Clean Notes</label>
+        <textarea style={{ width: '100%', padding: 10, borderRadius: 8, border: '1.5px solid var(--line)', fontSize: 14, fontFamily: 'var(--font-outfit), sans-serif', color: 'var(--teal)', resize: 'vertical', minHeight: 72, outline: 'none', boxSizing: 'border-box' }} placeholder="General notes about today's clean..." value={notes} onChange={e => setNotes(e.target.value)} />
       </div>
 
       {/* Things Noticed */}
-      <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', padding: 20, marginBottom: 16 }}>
-        <label style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 6 }}>Things We Noticed</label>
-        <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 10, fontFamily: 'var(--font-outfit), sans-serif' }}>Stains, damage, items to flag for the client</p>
-        <textarea style={{ width: '100%', padding: 12, borderRadius: 10, border: '1.5px solid var(--line)', fontSize: 15, fontFamily: 'var(--font-outfit), sans-serif', color: 'var(--teal)', resize: 'vertical', minHeight: 80, outline: 'none', boxSizing: 'border-box', marginBottom: 12 }} placeholder="e.g. Scuff mark on hallway wall, soap scum build-up in master bath..." value={noticed} onChange={e => setNoticed(e.target.value)} />
-        {/* Noticed photos */}
+      <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--line)', padding: '14px 16px', marginBottom: 10 }}>
+        <label style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 4 }}>Things We Noticed</label>
+        <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 8px', fontFamily: 'var(--font-outfit), sans-serif' }}>Stains, damage, items to flag for the client</p>
+        <textarea style={{ width: '100%', padding: 10, borderRadius: 8, border: '1.5px solid var(--line)', fontSize: 14, fontFamily: 'var(--font-outfit), sans-serif', color: 'var(--teal)', resize: 'vertical', minHeight: 72, outline: 'none', boxSizing: 'border-box', marginBottom: 10 }} placeholder="e.g. Scuff mark on hallway wall, soap scum build-up in master bath..." value={noticed} onChange={e => setNoticed(e.target.value)} />
         {photos.filter(p => p.photo_type === 'noticed').length > 0 && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 10 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, marginBottom: 8 }}>
             {photos.filter(p => p.photo_type === 'noticed').map(photo => (
-              <div key={photo.id} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden' }}>
+              <div key={photo.id} style={{ position: 'relative', aspectRatio: '1', borderRadius: 8, overflow: 'hidden' }}>
                 <Image src={photo.url} alt="Noticed" fill style={{ objectFit: 'cover' }} />
-                <button onClick={() => removePhoto(photo.id)} style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', border: 'none', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                  <X size={12} color="white" />
+                <button onClick={() => removePhoto(photo.id)} style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', border: 'none', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                  <X size={11} color="white" />
                 </button>
               </div>
             ))}
           </div>
         )}
         <input ref={noticedFileRef} type="file" accept="image/*" multiple capture="environment" onChange={handleNoticedPhoto} style={{ display: 'none' }} />
-        <button onClick={() => noticedFileRef.current?.click()} disabled={uploadingNoticed} style={{ width: '100%', padding: '10px', borderRadius: 10, border: '2px dashed var(--blush-soft)', background: 'var(--blush-bg)', color: 'var(--muted)', fontSize: 13, fontFamily: 'var(--font-outfit), sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-          <Camera size={14} />{uploadingNoticed ? 'Uploading...' : 'Add Photo of Issue'}
+        <button onClick={() => noticedFileRef.current?.click()} disabled={uploadingNoticed} style={{ width: '100%', padding: '9px', borderRadius: 8, border: '2px dashed var(--blush-soft)', background: 'var(--blush-bg)', color: 'var(--muted)', fontSize: 13, fontFamily: 'var(--font-outfit), sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
+          <Camera size={13} />{uploadingNoticed ? 'Uploading...' : 'Add Photo of Issue'}
         </button>
       </div>
 
       {/* Extras */}
-      <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', padding: 20, marginBottom: 16 }}>
-        <label style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 12 }}>Extra Services</label>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+      <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--line)', padding: '14px 16px', marginBottom: 10 }}>
+        <label style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 10 }}>Extra Services</label>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
           {EXTRAS.map(extra => (
-            <button key={extra} onClick={() => toggleExtra(extra)} style={{ padding: '8px 14px', borderRadius: 20, border: extras.includes(extra) ? '1.5px solid var(--blush)' : '1.5px solid var(--line)', background: extras.includes(extra) ? 'var(--blush-bg)' : 'white', color: extras.includes(extra) ? 'var(--teal)' : 'var(--muted)', fontFamily: 'var(--font-outfit), sans-serif', fontSize: 13, fontWeight: extras.includes(extra) ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>
+            <button key={extra} onClick={() => toggleExtra(extra)} style={{ padding: '7px 12px', borderRadius: 20, border: extras.includes(extra) ? '1.5px solid var(--blush)' : '1.5px solid var(--line)', background: extras.includes(extra) ? 'var(--blush-bg)' : 'white', color: extras.includes(extra) ? 'var(--teal)' : 'var(--muted)', fontFamily: 'var(--font-outfit), sans-serif', fontSize: 13, fontWeight: extras.includes(extra) ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>
               {extras.includes(extra) ? '✓ ' : ''}{extra}
             </button>
           ))}
@@ -275,34 +276,37 @@ function CleanFlow() {
       </div>
 
       {/* Photos */}
-      <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', padding: 20, marginBottom: 24 }}>
-        <label style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 12 }}>Photos</label>
-        {photos.length > 0 && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 12 }}>
-            {photos.map(photo => (
-              <div key={photo.id} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden' }}>
+      <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--line)', padding: '14px 16px', marginBottom: 100 }}>
+        <label style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 10 }}>Photos</label>
+        {photos.filter(p => p.photo_type !== 'noticed').length > 0 && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, marginBottom: 10 }}>
+            {photos.filter(p => p.photo_type !== 'noticed').map(photo => (
+              <div key={photo.id} style={{ position: 'relative', aspectRatio: '1', borderRadius: 8, overflow: 'hidden' }}>
                 <Image src={photo.url} alt="Clean photo" fill style={{ objectFit: 'cover' }} />
                 {photo.room && (
                   <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.55)', padding: '3px 6px', fontSize: 10, color: 'white', fontFamily: 'var(--font-montserrat), sans-serif', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                     {photo.photo_type === 'before' ? '⬛ ' : '✓ '}{photo.room}
                   </div>
                 )}
-                <button onClick={() => removePhoto(photo.id)} style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', border: 'none', borderRadius: '50%', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                  <X size={12} color="white" />
+                <button onClick={() => removePhoto(photo.id)} style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', border: 'none', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                  <X size={11} color="white" />
                 </button>
               </div>
             ))}
           </div>
         )}
         <input ref={fileRef} type="file" accept="image/*" multiple capture="environment" onChange={handleFileSelect} style={{ display: 'none' }} />
-        <button onClick={() => fileRef.current?.click()} disabled={uploading} style={{ width: '100%', padding: 12, borderRadius: 10, border: '2px dashed var(--line)', background: 'var(--cream)', color: 'var(--muted)', fontSize: 14, fontFamily: 'var(--font-outfit), sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-          <Camera size={16} />{uploading ? 'Uploading...' : 'Add Photos'}
+        <button onClick={() => fileRef.current?.click()} disabled={uploading} style={{ width: '100%', padding: 10, borderRadius: 8, border: '2px dashed var(--line)', background: 'var(--cream)', color: 'var(--muted)', fontSize: 14, fontFamily: 'var(--font-outfit), sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <Camera size={15} />{uploading ? 'Uploading...' : 'Add Photos'}
         </button>
       </div>
 
-      <button onClick={endClean} disabled={ending} className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 16, padding: 18, background: 'var(--teal)' }}>
-        {ending ? 'Finishing...' : 'End Clean →'}
-      </button>
+      {/* Fixed End Clean button above bottom nav */}
+      <div style={{ position: 'fixed', bottom: 70, left: 0, right: 0, padding: '10px 16px', background: 'white', borderTop: '1px solid var(--line)', zIndex: 40 }}>
+        <button onClick={endClean} disabled={ending} className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 15, padding: 15, background: 'var(--teal)' }}>
+          {ending ? 'Finishing...' : 'End Clean →'}
+        </button>
+      </div>
     </div>
   )
 
