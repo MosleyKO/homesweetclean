@@ -217,7 +217,7 @@ export default function CleanDetailPage() {
       {/* Time editing */}
       <div style={{ background: 'white', borderRadius: 14, border: '1px solid var(--line)', padding: 24, marginBottom: 16 }}>
         <label style={labelStyle}>Clean Time</label>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
           <div>
             <div style={{ fontSize: 11, fontFamily: 'var(--font-montserrat), sans-serif', fontWeight: 600, color: 'var(--muted)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Start</div>
             <input type="datetime-local" style={inputStyle} value={startedAt} onChange={e => setStartedAt(e.target.value)} />
