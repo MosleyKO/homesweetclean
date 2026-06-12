@@ -1,11 +1,13 @@
 import { verifyRegistrationResponse } from '@simplewebauthn/server'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAdmin } from '@/lib/require-admin'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 
 const RP_ID = process.env.NEXT_PUBLIC_SITE_URL?.replace('https://', '').replace('http://', '').split('/')[0] ?? 'localhost'
 const ORIGIN = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 
 export async function POST(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const challenge = req.cookies.get('webauthn_challenge')?.value
   if (!challenge) return NextResponse.json({ error: 'No challenge' }, { status: 400 })
 

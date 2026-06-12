@@ -1,8 +1,10 @@
 import { supabase } from '@/lib/supabase'
+import { requireAdmin } from '@/lib/require-admin'
 import { NextRequest, NextResponse } from 'next/server'
 
 // Create a new clean (start)
 export async function POST(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const { client_id } = await req.json()
   const { data, error } = await supabase
     .from('cleans')
@@ -16,6 +18,7 @@ export async function POST(req: NextRequest) {
 
 // Update a clean (end, notes, extras, noticed)
 export async function PATCH(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const { id, ...updates } = await req.json()
   const allowed = ['started_at', 'ended_at', 'notes', 'extras', 'noticed', 'cleaners', 'summary_sent', 'summary_sent_at']
   const safe = Object.fromEntries(Object.entries(updates).filter(([k]) => allowed.includes(k)))

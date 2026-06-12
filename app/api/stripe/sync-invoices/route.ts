@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/require-admin";
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 
 export async function POST(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

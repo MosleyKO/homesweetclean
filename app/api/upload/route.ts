@@ -1,8 +1,10 @@
 import { supabase } from '@/lib/supabase'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { requireAdmin } from '@/lib/require-admin'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const formData = await req.formData()
   const file = formData.get('file') as File
   const cleanId = formData.get('clean_id') as string

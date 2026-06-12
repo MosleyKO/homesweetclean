@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase'
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { requireAdmin } from '@/lib/require-admin'
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import crypto from 'crypto'
@@ -8,6 +9,7 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.homesweetclean.co'
 
 export async function GET(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const cleanId = req.nextUrl.searchParams.get('clean_id')
   if (!cleanId) return NextResponse.json({ error: 'Missing clean_id' }, { status: 400 })
 

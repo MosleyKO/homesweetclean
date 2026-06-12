@@ -1,7 +1,9 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { requireAdmin } from '@/lib/require-admin'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const deny = requireAdmin(_req); if (deny) return deny
   const { id } = await params
 
   // Delete related records first (clean_photos → cleans → client_tokens → clients)

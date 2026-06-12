@@ -1,8 +1,10 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { requireAdmin } from '@/lib/require-admin'
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 
 export async function POST(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const { client_id } = await req.json()
   if (!client_id) return NextResponse.json({ error: 'Missing client_id' }, { status: 400 })
 

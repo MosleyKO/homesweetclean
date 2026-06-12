@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/require-admin";
 import Stripe from "stripe";
 
 export async function GET(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const email = req.nextUrl.searchParams.get("email") ?? "";
   if (!email || email.length < 3) return NextResponse.json({ charges: [] });
 

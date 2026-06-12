@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/require-admin";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseAdmin = createClient(
@@ -7,6 +8,7 @@ const supabaseAdmin = createClient(
 );
 
 export async function PATCH(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const { clientId, stripeCustomerId, stripeCustomerName } = await req.json();
   if (!clientId || !stripeCustomerId) {
     return NextResponse.json({ error: "Missing clientId or stripeCustomerId" }, { status: 400 });

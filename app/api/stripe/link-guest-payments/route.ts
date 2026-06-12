@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/require-admin";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseAdmin = createClient(
@@ -17,6 +18,7 @@ type GuestCharge = {
 }
 
 export async function POST(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const { clientId, charges }: { clientId: string; charges: GuestCharge[] } = await req.json();
   if (!clientId || !charges?.length) {
     return NextResponse.json({ error: "Missing clientId or charges" }, { status: 400 });

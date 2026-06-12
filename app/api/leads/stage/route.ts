@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/require-admin";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseAdmin = createClient(
@@ -7,6 +8,7 @@ const supabaseAdmin = createClient(
 );
 
 export async function PATCH(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const { id, stage } = await req.json();
   if (!id || !stage) return NextResponse.json({ error: "Missing id or stage" }, { status: 400 });
 

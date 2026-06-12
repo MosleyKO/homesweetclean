@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/require-admin";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseAdmin = createClient(
@@ -7,6 +8,7 @@ const supabaseAdmin = createClient(
 );
 
 export async function PATCH(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const { id } = await req.json();
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
 

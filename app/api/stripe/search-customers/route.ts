@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/require-admin";
 import Stripe from "stripe";
 
 export async function GET(req: NextRequest) {
+  const deny = requireAdmin(req); if (deny) return deny
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   const q = req.nextUrl.searchParams.get("q") ?? "";
   if (!q || q.length < 2) return NextResponse.json({ customers: [] });
