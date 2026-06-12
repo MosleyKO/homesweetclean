@@ -23,9 +23,16 @@ export async function POST(req: NextRequest) {
   const room = formData.get('room') as string | null
   const photoType = formData.get('photo_type') as string | null
 
-  const { data, error } = await supabase
+  const insertData: Record<string, unknown> = {
+    clean_id: cleanId,
+    url: publicUrl,
+    room: room || null,
+  }
+  if (photoType) insertData.photo_type = photoType
+
+  const { data, error } = await supabaseAdmin
     .from('clean_photos')
-    .insert([{ clean_id: cleanId, url: publicUrl, room: room || null, photo_type: photoType || null }])
+    .insert([insertData])
     .select()
     .single()
 
