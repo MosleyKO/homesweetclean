@@ -79,7 +79,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           flexDirection: 'column',
         }}>
           {nav.map(({ href, label, icon: Icon }) => {
-            const active = pathname === href || (href !== '/admin' && pathname.startsWith(href))
+            const active = pathname === href || (href !== '/admin' && (pathname.startsWith(href + '/') || pathname === href))
             return (
               <Link key={href} href={href} style={{
                 display: 'flex',

@@ -169,12 +169,12 @@ export default function CleanDetailPage() {
   const extrasList = client?.property_type === 'commercial' ? COMMERCIAL_EXTRAS : RESIDENTIAL_EXTRAS
 
   return (
-    <div style={{ maxWidth: 680 }}>
+    <div>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
         <div>
-          <Link href={`/admin/clients/${client?.id}`} style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--muted)', textDecoration: 'none', letterSpacing: '0.06em' }}>
-            ← {client?.name ?? 'CLIENT'}
+          <Link href="/admin/cleans" style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--muted)', textDecoration: 'none', letterSpacing: '0.06em' }}>
+            ← All Cleans
           </Link>
           <h1 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 28, fontWeight: 600, color: 'var(--teal)', margin: '8px 0 4px' }}>
             Clean — {clean.started_at ? fmtDate(clean.started_at) : 'In Progress'}
