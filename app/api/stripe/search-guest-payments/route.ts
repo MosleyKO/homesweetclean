@@ -8,21 +8,25 @@ export async function GET(req: NextRequest) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
   try {
-    // Search charges by receipt_email where no customer is attached
-    const results = await stripe.charges.search({
-      query: `receipt_email:"${email}"`,
-      limit: 50,
-    });
+    // Fetch recent charges and filter by receipt_email on our side
+    // (Stripe search API doesn't support receipt_email as a query field)
+    const results = await stripe.charges.list({ limit: 100 });
 
+    const emailLower = email.toLowerCase();
     const charges = results.data
-      .filter(c => !( c as any).customer)
+      .filter(c => {
+        const receiptEmail = ((c as any).receipt_email ?? '').toLowerCase();
+        const billingEmail = (c.billing_details?.email ?? '').toLowerCase();
+        const hasNoCustomer = !(c as any).customer;
+        return hasNoCustomer && (receiptEmail.includes(emailLower) || billingEmail.includes(emailLower));
+      })
       .map(c => ({
         id: c.id,
         amount: c.amount,
         currency: c.currency,
         status: c.status,
         description: c.description ?? null,
-        receipt_email: (c as any).receipt_email ?? null,
+        receipt_email: (c as any).receipt_email ?? c.billing_details?.email ?? null,
         receipt_url: c.receipt_url ?? null,
         payment_date: new Date(c.created * 1000).toISOString(),
       }));
