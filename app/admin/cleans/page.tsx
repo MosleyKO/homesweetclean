@@ -17,7 +17,7 @@ export default async function CleansListPage() {
   const fmtTime = (d: string) => new Date(d).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
 
   return (
-    <div style={{ maxWidth: 800 }}>
+    <div>
       <div style={{ marginBottom: 24 }}>
         <p className="eyebrow" style={{ marginBottom: 4 }}>Admin</p>
         <h1 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 30, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>All Cleans</h1>

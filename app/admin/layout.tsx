@@ -2,11 +2,12 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Users, LayoutDashboard, Sparkles, Kanban } from 'lucide-react'
+import { Users, LayoutDashboard, Sparkles, Kanban, ClipboardList } from 'lucide-react'
 
 const nav = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/clients', label: 'Clients', icon: Users },
+  { href: '/admin/cleans', label: 'Cleans', icon: ClipboardList, desktopOnly: true },
   { href: '/admin/pipeline', label: 'Pipeline', icon: Kanban },
   { href: '/admin/clean', label: 'Start Clean', icon: Sparkles },
 ]
@@ -120,7 +121,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         alignItems: 'stretch',
         paddingBottom: 'env(safe-area-inset-bottom)',
       }}>
-        {nav.map(({ href, label, icon: Icon }) => {
+        {nav.filter(item => !item.desktopOnly).map(({ href, label, icon: Icon }) => {
           const active = pathname === href || (href !== '/admin' && pathname.startsWith(href))
           return (
             <Link key={href} href={href} style={{

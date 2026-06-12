@@ -235,7 +235,7 @@ export default async function AdminDashboard() {
                     </tbody>
                   </table>
                   <div style={{ padding: '12px 24px', borderTop: '1px solid var(--line)', textAlign: 'center' }}>
-                    <Link href='/admin/clients' style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--blush)', textDecoration: 'none', letterSpacing: '0.06em' }}>VIEW ALL CLEANS →</Link>
+                    <Link href='/admin/cleans' style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--blush)', textDecoration: 'none', letterSpacing: '0.06em' }}>VIEW ALL CLEANS →</Link>
                   </div>
                 </>
               ) : (
