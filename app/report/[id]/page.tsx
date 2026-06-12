@@ -57,6 +57,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
   const hasNoticed = !!(clean.noticed || noticedPhotos.length > 0)
   const hasNotes = !!clean.notes
   const hasExtras = clean.extras && clean.extras.length > 0
+  const hasTaggedPhotos = regularPhotos.some((p: any) => p.photo_type === 'before' || p.photo_type === 'after')
 
   return (
     <div style={{ minHeight: '100vh', background: '#F7F3EF', fontFamily: 'var(--font-outfit), sans-serif' }}>
@@ -158,7 +159,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
                   </div>
                 )}
                 {noticedPhotos.length > 0 && (
-                  <PhotoLightbox photos={noticedPhotos} />
+                  <PhotoLightbox photos={noticedPhotos} columns={1} />
                 )}
               </div>
             )}
@@ -205,8 +206,8 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
                 <Camera size={16} color="var(--blush)" strokeWidth={1.75} />
               </div>
               <div>
-                <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 18, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>Before &amp; After Photos</h2>
-                <p style={{ fontSize: 12, color: 'var(--muted)', margin: '2px 0 0', fontFamily: 'var(--font-montserrat), sans-serif' }}>See the difference we made today. Tap any photo to view full size.</p>
+                <h2 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 18, fontWeight: 600, color: 'var(--teal)', margin: 0 }}>{hasTaggedPhotos ? 'Before & After Photos' : 'Clean Photos'}</h2>
+                <p style={{ fontSize: 12, color: 'var(--muted)', margin: '2px 0 0', fontFamily: 'var(--font-montserrat), sans-serif' }}>{hasTaggedPhotos ? 'See the difference we made today. Tap any photo to view full size.' : 'Photos from today\'s clean. Tap any photo to view full size.'}</p>
               </div>
             </div>
 
@@ -237,7 +238,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
                         <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--sage-deep)', marginBottom: 6, marginTop: before.length > 0 ? 12 : 0 }}>After</div>
                         <PhotoLightbox photos={after} columns={1} />
                       </>}
-                      {untagged.length > 0 && <PhotoLightbox photos={untagged} />}
+                      {untagged.length > 0 && <PhotoLightbox photos={untagged} columns={1} />}
                     </>
                   )}
                 </div>
