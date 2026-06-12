@@ -418,6 +418,7 @@ function CleanFlow() {
       <p style={{ color: 'var(--muted)', fontSize: 15, marginBottom: 32 }}>{selectedClient?.name} · {formatElapsed(elapsed)} · {photos.length} photo{photos.length !== 1 ? 's' : ''}</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <a href={`/api/send-report?clean_id=${cleanId}`} className="btn-primary" style={{ justifyContent: 'center' }}>Send Summary to Client →</a>
+        <a href={`/report/${cleanId}`} target="_blank" className="btn-secondary" style={{ justifyContent: 'center' }}>Preview Report →</a>
         <button onClick={() => router.push(`/admin/clients/${selectedClient?.id}`)} className="btn-secondary">View Client History</button>
         <button onClick={() => { setPhase('select'); setSelectedClient(null); setCleanId(null); setNotes(''); setNoticed(''); setExtras([]); setCleaners(['Kinsey']); setPhotos([]); setElapsed(0) }} style={{ background: 'none', border: 'none', color: 'var(--muted)', fontSize: 14, cursor: 'pointer', marginTop: 8 }}>Start another clean</button>
       </div>

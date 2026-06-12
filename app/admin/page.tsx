@@ -19,19 +19,25 @@ export default async function AdminDashboard() {
     { count: pendingSummaries },
     { data: invoicesMTD },
     { data: invoicesHistory },
+    { data: paymentsMTD },
+    { data: paymentsHistory },
   ] = await Promise.all([
     supabase.from('clients').select('id, name, status'),
     supabase.from('cleans').select('*, clients(name)').order('started_at', { ascending: false }).limit(60),
     supabase.from('cleans').select('*', { count: 'exact', head: true }).eq('summary_sent', false).not('ended_at', 'is', null),
-    supabase.from('invoices').select('amount_paid').gte('invoice_created_at', startOfMonth),
-    supabase.from('invoices').select('amount_paid, invoice_created_at').gte('invoice_created_at', sixMonthsAgo).order('invoice_created_at', { ascending: true }),
+    supabase.from('invoices').select('amount_paid').gte('invoice_created_at', startOfMonth).eq('status', 'paid'),
+    supabase.from('invoices').select('amount_paid, invoice_created_at').gte('invoice_created_at', sixMonthsAgo).eq('status', 'paid').order('invoice_created_at', { ascending: true }),
+    supabase.from('payments').select('amount').gte('payment_date', startOfMonth).eq('status', 'succeeded'),
+    supabase.from('payments').select('amount, payment_date').gte('payment_date', sixMonthsAgo).eq('status', 'succeeded').order('payment_date', { ascending: true }),
   ])
 
   const activeClients = clients?.filter(c => c.status === 'active').length ?? 0
   const newLeads = clients?.filter(c => c.status === 'lead').length ?? 0
   const inactiveClients = clients?.filter(c => c.status === 'inactive').length ?? 0
   const cleaningsMTD = allCleans?.filter(c => c.started_at && c.started_at >= startOfMonth).length ?? 0
-  const revenueMTD = (invoicesMTD ?? []).reduce((sum, inv) => sum + (inv.amount_paid ?? 0), 0) / 100
+  const invoiceRevenueMTD = (invoicesMTD ?? []).reduce((sum, inv) => sum + (inv.amount_paid ?? 0), 0)
+  const paymentRevenueMTD = (paymentsMTD ?? []).reduce((sum, p) => sum + (p.amount ?? 0), 0)
+  const revenueMTD = (invoiceRevenueMTD + paymentRevenueMTD) / 100
 
   // Monthly revenue for line chart (last 6 months)
   const monthlyRevenue: Record<string, number> = {}
@@ -45,6 +51,12 @@ export default async function AdminDashboard() {
     const d = new Date(inv.invoice_created_at)
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
     if (key in monthlyRevenue) monthlyRevenue[key] += (inv.amount_paid ?? 0) / 100
+  }
+  for (const pay of paymentsHistory ?? []) {
+    if (!pay.payment_date) continue
+    const d = new Date(pay.payment_date)
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    if (key in monthlyRevenue) monthlyRevenue[key] += (pay.amount ?? 0) / 100
   }
   const revenueEntries = Object.entries(monthlyRevenue)
   const revenueValues = revenueEntries.map(([, v]) => v)

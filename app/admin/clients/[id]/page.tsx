@@ -37,7 +37,9 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
 
   // Customer Snapshot metrics
   const completedCleans = (cleans ?? []).filter(c => c.ended_at)
-  const lifetimeRevenue = (invoices ?? []).reduce((sum, inv) => sum + (inv.amount_paid ?? 0), 0) / 100
+  const invoiceRevenue = (invoices ?? []).filter(inv => inv.status === 'paid').reduce((sum, inv) => sum + (inv.amount_paid ?? 0), 0) / 100
+  const paymentRevenue = (payments ?? []).filter(p => p.status === 'succeeded').reduce((sum, p) => sum + (p.amount ?? 0), 0) / 100
+  const lifetimeRevenue = invoiceRevenue + paymentRevenue
   const totalCleans = completedCleans.length
   const avgTicket = totalCleans > 0 ? Math.round(lifetimeRevenue / totalCleans) : 0
   const lastClean = cleans?.[0]
