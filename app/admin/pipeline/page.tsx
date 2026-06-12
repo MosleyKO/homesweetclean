@@ -21,14 +21,20 @@ export default async function PipelinePage() {
   return (
     <div>
       <style>{`
-        .pipeline-stats { display: flex; gap: 12; }
+        .pipeline-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
+        .pipeline-h1 { font-family: var(--font-fraunces), serif; font-size: 32px; font-weight: 600; color: var(--teal); margin: 0 0 4px; }
+        @media (max-width: 768px) {
+          .pipeline-header { flex-direction: column; gap: 12px; margin-bottom: 20px; }
+          .pipeline-header .btn-primary { width: 100%; justify-content: center; }
+          .pipeline-h1 { font-size: 26px; }
+        }
       `}</style>
 
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
+      <div className="pipeline-header">
         <div>
           <p className="eyebrow" style={{ marginBottom: 6 }}>Sales</p>
-          <h1 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 32, fontWeight: 600, color: 'var(--teal)', margin: '0 0 4px' }}>Pipeline</h1>
+          <h1 className="pipeline-h1">Pipeline</h1>
           <p style={{ color: 'var(--muted)', fontSize: 14, margin: 0 }}>
             {total} active {total === 1 ? 'lead' : 'leads'}
           </p>
