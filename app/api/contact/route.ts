@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     email,
     phone: phone || null,
     address: address || null,
-    property_type: propertyType || "residential",
+    property_type: (propertyType || "residential").toLowerCase(),
     frequency: service || null,
     bedrooms: bedrooms || null,
     client_notes: message || null,
