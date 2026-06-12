@@ -113,7 +113,8 @@ export default async function AdminDashboard() {
         .dash-mobile-action-col { display: none; }
 
         @media (max-width: 768px) {
-          .dash-layout { flex-direction: column; }
+          .dash-layout { flex-direction: column; align-items: stretch; }
+          .dash-left { width: 100%; }
           .dash-right { display: none; width: 100%; }
           .dash-stat-cards { display: none; }
           .dash-actions-row { display: none; }

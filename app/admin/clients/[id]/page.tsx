@@ -55,19 +55,23 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
         .cd-snapshot-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
         .cd-snapshot-cell { padding: 16px 20px; border-bottom: 1px solid var(--line); }
         .cd-snapshot-cell:nth-child(odd) { border-right: 1px solid var(--line); }
-        .cd-snapshot-meta { padding: 0 20px 8px; }
         .cd-snapshot-meta-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
         .cd-snapshot-meta-row:last-child { border-bottom: none; }
         .cd-history-table { display: block; }
         .cd-history-cards { display: none; }
-        .cd-header-left { }
         .cd-name { font-size: 36px; margin: 4px 0 6px; }
+        .cd-name-row { display: block; }
+        .cd-delete-desktop { display: flex; }
+        .cd-delete-mobile { display: none; }
 
         @media (max-width: 768px) {
-          .cd-header { flex-direction: column; gap: 14px; margin-bottom: 20px; }
-          .cd-header-actions { width: 100%; }
-          .cd-header-actions > * { flex: 1; justify-content: center; font-size: 13px !important; padding: 10px 12px !important; }
-          .cd-name { font-size: 24px !important; margin: 4px 0 4px !important; }
+          .cd-header { flex-direction: column; gap: 10px; margin-bottom: 20px; }
+          .cd-name-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+          .cd-name { font-size: 24px !important; margin: 4px 0 4px !important; flex: 1; }
+          .cd-delete-desktop { display: none !important; }
+          .cd-delete-mobile { display: flex; flex-shrink: 0; margin-top: 6px; }
+          .cd-header-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
+          .cd-header-actions a { justify-content: center; font-size: 13px !important; padding: 10px 12px !important; }
           .cd-top-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
           .cd-snapshot { display: none; }
           .cd-bottom-grid { grid-template-columns: 1fr; }
@@ -78,9 +82,14 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
 
       {/* Header */}
       <div className="cd-header">
-        <div className="cd-header-left">
+        <div style={{ flex: 1, minWidth: 0 }}>
           <Link href='/admin/clients' style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--muted)', textDecoration: 'none', letterSpacing: '0.06em' }}>← Back to Clients</Link>
-          <h1 className="cd-name" style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 600, color: 'var(--teal)' }}>{client.name}</h1>
+          <div className="cd-name-row">
+            <h1 className="cd-name" style={{ fontFamily: 'var(--font-fraunces), serif', fontWeight: 600, color: 'var(--teal)' }}>{client.name}</h1>
+            <div className="cd-delete-mobile">
+              <DeleteClientButton clientId={client.id} clientName={client.name} />
+            </div>
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ display: 'inline-block', padding: '3px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: s.bg, color: s.color, textTransform: 'capitalize' }}>
               {client.status}
@@ -93,7 +102,9 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
           </div>
         </div>
         <div className="cd-header-actions">
-          <DeleteClientButton clientId={client.id} clientName={client.name} />
+          <div className="cd-delete-desktop">
+            <DeleteClientButton clientId={client.id} clientName={client.name} />
+          </div>
           <Link href={`/admin/clients/${client.id}/edit`} className='btn-secondary'>Edit</Link>
           <Link href={`/admin/clean?client=${client.id}`} className='btn-primary' style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <Sparkles size={14} /> Start Clean

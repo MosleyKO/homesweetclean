@@ -234,7 +234,7 @@ export default function PipelineBoard({ leads: initialLeads }: { leads: Lead[] }
   return (
     <>
       {/* Desktop kanban */}
-      <div className="pipeline-desktop" style={{ display: 'grid', gridTemplateColumns: `repeat(${STAGES.length}, 1fr)`, gap: 16, alignItems: 'start' }}>
+      <div className="pipeline-desktop" style={{ gridTemplateColumns: `repeat(${STAGES.length}, 1fr)`, gap: 16, alignItems: 'start' }}>
         {STAGES.map(stage => {
           const stageLeads = leadsBy(stage.key)
           return (
@@ -335,8 +335,8 @@ export default function PipelineBoard({ leads: initialLeads }: { leads: Lead[] }
         .pipeline-desktop { display: grid; }
         .pipeline-mobile { display: none; }
         @media (max-width: 768px) {
-          .pipeline-desktop { display: none; }
-          .pipeline-mobile { display: block; }
+          .pipeline-desktop { display: none !important; }
+          .pipeline-mobile { display: block !important; }
         }
       `}</style>
     </>
