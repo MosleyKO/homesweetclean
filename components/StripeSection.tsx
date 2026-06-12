@@ -261,18 +261,6 @@ export default function StripeSection({
                 {syncing ? 'Syncing...' : 'Sync'}
               </button>
               <button
-                onClick={() => { setShowGuest(v => !v); setGuestEmail(''); setGuestCharges([]); setGuestSelected(new Set()); setGuestError(null) }}
-                title="Link guest checkout payments"
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 5,
-                  fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif',
-                  letterSpacing: '0.06em', color: 'var(--muted)', background: 'var(--cream)',
-                  border: '1px solid var(--line)', padding: '6px 12px', borderRadius: 8, cursor: 'pointer',
-                }}
-              >
-                <UserX size={12} /> Guest Payments
-              </button>
-              <button
                 onClick={handleUnlink}
                 title="Unlink Stripe customer"
                 style={{ display: 'inline-flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', padding: 4 }}
@@ -293,6 +281,18 @@ export default function StripeSection({
               <Search size={12} /> Link Stripe Customer
             </button>
           )}
+          <button
+            onClick={() => { setShowGuest(v => !v); setGuestEmail(''); setGuestCharges([]); setGuestSelected(new Set()); setGuestError(null) }}
+            title="Link guest checkout payments"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif',
+              letterSpacing: '0.06em', color: 'var(--muted)', background: 'var(--cream)',
+              border: '1px solid var(--line)', padding: '6px 12px', borderRadius: 8, cursor: 'pointer',
+            }}
+          >
+            <UserX size={12} /> Guest Payments
+          </button>
         </div>
       </div>
 
