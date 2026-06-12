@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Save lead to DB
-  await supabaseAdmin.from("clients").insert([{
+  const { error: insertError } = await supabaseAdmin.from("clients").insert([{
     name,
     email,
     phone: phone || null,
@@ -40,6 +40,11 @@ export async function POST(req: NextRequest) {
     source: "website_form",
     source_detail: sourceDetail || null,
   }]);
+
+  if (insertError) {
+    console.error("Lead insert error:", insertError.message);
+    return NextResponse.json({ error: "Failed to save lead" }, { status: 500 });
+  }
 
   // Send notification email
   try {

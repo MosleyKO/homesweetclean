@@ -3,7 +3,11 @@ import { useState } from "react";
 import { Phone, Mail, MapPin, Sparkles } from "lucide-react";
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", propertyType: "", service: "", bedrooms: "", address: "", message: "" });
+  const [form, setForm] = useState({
+    name: "", email: "", phone: "", propertyType: "", service: "",
+    bedrooms: "", bathrooms: "", frequency: "", sqft: "", spaceType: "",
+    address: "", message: "",
+  });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -17,7 +21,7 @@ export default function ContactPage() {
       });
       if (res.ok) {
         setStatus("success");
-        setForm({ name: "", email: "", phone: "", propertyType: "", service: "", bedrooms: "", address: "", message: "" });
+        setForm({ name: "", email: "", phone: "", propertyType: "", service: "", bedrooms: "", bathrooms: "", frequency: "", sqft: "", spaceType: "", address: "", message: "" });
         if (typeof window !== "undefined" && window.gtag) {
           window.gtag("event", "generate_lead", { event_category: "contact", event_label: "quote_form" });
         }
@@ -59,8 +63,8 @@ export default function ContactPage() {
       <section style={{ background: "var(--cream)", padding: "36px 32px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: 650, margin: "0 auto" }}>
           <div className="eyebrow" style={{ justifyContent: "center" }}>Get in Touch ♥</div>
-          <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 12 }}>
-            Let's get your home{" "}
+          <h1 style={{ fontFamily: "var(--font-fraunces), serif", fontSize: "clamp(22px, 2.6vw, 38px)", fontWeight: 600, color: "var(--teal)", lineHeight: 1.1, marginBottom: 12, whiteSpace: "nowrap" }}>
+            Let&apos;s get your space{" "}
             <span style={{ fontFamily: "var(--font-allura), cursive", color: "var(--blush)", fontWeight: 400, fontSize: "1.15em" }}>sparkling clean.</span>
           </h1>
           <p style={{ fontSize: 16, color: "var(--muted)", lineHeight: 1.6 }}>
@@ -129,17 +133,83 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div>
-                  <label style={labelStyle}>Number of Bedrooms</label>
-                  <select style={{ ...inputStyle, cursor: "pointer" }} value={form.bedrooms} onChange={e => setForm({ ...form, bedrooms: e.target.value })}>
-                    <option value="">Select...</option>
-                    <option>Studio / 1 Bedroom</option>
-                    <option>2 Bedrooms</option>
-                    <option>3 Bedrooms</option>
-                    <option>4 Bedrooms</option>
-                    <option>5+ Bedrooms</option>
-                  </select>
-                </div>
+                {form.propertyType === "Residential" && (
+                  <>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }} className="form-row">
+                      <div>
+                        <label style={labelStyle}>Bedrooms</label>
+                        <select style={{ ...inputStyle, cursor: "pointer" }} value={form.bedrooms} onChange={e => setForm({ ...form, bedrooms: e.target.value })}>
+                          <option value="">Select...</option>
+                          <option>Studio / 1 Bedroom</option>
+                          <option>2 Bedrooms</option>
+                          <option>3 Bedrooms</option>
+                          <option>4 Bedrooms</option>
+                          <option>5+ Bedrooms</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label style={labelStyle}>Bathrooms</label>
+                        <select style={{ ...inputStyle, cursor: "pointer" }} value={form.bathrooms} onChange={e => setForm({ ...form, bathrooms: e.target.value })}>
+                          <option value="">Select...</option>
+                          <option>1 Bathroom</option>
+                          <option>2 Bathrooms</option>
+                          <option>3 Bathrooms</option>
+                          <option>4+ Bathrooms</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Cleaning Frequency</label>
+                      <select style={{ ...inputStyle, cursor: "pointer" }} value={form.frequency} onChange={e => setForm({ ...form, frequency: e.target.value })}>
+                        <option value="">Select...</option>
+                        <option>One-Time</option>
+                        <option>Weekly</option>
+                        <option>Bi-Weekly</option>
+                        <option>Monthly</option>
+                        <option>Not sure yet</option>
+                      </select>
+                    </div>
+                  </>
+                )}
+
+                {form.propertyType === "Commercial" && (
+                  <>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }} className="form-row">
+                      <div>
+                        <label style={labelStyle}>Space Type</label>
+                        <select style={{ ...inputStyle, cursor: "pointer" }} value={form.spaceType} onChange={e => setForm({ ...form, spaceType: e.target.value })}>
+                          <option value="">Select...</option>
+                          <option>Office</option>
+                          <option>Retail</option>
+                          <option>Medical / Dental</option>
+                          <option>Warehouse / Industrial</option>
+                          <option>Other</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label style={labelStyle}>Approx. Square Footage</label>
+                        <select style={{ ...inputStyle, cursor: "pointer" }} value={form.sqft} onChange={e => setForm({ ...form, sqft: e.target.value })}>
+                          <option value="">Select...</option>
+                          <option>Under 1,000 sq ft</option>
+                          <option>1,000 – 2,500 sq ft</option>
+                          <option>2,500 – 5,000 sq ft</option>
+                          <option>5,000+ sq ft</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Cleaning Frequency</label>
+                      <select style={{ ...inputStyle, cursor: "pointer" }} value={form.frequency} onChange={e => setForm({ ...form, frequency: e.target.value })}>
+                        <option value="">Select...</option>
+                        <option>One-Time</option>
+                        <option>Weekly</option>
+                        <option>Bi-Weekly</option>
+                        <option>Monthly</option>
+                        <option>Not sure yet</option>
+                      </select>
+                    </div>
+                  </>
+                )}
 
                 <div>
                   <label style={labelStyle}>Address to be Cleaned *</label>

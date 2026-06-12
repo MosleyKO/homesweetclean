@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { CreditCard, Search, X, ExternalLink, RefreshCw, Unlink } from 'lucide-react'
+import { CreditCard, Search, X, ExternalLink, RefreshCw, Unlink, UserX } from 'lucide-react'
 
 type Invoice = {
   id: string
@@ -28,6 +28,17 @@ type Payment = {
   description: string | null
   receipt_url: string | null
   payment_date: string | null
+}
+
+type GuestCharge = {
+  id: string
+  amount: number
+  currency: string
+  status: string
+  description: string | null
+  receipt_email: string | null
+  receipt_url: string | null
+  payment_date: string
 }
 
 type StripeCustomerResult = {
@@ -85,6 +96,16 @@ export default function StripeSection({
   const [syncError, setSyncError] = useState<string | null>(null)
   const [tab, setTab] = useState<'invoices' | 'payments'>('invoices')
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Guest payment linking
+  const [showGuest, setShowGuest] = useState(false)
+  const [guestEmail, setGuestEmail] = useState('')
+  const [guestCharges, setGuestCharges] = useState<GuestCharge[]>([])
+  const [guestSearching, setGuestSearching] = useState(false)
+  const [guestSelected, setGuestSelected] = useState<Set<string>>(new Set())
+  const [guestLinking, setGuestLinking] = useState(false)
+  const [guestError, setGuestError] = useState<string | null>(null)
+  const guestDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Revenue calculations
   const invoiceRevenue = initialInvoices
@@ -160,6 +181,51 @@ export default function StripeSection({
     router.refresh()
   }
 
+  const handleGuestSearch = (val: string) => {
+    setGuestEmail(val)
+    setGuestError(null)
+    if (guestDebounceRef.current) clearTimeout(guestDebounceRef.current)
+    if (val.length < 3) { setGuestCharges([]); return }
+    guestDebounceRef.current = setTimeout(async () => {
+      setGuestSearching(true)
+      const res = await fetch(`/api/stripe/search-guest-payments?email=${encodeURIComponent(val)}`)
+      const data = await res.json()
+      if (data.error) setGuestError(data.error)
+      setGuestCharges(data.charges ?? [])
+      setGuestSearching(false)
+    }, 400)
+  }
+
+  const toggleGuestCharge = (id: string) => {
+    setGuestSelected(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
+
+  const handleLinkGuest = async () => {
+    if (!guestSelected.size) return
+    setGuestLinking(true)
+    const selected = guestCharges.filter(c => guestSelected.has(c.id))
+    const res = await fetch('/api/stripe/link-guest-payments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clientId, charges: selected }),
+    })
+    const data = await res.json()
+    if (data.ok) {
+      setShowGuest(false)
+      setGuestEmail('')
+      setGuestCharges([])
+      setGuestSelected(new Set())
+      router.refresh()
+    } else {
+      setGuestError(data.error ?? 'Failed to link payments')
+    }
+    setGuestLinking(false)
+  }
+
   const hasData = initialInvoices.length > 0 || initialPayments.length > 0
 
   return (
@@ -193,6 +259,18 @@ export default function StripeSection({
               >
                 <RefreshCw size={12} style={{ animation: syncing ? 'spin 1s linear infinite' : 'none' }} />
                 {syncing ? 'Syncing...' : 'Sync'}
+              </button>
+              <button
+                onClick={() => { setShowGuest(v => !v); setGuestEmail(''); setGuestCharges([]); setGuestSelected(new Set()); setGuestError(null) }}
+                title="Link guest checkout payments"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif',
+                  letterSpacing: '0.06em', color: 'var(--muted)', background: 'var(--cream)',
+                  border: '1px solid var(--line)', padding: '6px 12px', borderRadius: 8, cursor: 'pointer',
+                }}
+              >
+                <UserX size={12} /> Guest Payments
               </button>
               <button
                 onClick={handleUnlink}
@@ -259,6 +337,107 @@ export default function StripeSection({
           )}
           {!searching && query.length >= 2 && results.length === 0 && (
             <p style={{ fontSize: 13, color: 'var(--muted)', margin: 0 }}>No Stripe customers found.</p>
+          )}
+        </div>
+      )}
+
+      {/* Guest payment search panel */}
+      {showGuest && (
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--line)', background: 'var(--cream)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <div>
+              <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: 'var(--teal)', marginBottom: 2 }}>
+                Link Guest Checkout Payments
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--muted)' }}>Search by the email used at checkout</div>
+            </div>
+            <button onClick={() => setShowGuest(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}>
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Email search */}
+          <div style={{ position: 'relative', marginBottom: 12 }}>
+            <Search size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)' }} />
+            <input
+              autoFocus
+              value={guestEmail}
+              onChange={e => handleGuestSearch(e.target.value)}
+              placeholder="guest@email.com"
+              style={{ width: '100%', padding: '10px 12px 10px 36px', borderRadius: 8, border: '1.5px solid var(--line)', fontSize: 14, fontFamily: 'var(--font-outfit), sans-serif', color: 'var(--teal)', background: 'white', outline: 'none', boxSizing: 'border-box' }}
+            />
+          </div>
+
+          {guestError && (
+            <div style={{ fontSize: 12, color: '#991b1b', marginBottom: 10 }}>Error: {guestError}</div>
+          )}
+
+          {guestSearching && (
+            <p style={{ fontSize: 13, color: 'var(--muted)', margin: '0 0 10px' }}>Searching Stripe...</p>
+          )}
+
+          {guestCharges.length > 0 && (
+            <>
+              <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>
+                Select payments to link to this client:
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
+                {guestCharges.map(c => {
+                  const checked = guestSelected.has(c.id)
+                  return (
+                    <label
+                      key={c.id}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 12,
+                        padding: '10px 14px', borderRadius: 8,
+                        border: `1.5px solid ${checked ? 'var(--teal)' : 'var(--line)'}`,
+                        background: checked ? 'var(--blush-bg)' : 'white',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleGuestCharge(c.id)}
+                        style={{ width: 16, height: 16, accentColor: 'var(--teal)', flexShrink: 0 }}
+                      />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--teal)' }}>
+                            {fmt(c.amount, c.currency)}
+                          </span>
+                          <span style={{ fontSize: 11, color: 'var(--muted)' }}>
+                            {fmtDate(c.payment_date)}
+                          </span>
+                        </div>
+                        {c.description && (
+                          <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>{c.description}</div>
+                        )}
+                        <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>{c.receipt_email}</div>
+                      </div>
+                    </label>
+                  )
+                })}
+              </div>
+              <button
+                onClick={handleLinkGuest}
+                disabled={guestSelected.size === 0 || guestLinking}
+                style={{
+                  padding: '8px 18px', borderRadius: 8, border: 'none',
+                  background: guestSelected.size > 0 ? 'var(--teal)' : 'var(--line)',
+                  color: 'white', fontFamily: 'var(--font-montserrat), sans-serif',
+                  fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
+                  cursor: guestSelected.size > 0 ? 'pointer' : 'default',
+                  opacity: guestLinking ? 0.6 : 1,
+                }}
+              >
+                {guestLinking ? 'Linking...' : `Link ${guestSelected.size > 0 ? guestSelected.size : ''} Payment${guestSelected.size !== 1 ? 's' : ''}`}
+              </button>
+            </>
+          )}
+
+          {!guestSearching && guestEmail.length >= 3 && guestCharges.length === 0 && (
+            <p style={{ fontSize: 13, color: 'var(--muted)', margin: 0 }}>No guest payments found for that email.</p>
           )}
         </div>
       )}
