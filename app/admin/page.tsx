@@ -8,10 +8,21 @@ export default async function AdminDashboard() {
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
   const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1).toISOString()
-  const dayOfWeek = now.getDay()
-  const monday = new Date(now)
-  monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1))
-  monday.setHours(0, 0, 0, 0)
+  const tz = 'America/Denver'
+  const weekdayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  const mtDateStr = (d: Date) => {
+    const p = new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(d)
+    return `${p.find(x => x.type === 'year')!.value}-${p.find(x => x.type === 'month')!.value}-${p.find(x => x.type === 'day')!.value}`
+  }
+  const mtWeekday = (d: Date) => weekdayNames.indexOf(d.toLocaleDateString('en-US', { timeZone: tz, weekday: 'short' }))
+  const todayDayNum = mtWeekday(now)
+  const daysFromMonday = todayDayNum === 0 ? 6 : todayDayNum - 1
+  const mtParts = new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric' }).formatToParts(now)
+  const mtY = Number(mtParts.find(p => p.type === 'year')!.value)
+  const mtM = Number(mtParts.find(p => p.type === 'month')!.value) - 1
+  const mtD = Number(mtParts.find(p => p.type === 'day')!.value)
+  const mondayMTDate = new Date(mtY, mtM, mtD - daysFromMonday)
+  const mondayStr = `${mondayMTDate.getFullYear()}-${String(mondayMTDate.getMonth() + 1).padStart(2, '0')}-${String(mondayMTDate.getDate()).padStart(2, '0')}`
 
   const [
     { data: clients },
@@ -78,18 +89,18 @@ export default async function AdminDashboard() {
     ? `M${pts[0].x},${chartH} L${polyline.replace(/ /g, ' L')} L${pts[pts.length - 1].x},${chartH} Z`
     : ''
 
-  // Cleans this week
+  // Cleans this week (all day math in MT)
   const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   const cleansByDay = [0, 0, 0, 0, 0, 0, 0]
   for (const clean of allCleans ?? []) {
     if (!clean.started_at) continue
     const d = new Date(clean.started_at)
-    if (d < monday) continue
-    const idx = (d.getDay() + 6) % 7
+    if (mtDateStr(d) < mondayStr) continue
+    const idx = (mtWeekday(d) + 6) % 7
     cleansByDay[idx]++
   }
   const maxBars = Math.max(...cleansByDay, 1)
-  const todayIdx = (now.getDay() + 6) % 7
+  const todayIdx = (todayDayNum + 6) % 7
   const totalCleansWeek = cleansByDay.reduce((a, b) => a + b, 0)
 
   const recentCleans = (allCleans ?? []).slice(0, 5)
