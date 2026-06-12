@@ -124,7 +124,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
               { label: 'Date', value: clean.started_at ? fmtDate(clean.started_at) : '—' },
               { label: 'Time', value: clean.started_at && clean.ended_at ? `${fmtTime(clean.started_at)} – ${fmtTime(clean.ended_at)}` : '—' },
               { label: 'Duration', value: duration ? `${duration} min` : '—' },
-              { label: 'Cleaner', value: 'Kinsey' },
+              { label: clean.cleaners?.length === 1 ? 'Cleaner' : 'Cleaners', value: clean.cleaners?.length ? (clean.cleaners as string[]).join(' & ') : 'Kinsey' },
             ].map(({ label, value }) => (
               <div key={label} className="stat-cell">
                 <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 6, whiteSpace: 'nowrap' }}>{label}</div>

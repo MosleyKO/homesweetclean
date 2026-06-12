@@ -6,15 +6,24 @@ import { supabase } from '@/lib/supabase'
 import { Camera, X, CheckCircle, Key } from 'lucide-react'
 import Image from 'next/image'
 
-const EXTRAS = [
+const RESIDENTIAL_EXTRAS = [
   'Steam mop floors', 'Clean inside oven', 'Clean inside fridge',
   'Wash windows', 'Change bed linens', 'Clean inside microwave',
   'Wipe down blinds', 'Clean garage', 'Scrub tile grout', 'Organize pantry',
 ]
 
+const COMMERCIAL_EXTRAS = [
+  'Steam mop floors', 'Wash windows', 'Wipe down blinds',
+  'Scrub tile grout', 'Sanitize restrooms', 'Clean break room',
+  'Dust surfaces & furniture', 'Clean glass partitions', 'Empty trash bins',
+]
+
+const CLEANERS = ['Kinsey', 'Koby']
+
 const ROOMS = ['Kitchen', 'Bathroom', 'Living Room', 'Bedroom', 'Office', 'Entry', 'Hallway', 'Laundry Room', 'Dining Room', 'Other']
 
 type Phase = 'select' | 'active' | 'done'
+type PhotoType = 'before' | 'after' | null
 interface Client { id: string; name: string; access_notes: string | null; client_notes: string | null; property_type: string }
 interface Photo { id: string; url: string; room: string | null; photo_type: string | null }
 
@@ -33,6 +42,8 @@ function CleanFlow() {
   const [notes, setNotes] = useState('')
   const [noticed, setNoticed] = useState('')
   const [extras, setExtras] = useState<string[]>([])
+  const [customExtra, setCustomExtra] = useState('')
+  const [cleaners, setCleaners] = useState<string[]>(['Kinsey'])
   const [photos, setPhotos] = useState<Photo[]>([])
   const [uploading, setUploading] = useState(false)
   const [uploadingNoticed, setUploadingNoticed] = useState(false)
@@ -41,27 +52,55 @@ function CleanFlow() {
   const [pendingFiles, setPendingFiles] = useState<File[]>([])
   const [tagRoom, setTagRoom] = useState('Kitchen')
   const [tagCustomRoom, setTagCustomRoom] = useState('')
-  const [tagType, setTagType] = useState<'before' | 'after'>('before')
+  const [tagType, setTagType] = useState<PhotoType>(null)
   const [showTagModal, setShowTagModal] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   const noticedFileRef = useRef<HTMLInputElement>(null)
 
+  // Load clients, then check localStorage for an in-progress clean to resume
   useEffect(() => {
     supabase.from('clients').select('id, name, access_notes, client_notes, property_type').eq('status', 'active').order('name')
       .then(({ data }) => {
-        if (data) {
-          setClients(data)
-          if (preselectedId) {
-            const found = data.find((c: Client) => c.id === preselectedId)
-            if (found) setSelectedClient(found)
-          }
+        if (!data) return
+        setClients(data)
+
+        if (preselectedId) {
+          const found = data.find((c: Client) => c.id === preselectedId)
+          if (found) setSelectedClient(found)
+          return
         }
+
+        // Resume an in-progress clean if one was saved
+        const saved = localStorage.getItem('hsc_active_clean')
+        if (!saved) return
+        let parsed: { cleanId: string; clientId: string }
+        try { parsed = JSON.parse(saved) } catch { localStorage.removeItem('hsc_active_clean'); return }
+
+        supabase.from('cleans').select('*').eq('id', parsed.cleanId).single().then(({ data: cleanData }) => {
+          if (!cleanData || cleanData.ended_at) { localStorage.removeItem('hsc_active_clean'); return }
+          const client = data.find((c: Client) => c.id === parsed.clientId)
+          if (!client) return
+          supabase.from('clean_photos').select('*').eq('clean_id', parsed.cleanId).then(({ data: photoData }) => {
+            setSelectedClient(client)
+            setCleanId(parsed.cleanId)
+            setStartTime(new Date(cleanData.started_at))
+            setNotes(cleanData.notes ?? '')
+            setNoticed(cleanData.noticed ?? '')
+            setExtras(cleanData.extras ?? [])
+            setCleaners(cleanData.cleaners?.length ? cleanData.cleaners : ['Kinsey'])
+            setPhotos(photoData ?? [])
+            setPhase('active')
+          })
+        })
       })
   }, [preselectedId])
 
+  // Live timer — recomputes from DB start time so it's always accurate
   useEffect(() => {
     if (phase !== 'active' || !startTime) return
-    const interval = setInterval(() => setElapsed(Math.floor((Date.now() - startTime.getTime()) / 1000)), 1000)
+    const tick = () => setElapsed(Math.floor((Date.now() - startTime.getTime()) / 1000))
+    tick()
+    const interval = setInterval(tick, 1000)
     return () => clearInterval(interval)
   }, [phase, startTime])
 
@@ -74,6 +113,7 @@ function CleanFlow() {
     if (!selectedClient) return
     const res = await fetch('/api/cleans', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ client_id: selectedClient.id }) })
     const data = await res.json()
+    localStorage.setItem('hsc_active_clean', JSON.stringify({ cleanId: data.id, clientId: selectedClient.id }))
     setCleanId(data.id)
     setStartTime(new Date(data.started_at))
     setPhase('active')
@@ -85,7 +125,7 @@ function CleanFlow() {
     setPendingFiles(files)
     setTagRoom('Kitchen')
     setTagCustomRoom('')
-    setTagType('before')
+    setTagType(null)
     setShowTagModal(true)
     if (fileRef.current) fileRef.current.value = ''
   }
@@ -100,7 +140,7 @@ function CleanFlow() {
       fd.append('file', file)
       fd.append('clean_id', cleanId)
       fd.append('room', roomLabel)
-      fd.append('photo_type', tagType)
+      if (tagType) fd.append('photo_type', tagType)
       const res = await fetch('/api/upload', { method: 'POST', body: fd })
       const data = await res.json()
       if (data.url) setPhotos(p => [...p, { id: data.id, url: data.url, room: roomLabel, photo_type: tagType }])
@@ -135,18 +175,30 @@ function CleanFlow() {
   const toggleExtra = (extra: string) =>
     setExtras(prev => prev.includes(extra) ? prev.filter(e => e !== extra) : [...prev, extra])
 
+  const addCustomExtra = () => {
+    const val = customExtra.trim()
+    if (!val || extras.includes(val)) { setCustomExtra(''); return }
+    setExtras(prev => [...prev, val])
+    setCustomExtra('')
+  }
+
+  const toggleCleaner = (cleaner: string) =>
+    setCleaners(prev => prev.includes(cleaner) ? prev.filter(c => c !== cleaner) : [...prev, cleaner])
+
   const endClean = async () => {
     if (!cleanId) return
     setEnding(true)
     await fetch('/api/cleans', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: cleanId, ended_at: new Date().toISOString(), notes, noticed, extras }),
+      body: JSON.stringify({ id: cleanId, ended_at: new Date().toISOString(), notes, noticed, extras, cleaners }),
     })
+    localStorage.removeItem('hsc_active_clean')
     setPhase('done')
     setEnding(false)
   }
 
+  const extrasList = selectedClient?.property_type === 'commercial' ? COMMERCIAL_EXTRAS : RESIDENTIAL_EXTRAS
   const filtered = clients.filter(c => c.name.toLowerCase().includes(search.toLowerCase()))
 
   // ── SELECT ──
@@ -171,7 +223,6 @@ function CleanFlow() {
         <div style={{ background: 'var(--cream-warm)', borderRadius: 12, padding: '14px 16px', marginTop: 16, fontSize: 14, color: 'var(--teal)', lineHeight: 1.6 }}><strong>Note:</strong> {selectedClient.client_notes}</div>
       )}
 
-      {/* Fixed Start Clean bar — appears above bottom nav when client selected */}
       {selectedClient && (
         <div style={{ position: 'fixed', bottom: 70, left: 0, right: 0, padding: '12px 16px', background: 'white', borderTop: '1px solid var(--line)', zIndex: 40 }}>
           <button onClick={startClean} className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 16, padding: 16 }}>
@@ -188,7 +239,7 @@ function CleanFlow() {
       {/* Tag modal */}
       {showTagModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
-          <div style={{ background: 'white', borderRadius: '20px 20px 0 0', padding: '28px 24px', width: '100%', maxWidth: 480 }}>
+          <div style={{ background: 'white', borderRadius: '20px 20px 0 0', padding: '28px 24px', paddingBottom: 'max(28px, env(safe-area-inset-bottom, 28px))', width: '100%', maxWidth: 480, maxHeight: '85vh', overflowY: 'auto' }}>
             <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: 20, fontWeight: 600, color: 'var(--teal)', margin: '0 0 20px' }}>Tag {pendingFiles.length} photo{pendingFiles.length > 1 ? 's' : ''}</h3>
 
             <div style={{ marginBottom: 18 }}>
@@ -199,16 +250,20 @@ function CleanFlow() {
                 ))}
               </div>
               {tagRoom === 'Other' && (
-                <input style={{ marginTop: 10, width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid var(--line)', fontSize: 14, fontFamily: 'var(--font-outfit), sans-serif', color: 'var(--teal)', outline: 'none', boxSizing: 'border-box' }} placeholder="Enter room name..." value={tagCustomRoom} onChange={e => setTagCustomRoom(e.target.value)} autoFocus />
+                <input style={{ marginTop: 10, width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid var(--line)', fontSize: 14, fontFamily: 'var(--font-outfit), sans-serif', color: 'var(--teal)', outline: 'none', boxSizing: 'border-box' }} placeholder="Enter room name..." value={tagCustomRoom} onChange={e => setTagCustomRoom(e.target.value)} />
               )}
             </div>
 
             <div style={{ marginBottom: 24 }}>
-              <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 10 }}>Before or After?</div>
+              <div style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 4 }}>Before / After <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, fontSize: 11 }}>(optional)</span></div>
+              <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 10px', fontFamily: 'var(--font-outfit), sans-serif' }}>Tap to select, tap again to deselect. Leave blank to just document the room.</p>
               <div style={{ display: 'flex', gap: 10 }}>
-                {(['before', 'after'] as const).map(t => (
-                  <button key={t} onClick={() => setTagType(t)} style={{ flex: 1, padding: '12px', borderRadius: 12, border: tagType === t ? '2px solid var(--blush)' : '1.5px solid var(--line)', background: tagType === t ? 'var(--blush-bg)' : 'white', fontFamily: 'var(--font-fraunces), serif', fontSize: 16, fontWeight: 600, color: tagType === t ? 'var(--teal)' : 'var(--muted)', cursor: 'pointer', textTransform: 'capitalize' }}>{t}</button>
-                ))}
+                {(['before', 'after'] as const).map(t => {
+                  const active = tagType === t
+                  return (
+                    <button key={t} onClick={() => setTagType(prev => prev === t ? null : t)} style={{ flex: 1, padding: '12px', borderRadius: 12, border: active ? '2px solid var(--blush)' : '1.5px solid var(--line)', background: active ? 'var(--blush-bg)' : 'white', fontFamily: 'var(--font-fraunces), serif', fontSize: 16, fontWeight: 600, color: active ? 'var(--teal)' : 'var(--muted)', cursor: 'pointer', textTransform: 'capitalize' }}>{t}</button>
+                  )
+                })}
               </div>
             </div>
 
@@ -234,6 +289,24 @@ function CleanFlow() {
         </div>
       )}
 
+      {/* Cleaners */}
+      <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--line)', padding: '14px 16px', marginBottom: 10 }}>
+        <label style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 10 }}>Who&apos;s Cleaning</label>
+        <div style={{ display: 'flex', gap: 10 }}>
+          {CLEANERS.map(cleaner => {
+            const checked = cleaners.includes(cleaner)
+            return (
+              <button key={cleaner} onClick={() => toggleCleaner(cleaner)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', borderRadius: 10, border: checked ? '2px solid var(--blush)' : '1.5px solid var(--line)', background: checked ? 'var(--blush-bg)' : 'white', cursor: 'pointer', fontFamily: 'var(--font-outfit), sans-serif', fontSize: 14, fontWeight: checked ? 600 : 400, color: checked ? 'var(--teal)' : 'var(--muted)', transition: 'all 0.15s' }}>
+                <div style={{ width: 18, height: 18, borderRadius: 4, border: checked ? '2px solid var(--blush)' : '2px solid var(--line)', background: checked ? 'var(--blush)' : 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  {checked && <span style={{ color: 'white', fontSize: 11, fontWeight: 700, lineHeight: 1 }}>✓</span>}
+                </div>
+                {cleaner}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
       {/* Notes */}
       <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--line)', padding: '14px 16px', marginBottom: 10 }}>
         <label style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 8 }}>Clean Notes</label>
@@ -257,7 +330,7 @@ function CleanFlow() {
             ))}
           </div>
         )}
-        <input ref={noticedFileRef} type="file" accept="image/*" multiple capture="environment" onChange={handleNoticedPhoto} style={{ display: 'none' }} />
+        <input ref={noticedFileRef} type="file" accept="image/*" multiple onChange={handleNoticedPhoto} style={{ display: 'none' }} />
         <button onClick={() => noticedFileRef.current?.click()} disabled={uploadingNoticed} style={{ width: '100%', padding: '9px', borderRadius: 8, border: '2px dashed var(--blush-soft)', background: 'var(--blush-bg)', color: 'var(--muted)', fontSize: 13, fontFamily: 'var(--font-outfit), sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
           <Camera size={13} />{uploadingNoticed ? 'Uploading...' : 'Add Photo of Issue'}
         </button>
@@ -267,11 +340,27 @@ function CleanFlow() {
       <div style={{ background: 'white', borderRadius: 12, border: '1px solid var(--line)', padding: '14px 16px', marginBottom: 10 }}>
         <label style={{ fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 10 }}>Extra Services</label>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
-          {EXTRAS.map(extra => (
+          {extrasList.map(extra => (
             <button key={extra} onClick={() => toggleExtra(extra)} style={{ padding: '7px 12px', borderRadius: 20, border: extras.includes(extra) ? '1.5px solid var(--blush)' : '1.5px solid var(--line)', background: extras.includes(extra) ? 'var(--blush-bg)' : 'white', color: extras.includes(extra) ? 'var(--teal)' : 'var(--muted)', fontFamily: 'var(--font-outfit), sans-serif', fontSize: 13, fontWeight: extras.includes(extra) ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>
               {extras.includes(extra) ? '✓ ' : ''}{extra}
             </button>
           ))}
+          {/* Custom extras added this session */}
+          {extras.filter(e => !extrasList.includes(e)).map(e => (
+            <button key={e} onClick={() => toggleExtra(e)} style={{ padding: '7px 12px', borderRadius: 20, border: '1.5px solid var(--blush)', background: 'var(--blush-bg)', color: 'var(--teal)', fontFamily: 'var(--font-outfit), sans-serif', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+              ✓ {e}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+          <input
+            style={{ flex: 1, padding: '9px 12px', borderRadius: 8, border: '1.5px solid var(--line)', fontSize: 13, fontFamily: 'var(--font-outfit), sans-serif', color: 'var(--teal)', outline: 'none', boxSizing: 'border-box' as const }}
+            placeholder="Add custom extra..."
+            value={customExtra}
+            onChange={e => setCustomExtra(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && addCustomExtra()}
+          />
+          <button onClick={addCustomExtra} style={{ padding: '9px 14px', borderRadius: 8, border: '1.5px solid var(--line)', background: 'white', color: 'var(--teal)', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' as const }}>+ Add</button>
         </div>
       </div>
 
@@ -285,7 +374,7 @@ function CleanFlow() {
                 <Image src={photo.url} alt="Clean photo" fill style={{ objectFit: 'cover' }} />
                 {photo.room && (
                   <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.55)', padding: '3px 6px', fontSize: 10, color: 'white', fontFamily: 'var(--font-montserrat), sans-serif', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    {photo.photo_type === 'before' ? '⬛ ' : '✓ '}{photo.room}
+                    {photo.photo_type === 'before' ? '⬛ ' : photo.photo_type === 'after' ? '✓ ' : ''}{photo.room}
                   </div>
                 )}
                 <button onClick={() => removePhoto(photo.id)} style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', border: 'none', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
@@ -295,7 +384,7 @@ function CleanFlow() {
             ))}
           </div>
         )}
-        <input ref={fileRef} type="file" accept="image/*" multiple capture="environment" onChange={handleFileSelect} style={{ display: 'none' }} />
+        <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleFileSelect} style={{ display: 'none' }} />
         <button onClick={() => fileRef.current?.click()} disabled={uploading} style={{ width: '100%', padding: 10, borderRadius: 8, border: '2px dashed var(--line)', background: 'var(--cream)', color: 'var(--muted)', fontSize: 14, fontFamily: 'var(--font-outfit), sans-serif', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
           <Camera size={15} />{uploading ? 'Uploading...' : 'Add Photos'}
         </button>
@@ -319,7 +408,7 @@ function CleanFlow() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <a href={`/api/send-report?clean_id=${cleanId}`} className="btn-primary" style={{ justifyContent: 'center' }}>Send Summary to Client →</a>
         <button onClick={() => router.push(`/admin/clients/${selectedClient?.id}`)} className="btn-secondary">View Client History</button>
-        <button onClick={() => { setPhase('select'); setSelectedClient(null); setCleanId(null); setNotes(''); setNoticed(''); setExtras([]); setPhotos([]); setElapsed(0) }} style={{ background: 'none', border: 'none', color: 'var(--muted)', fontSize: 14, cursor: 'pointer', marginTop: 8 }}>Start another clean</button>
+        <button onClick={() => { setPhase('select'); setSelectedClient(null); setCleanId(null); setNotes(''); setNoticed(''); setExtras([]); setCleaners(['Kinsey']); setPhotos([]); setElapsed(0) }} style={{ background: 'none', border: 'none', color: 'var(--muted)', fontSize: 14, cursor: 'pointer', marginTop: 8 }}>Start another clean</button>
       </div>
     </div>
   )
