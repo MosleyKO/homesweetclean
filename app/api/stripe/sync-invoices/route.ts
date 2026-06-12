@@ -14,12 +14,14 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const stripeInvoices = await stripe.invoices.list({
-      customer: stripeCustomerId,
-      limit: 100,
-    });
+    // Pull invoices and all charges in parallel
+    const [stripeInvoices, stripeCharges] = await Promise.all([
+      stripe.invoices.list({ customer: stripeCustomerId, limit: 100 }),
+      stripe.charges.list({ customer: stripeCustomerId, limit: 100 }),
+    ]);
 
-    const rows = stripeInvoices.data.map(inv => {
+    // Upsert invoices
+    const invoiceRows = stripeInvoices.data.map(inv => {
       const paidAt = typeof inv.status_transitions?.paid_at === 'number'
         ? new Date(inv.status_transitions.paid_at * 1000).toISOString()
         : null;
@@ -43,22 +45,48 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    if (rows.length === 0) {
-      return NextResponse.json({ ok: true, count: 0 });
+    if (invoiceRows.length > 0) {
+      const { error } = await supabaseAdmin
+        .from("invoices")
+        .upsert(invoiceRows, { onConflict: "stripe_invoice_id" });
+      if (error) {
+        console.error("Invoice upsert error:", error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
     }
 
-    const { error } = await supabaseAdmin
-      .from("invoices")
-      .upsert(rows, { onConflict: "stripe_invoice_id" });
+    // Standalone charges — those not tied to an invoice
+    const standaloneCharges = stripeCharges.data.filter(c => !(c as any).invoice);
+    const paymentRows = standaloneCharges.map(c => ({
+      client_id: clientId,
+      stripe_charge_id: c.id,
+      stripe_customer_id: stripeCustomerId,
+      amount: c.amount ?? 0,
+      currency: c.currency ?? 'usd',
+      status: c.status ?? 'unknown',
+      description: c.description ?? null,
+      receipt_url: c.receipt_url ?? null,
+      payment_date: new Date(c.created * 1000).toISOString(),
+    }));
 
-    if (error) {
-      console.error("Supabase upsert error:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (paymentRows.length > 0) {
+      const { error } = await supabaseAdmin
+        .from("payments")
+        .upsert(paymentRows, { onConflict: "stripe_charge_id" });
+      if (error) {
+        console.error("Payment upsert error:", error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
     }
 
-    return NextResponse.json({ ok: true, count: rows.length });
+    return NextResponse.json({
+      ok: true,
+      invoices: invoiceRows.length,
+      payments: paymentRows.length,
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
+    console.error("Stripe sync error:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

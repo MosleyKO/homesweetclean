@@ -27,9 +27,10 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
   const { data: client } = await supabase.from('clients').select('*').eq('id', id).single()
   if (!client) notFound()
 
-  const [{ data: cleans }, { data: invoices }] = await Promise.all([
+  const [{ data: cleans }, { data: invoices }, { data: payments }] = await Promise.all([
     supabase.from('cleans').select('*, clean_photos(url)').eq('client_id', id).order('started_at', { ascending: false }),
     supabase.from('invoices').select('*').eq('client_id', id).order('invoice_created_at', { ascending: false }),
+    supabase.from('payments').select('*').eq('client_id', id).order('payment_date', { ascending: false }),
   ])
 
   const s = statusColors[client.status] ?? statusColors.inactive
@@ -285,6 +286,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
           stripeCustomerId={client.stripe_customer_id ?? null}
           stripeCustomerName={client.stripe_customer_name ?? null}
           invoices={invoices ?? []}
+          payments={payments ?? []}
         />
       </div>
     </div>
