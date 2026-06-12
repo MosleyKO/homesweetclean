@@ -210,8 +210,8 @@ export default async function AdminDashboard() {
                               {duration ? `${duration} min` : clean.started_at ? 'In progress' : '—'}
                             </td>
                             <td style={{ padding: '13px 24px' }}>
-                              <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: clean.summary_sent ? '#dcfce7' : '#fef9c3', color: clean.summary_sent ? '#166534' : '#854d0e' }}>
-                                {clean.summary_sent ? 'Sent' : 'Pending'}
+                              <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: clean.summary_sent ? '#dcfce7' : !clean.ended_at ? '#e0f2fe' : '#fef9c3', color: clean.summary_sent ? '#166534' : !clean.ended_at ? '#0284c7' : '#854d0e' }}>
+                                {clean.summary_sent ? 'Sent' : !clean.ended_at ? 'In Progress' : 'Pending'}
                               </span>
                             </td>
                             <td style={{ padding: '13px 24px' }}>
@@ -326,6 +326,10 @@ export default async function AdminDashboard() {
                       {clean.summary_sent ? (
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: '#dcfce7', color: '#166534' }}>
                           <Send size={10} /> Sent
+                        </span>
+                      ) : !clean.ended_at ? (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: '#e0f2fe', color: '#0284c7' }}>
+                          <Clock size={10} /> In Progress
                         </span>
                       ) : (
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-montserrat), sans-serif', background: '#FEFCE8', color: '#854d0e' }}>
