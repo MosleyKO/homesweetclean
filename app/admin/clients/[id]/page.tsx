@@ -137,9 +137,21 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
               <span style={{ fontSize: 13, color: 'var(--teal)' }}>{val}</span>
             </div>
           ) : null)}
-          {client.frequency && (
-            <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--line)', fontSize: 13, color: 'var(--muted)' }}>
-              Frequency: <strong style={{ color: 'var(--teal)' }}>{client.frequency}</strong>
+          {(client.service_type || client.frequency || client.bedrooms || client.bathrooms || client.sqft || client.space_type) && (
+            <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--line)', display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {[
+                client.service_type && { label: 'Service', value: client.service_type },
+                client.frequency && { label: 'Frequency', value: client.frequency },
+                client.bedrooms && { label: 'Bedrooms', value: client.bedrooms },
+                client.bathrooms && { label: 'Bathrooms', value: client.bathrooms },
+                client.space_type && { label: 'Space Type', value: client.space_type },
+                client.sqft && { label: 'Sq Footage', value: client.sqft },
+              ].filter(Boolean).map(({ label, value }: any) => (
+                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+                  <span style={{ color: 'var(--muted)' }}>{label}</span>
+                  <strong style={{ color: 'var(--teal)', textAlign: 'right', maxWidth: '60%' }}>{value}</strong>
+                </div>
+              ))}
             </div>
           )}
         </div>

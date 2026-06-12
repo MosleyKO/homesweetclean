@@ -10,7 +10,7 @@ const supabaseAdmin = createClient(
 export async function POST(req: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const body = await req.json();
-  const { name, email, phone, propertyType, service, bedrooms, address, message } = body;
+  const { name, email, phone, propertyType, service, bedrooms, bathrooms, frequency, sqft, spaceType, address, message } = body;
 
   // Capture source from headers/referrer
   const referer = req.headers.get("referer") ?? "";
@@ -32,8 +32,12 @@ export async function POST(req: NextRequest) {
     phone: phone || null,
     address: address || null,
     property_type: (propertyType || "residential").toLowerCase(),
-    frequency: service || null,
+    service_type: service || null,
+    frequency: frequency || null,
     bedrooms: bedrooms || null,
+    bathrooms: bathrooms || null,
+    sqft: sqft || null,
+    space_type: spaceType || null,
     client_notes: message || null,
     status: "lead",
     pipeline_stage: "new_inquiry",
