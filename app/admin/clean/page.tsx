@@ -31,6 +31,7 @@ function CleanFlow() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const preselectedId = searchParams.get('client')
+  const resumeCleanId = searchParams.get('resume')
 
   const [phase, setPhase] = useState<Phase>('select')
   const [clients, setClients] = useState<Client[]>([])
@@ -70,19 +71,29 @@ function CleanFlow() {
           return
         }
 
-        // Resume an in-progress clean if one was saved
+        // Determine which clean ID to resume — URL param takes priority over localStorage
         const saved = localStorage.getItem('hsc_active_clean')
-        if (!saved) return
-        let parsed: { cleanId: string; clientId: string }
-        try { parsed = JSON.parse(saved) } catch { localStorage.removeItem('hsc_active_clean'); return }
+        let resumeId: string | null = resumeCleanId
+        let resumeClientId: string | null = null
+        if (!resumeId && saved) {
+          try {
+            const parsed = JSON.parse(saved)
+            resumeId = parsed.cleanId
+            resumeClientId = parsed.clientId
+          } catch { localStorage.removeItem('hsc_active_clean') }
+        }
+        if (!resumeId) return
 
-        supabase.from('cleans').select('*').eq('id', parsed.cleanId).single().then(({ data: cleanData }) => {
+        supabase.from('cleans').select('*').eq('id', resumeId).single().then(({ data: cleanData }) => {
           if (!cleanData || cleanData.ended_at) { localStorage.removeItem('hsc_active_clean'); return }
-          const client = data.find((c: Client) => c.id === parsed.clientId)
+          // find client — by stored clientId or by the clean's client_id
+          const clientId = resumeClientId ?? cleanData.client_id
+          const client = data.find((c: Client) => c.id === clientId)
           if (!client) return
-          supabase.from('clean_photos').select('*').eq('clean_id', parsed.cleanId).then(({ data: photoData }) => {
+          localStorage.setItem('hsc_active_clean', JSON.stringify({ cleanId: resumeId, clientId: client.id }))
+          supabase.from('clean_photos').select('*').eq('clean_id', resumeId).then(({ data: photoData }) => {
             setSelectedClient(client)
-            setCleanId(parsed.cleanId)
+            setCleanId(resumeId!)
             setStartTime(new Date(cleanData.started_at))
             setNotes(cleanData.notes ?? '')
             setNoticed(cleanData.noticed ?? '')

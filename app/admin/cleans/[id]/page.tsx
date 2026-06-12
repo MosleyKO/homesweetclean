@@ -208,7 +208,7 @@ export default function CleanDetailPage() {
               Started {new Date(clean.started_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
             </div>
           </div>
-          <a href="/admin/clean" style={{ display: 'inline-block', background: 'var(--blush)', color: 'white', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '12px 20px', borderRadius: 50, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+          <a href={`/admin/clean?resume=${id}`} style={{ display: 'inline-block', background: 'var(--blush)', color: 'white', fontFamily: 'var(--font-montserrat), sans-serif', fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '12px 20px', borderRadius: 50, textDecoration: 'none', whiteSpace: 'nowrap' }}>
             Resume Clean →
           </a>
         </div>
